@@ -1,0 +1,72 @@
+<html xmlns:tomboy="http://beatniksoftware.com/tomboy" xmlns:link="http://beatniksoftware.com/tomboy/link" xmlns:size="http://beatniksoftware.com/tomboy/size"><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"><title>VolDB_Release_Info</title><style type="text/css">
+        
+	body {  }
+	h1 { font-size: xx-large;
+     	     font-weight: bold;
+     	     border-bottom: 1px solid black; }
+	div.note {
+		   position: relative;
+		   display: block;
+		   padding: 5pt;
+		   margin: 5pt; 
+		   white-space: -moz-pre-wrap; /* Mozilla */
+ 	      	   white-space: -pre-wrap;     /* Opera 4 - 6 */
+ 	      	   white-space: -o-pre-wrap;   /* Opera 7 */
+ 	      	   white-space: pre-wrap;      /* CSS3 */
+ 	      	   word-wrap: break-word;      /* IE 5.5+ */ }
+	</style></head><body><div class="note" id="VolDB_Release_Info"><a name="voldb_release_info"></a><h1>VolDB_Release_Info</h1>
+<b>Planned for future releases:</b>
+<ul><li dir="ltr">check out the feasibility to add ad hoc email addresses in Send Mail functionality.</li></ul>
+
+Version 1.8 (uploaded 8/29/14
+<ul><li dir="ltr">modified datautils.php and added logging when new page is loaded
+</li><li dir="ltr">updated usage instances of nicEditor to add 'link' and 'unlink' buttons of textarea edit.
+</li><li dir="ltr">centralized definition of site dependent variables into datautils.inc and modified all page instances that referred to them.  Added javascript checker to prevent use of email functionality unless the system 'from; email address is defined.</li></ul>
+
+Version 1.7 (uploaded 8/1/14)
+<ul><li dir="ltr">upgraded to bootstrap3-typeahead.js in voltimeentry
+</li><li dir="ltr">added typeahead to volinfotabbed to provide autocomplete for city, state and zip</li></ul>
+
+Version 1.6 (Uploaded 6/6/14)
+<ul><li dir="ltr">added new report rptvoldetail to allow extraction and download of detailed volunteer time records</li></ul>
+
+Version 1.5 (Uploaded 5/29/14)
+<ul><li dir="ltr">added datepicker functionality to all pages that would provide added functionality.  Used bootstrap capability in order to maintain compatibility with existing css functionality.</li></ul>
+
+Version 1.4 (Uploaded 4/30/14)
+<ul><li dir="ltr">upgraded function in sendemailvolsupd that creates linkable url's embedded in the message.  The old version didn't isolate and convert the text strings properly.
+</li><li dir="ltr">fixed sendemailvolsupd to properly quote the href string in the closing tag of message.
+</li><li dir="ltr">added rptvolexpeption report to the main menu
+</li><li dir="ltr">modified volinfotabbed to merge volunteer detail tab with main information tab.
+</li><li dir="ltr">changed sending mail address in sendemailvolsupd to '<a style="color:#3465A4" href="info@pacificwildlifecare.org'">info@pacificwildlifecare.org'</a> to get around SPAM checkers.
+</li><li dir="ltr">added at bottom of page a comma separated list of all emails to listspecificlist suitable for copy and pasting into email clients.
+</li><li dir="ltr">modified index.php to log list self admin action to voldb activity log for rpt.php
+</li><li dir="ltr">removed security restriction of having to be a voladmin to do vol record updates.
+</li><li dir="ltr">fixed default date range in rptmcidtimereport to be last calendar month.
+</li><li dir="ltr">fixed rptmaillogviewer drop down action to use 'onchange'
+</li><li dir="ltr">modfied listspecificlist to drop memstatus and mctype and added notes to get extra space for phone numbers.</li></ul>
+
+Version 1.3 (Uploaded 3/20/2014)
+<ul><li dir="ltr">added ability to delete a vol time entry record on listedittimerecord
+</li><li dir="ltr">added function to turn submit button RED on voltimeentry form to prevent inadvertent double entry (hopefully).
+</li><li dir="ltr">modified sendemailvols to check for page modifications before allowing navigation to a different page.</li></ul>
+
+Version 1.2 (Uploaded 3/6/2014)
+<ul><li dir="ltr">added admpasswordupd into directory. It had been inadvertently left behind.
+</li><li dir="ltr">defined the mainmenu bar to be fix to the top of the window.
+</li><li dir="ltr">change the sort order of the time entry list/edit to be date of service (VolDate).
+</li><li dir="ltr">created rptperiodsummary to use for Summary Reporting for Board
+</li><li dir="ltr">added editor facilities to the email composition page sendemailvols
+</li><li dir="ltr">modified all reports with date ranges to default to start and end date of prior month.</li></ul>
+
+Version 1.1 (Uploaded 2/26/2014)
+<ul><li dir="ltr">fixed listvolcategories to correctly check on security level
+</li><li dir="ltr">added display of MCID to index page for vol users reference
+</li><li dir="ltr">fixed maillogchecker to report email addresses with &lt;&gt; by adding htmlentities() to page output.
+</li><li dir="ltr">added link to selfte to allow user to list last 10 volunteer time entries.
+</li><li dir="ltr">fixed sendemailvolsupd to not note email in volunteer's correspondence and added 'action=form' to url string in tag of message.</li></ul>
+
+Version 1.0 (Uploaded 2/23/2014)
+<ul><li dir="ltr">complete and test the current volunteer email utility in voldb: sendchooser.php, sendemail.php and sendemailupd.php
+</li><li dir="ltr">initial release of 'index.php' to allow volunteers to manage their own lists</li></ul>
+</div></body></html>
