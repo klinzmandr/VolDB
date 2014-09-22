@@ -9,7 +9,7 @@
 <body>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
-
+<!-- new comment line to test sync -->
 <?php
 session_start();
 //include 'Incls/vardump.inc';
