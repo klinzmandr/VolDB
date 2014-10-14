@@ -5,7 +5,7 @@ var errmsg = "";
 var d = new Date();
 var curr_day = d.getDate();
 if (curr_day <= 9) curr_day = "0" + curr_day;
-var curr_month = d.getMonth() + 1; //Months are zero based
+var curr_month = new String(d.getMonth() + 1); 				//Months are zero based
 if (curr_month <= 9) curr_month = "0" + curr_month;
 var curr_year = d.getFullYear();
 
@@ -15,16 +15,14 @@ if (stripped == 'now') {
 	fld.style.background = "White";
 	return true;
 	}
-
 if (stripped.length == 2) {		// assume entry of dd
-	if(!stripped.match(/^(0[1-9]|[12][0-9]|3[01])/))  { 
+	if (!stripped.match(/^(0[1-9]|[12][0-9]|3[01])/))  {
 		errmsg += "Invalid day entered.\n"; 
 		}
 	else {
 		stripped = curr_year + curr_month + stripped.substr(0,2);
 		}
 	}
-
 if (stripped.length == 4) {		// assume entry of mmdd
 	if(!stripped.match(/^(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])/))  { 
 		errmsg += "Invalid month/day entered.\n"; 
