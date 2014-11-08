@@ -49,7 +49,6 @@ firstPage;
 exit;
 }
 
-
 $sql = "SELECT `voltime`.*, `members`.`FName`, `members`.`LName` 
 FROM `voltime`, `members` 
 WHERE `voltime`.`MCID` = `members`.`MCID`
