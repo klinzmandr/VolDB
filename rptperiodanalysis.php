@@ -49,11 +49,17 @@ firstPage;
 exit;
 }
 
-$sql = "SELECT * from `voltime` 
-	WHERE `VolDate` between '$sd' AND '$ed' 
-	ORDER BY `VTID` ASC";
+
+$sql = "SELECT `voltime`.*, `members`.`FName`, `members`.`LName` 
+FROM `voltime`, `members` 
+WHERE `voltime`.`MCID` = `members`.`MCID`
+	AND `voltime`.`VolDate` BETWEEN '$sd' AND '$ed' 
+ORDER BY `VTID` ASC;";
+
+//echo "sql: $sql<br>";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
+
 if ($rowcnt > 0) {
 // table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes
 	$mcidcount = array(); $mcidhours = array(); $mcidmileage = array();
@@ -67,9 +73,12 @@ if ($rowcnt > 0) {
 		$mcidcount[$mcid] += 1;
 		$mcidhours[$mcid] += $r[VolTime];
 		$mcidmileage[$mcid] += $r[VolMileage];
+		$mcidname[$mcid] = $r[FName] . ' ' . $r[LName];
 		$totalmiles += $r[VolMileage];
 		$totalhours += $r[VolTime];
 		}
+	$totalhours = number_format($totalhours); 
+	$totalmiles = number_format($totalmiles);
 	ksort($mcidcount);
 	ksort($mcidhours);
 	ksort($mcidmileage);
@@ -78,20 +87,21 @@ if ($rowcnt > 0) {
 	//echo '<pre>mcid hours '; print_r($mcidhours); echo '</pre>';
 	//echo '<pre>mcid milage '; print_r($mcidmileage); echo '</pre>';
 	//echo '<pre>category hours '; print_r($cathours); echo '</pre>';
-	echo "<b>Volunteers Served: " . count($mcidcount) . "</b>,&nbsp;";
+	echo "<b>Volunteers Served: </b>" . count($mcidcount) . ",&nbsp;";
 	echo "<b>Total Volunteer Hours:</b> $totalhours,&nbsp;";
 	echo "<b>Total Miles Driven:</b> $totalmiles<br />";	
 	echo "<b>Total Hours by Category:</b><br />";
 	echo '<div class="row">';
 	foreach ($cathours as $k => $v) { 
+		$v = number_format($v);
 		echo "<div class=\"col-sm-2\">$k: $v</div>";
 		}
 	echo	"</div><br />";		// ** row
 	echo '<table class="table table-condensed">';
-	echo '<tr><th>MCID</th><th>Serv.Cnt<th>Time</th><th>Mileage</th></tr>';
+	echo '<tr><th>MCID</th><th>Vol Name</th><th>Serv.Cnt<th>Time</th><th>Mileage</th></tr>';
 
 	foreach ($mcidcount as $m=>$v) { 
-		echo "<tr><td>$m</td><td>$v</td><td>$mcidhours[$m]</td><td>$mcidmileage[$m]</td></tr>"; 
+		echo "<tr><td>$m</td><td>$mcidname[$m]</td><td>$v</td><td>$mcidhours[$m]</td><td>$mcidmileage[$m]</td></tr>"; 
 		}
 	echo '</table>';	
 	}
