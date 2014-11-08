@@ -10,6 +10,7 @@
 <body>
 <?php
 session_start();
+
 //include 'Incls/vardump.inc';
 include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
