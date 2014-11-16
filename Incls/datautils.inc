@@ -4,7 +4,7 @@ date_default_timezone_set('America/Los_Angeles');
 
 // ====== Start Istallation Parameters =========
 
-include "../DBParamInfo";
+include "../.DBParamInfo";
 
 $HomeURL = 'http://www.pacificwildlifecare.org';
 // this email address is used as a from address in the reminder system
