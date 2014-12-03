@@ -14,8 +14,8 @@ session_start();
 include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 
-$sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("this month"));
-$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('this month'));
+$sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("previous month"));
+$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('previous month'));
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 echo '<div class="container"><h3>Volunteer Service Detail&nbsp;&nbsp;<a class="btn btn-default" href="javascript:self.close();">CLOSE</a></h3>';
