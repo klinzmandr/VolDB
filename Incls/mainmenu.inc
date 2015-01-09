@@ -76,6 +76,7 @@ print <<<menuPart2
 	<li><a href="rptperiodsummary.php" target="_blank">Period Service Summary</a></li>	
 	<li><a href="rptperiodanalysis.php" target="_blank">Period Service Analysis</a></li>	
 	<li><a href="rptperioddetail.php" target="_blank">Period Service Detail</a></li>
+	<li><a href="rptcategorydetail.php" target="_blank">Category Service Detail</a></li>
 	<li><a href="rptmcidtimereport.php" target="_blank">List Time for MCID</a></li>
 	<li><a href="rptvolunteerroster.php" target="_blank">Volunteer Roster</a></li>
 	<li><a href="rptvolexception.php" target="_blank">Volunteer Exception Report</a></li>
