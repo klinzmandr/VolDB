@@ -33,19 +33,39 @@ function chkcats() {
 	alert ("There were NO categorys selected");
 	return false;
 	}
+</script>
+<script>
+function chgcb() {
+	var cb = document.getElementsByName("ctrlcb");
+	var elems = document.getElementsByName("cats[]"); 
+	if (cb[0].checked) {
+		for (i = 0; i < elems.length; i++) {
+			elems[i].checked = true;
+		}
+	}
+	else {
+		for (i = 0; i < elems.length; i++) {
+			elems[i].checked = false;
+		}
+	}
+	return;
+}
 </script>';
-	echo "<h4>Specify Date Period Required</h4>
-	<p>This report produces all the detail enteries for one or more categories selected from the folloowing list within the date range specified.</p>
+	echo "
+	<p>This report produces all the detail entries for one or more categories selected from the following list within the date range specified.</p>
 	<p>Unless details are requested, the report summarizes all volunteer time reported within the date range entered.  If requested, details are listed and are also provided to be downloaded as a CSV spreadsheet file.</p>
+<h4>Specify Date Period:</h4><ul>
 <form action=\"rptcategorydetail.php\" method=\"post\"  class=\"form\" onsubmit=\"return chkcats()\">
 Start:<input type=\"text\" name=\"sd\" id=\"sd\" value=\"$sd\" style=\"width: 105px;\">
-End: <input type=\"text\" name=\"ed\" id=\"ed\" value=\"$ed\" style=\"width: 105px;\"><br><br>";
+End: <input type=\"text\" name=\"ed\" id=\"ed\" value=\"$ed\" style=\"width: 105px;\">
+</ul>";
 
 $cats = readdblist('VolCategorys');
 $catsarray = formatdbrec($cats);
 asort($catsarray);
 //echo '<pre> categories '; print_r($catsarray); echo '</pre>';
-echo 'Categories:<br><ul>';
+echo '<h4>Categories:</h4><ul>
+<input type="checkbox" name="ctrlcb" checked onchange="chgcb()"><b>Check All/None</b><br>';
 foreach ($catsarray as $k => $c) {
 	if ($c == '') continue;
 	$c = rtrim($c);
