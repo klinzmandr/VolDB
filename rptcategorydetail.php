@@ -100,6 +100,7 @@ if ($rowcnt > 0) {
 //	echo '<pre>'; print_r($r); echo '</pre>';
 		if (in_array($r[VolCategory], $cats)) {
 			$tothrs += $r[VolTime];
+			$totmiles += $r[VolMileage];
 			$counts[$r[VolCategory]][count] += 1;
 			$counts[$r[VolCategory]][hours] += $r[VolTime];
 			$mcidcounts[$r[MCID]][count] += 1;
@@ -117,7 +118,9 @@ if ($rowcnt > 0) {
 	echo "<h4>Period from $sd to $ed</h4>
 	Rows extracted: ".count($voldet).",&nbsp;";
 	echo "Categories reported: " . count($cats) . '<br>';
-	echo 'Unique Vol IDs reporting: ' . count($mcidcounts) . ', Total Hrs: ' . $tothrs . '<br>';
+	echo 'Unique Vol IDs reporting: ' . count($mcidcounts) . ', Total Hrs: ' . $tothrs;
+	if ($totmiles > 0) echo ", Total Mileage: $totmiles";
+	echo '<br>';
 //	echo '<b>Period Category service count and total hours</b><br>';
 	echo '<ul><table class="table-condnesed" border=0>';
 	
