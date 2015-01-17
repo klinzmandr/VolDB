@@ -77,6 +77,7 @@ print <<<menuPart2
 	<li><a href="rptperiodanalysis.php" target="_blank">Period Service Analysis</a></li>	
 	<li><a href="rptperioddetail.php" target="_blank">Period Service Detail</a></li>
 	<li><a href="rptcategorydetail.php" target="_blank">Category Service Detail</a></li>
+	<li><a href="rptvoltimesummary.php" target="_blank">Vol Time Summary</a></li>
 	<li><a href="rptmcidtimereport.php" target="_blank">List Time for MCID</a></li>
 	<li><a href="rptvolunteerroster.php" target="_blank">Volunteer Roster</a></li>
 	<li><a href="rptvolexception.php" target="_blank">Volunteer Exception Report</a></li>
@@ -120,7 +121,7 @@ print <<<theRest
 theRest;
 
 print <<<theModal
-<!-- ===================================== ABOUT Modal  ====================================== -->  
+<!-- ============== ABOUT Modal  ============== -->  
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
