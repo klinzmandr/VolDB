@@ -43,10 +43,9 @@ include 'Incls/datautils.inc';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
 
-echo '<div class="container">
-<h3>Volunteer Service Summary&nbsp;&nbsp;<a class="btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>';
-if ($action == '') {
-print <<<pagePart1
+print <<<formPart
+<div class="container">
+<h3>Volunteer Service Summary&nbsp;&nbsp;<a class="btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>
 <script>
 function chksel() {
 //	var v = document.getElementById("selid");
@@ -58,10 +57,6 @@ function chksel() {
 return true;
 }
 </script>
-<p>This report agregates all volunteer time records entries recorded on the database. The report counts and totals grouping by year, volunteer category and month</p>
-<p>Select from the following list to create the appropriate summary report.</p>
-
-<ul>
 <form action="rptvoltimesummary.php" onsubmit="return chksel()">
 <select name="type" id="selid">
 <option value=""></option>
@@ -70,11 +65,17 @@ return true;
 <option value="2">Vol&apos;s served in month</option>
 <option value="3">Average Time Served</option>
 <option value=""></option>
-</select><br><br>
+</select>&nbsp;&nbsp;
 <input type="hidden" name="action" value="go">
 <input type="submit" name="submit" value="submit">
 </form>
-</ul>
+
+formPart;
+if ($action == '') {
+print <<<pagePart1
+<p>This report agregates all volunteer time records entries recorded on the database. The report counts and totals grouping by year, volunteer category and month</p>
+<p>Select from the following list to create the appropriate summary report.</p>
+
 <h4>Report Types</h4>
 <p>In general, reports utilize all time records available on the volunteer database.  The reports produced will always reflect information for the entire history of the time data entry system up to the last entries made.  Also, please note that the yearly tables are listed in reverse chronological order.</p>
 <p><b>Total Volunteer Hours</b></p>
