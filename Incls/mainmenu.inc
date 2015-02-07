@@ -11,13 +11,20 @@ function chkchg() {
 	if (r == true) { chgFlag = 0; return true; }
 		return false;
 	}
+
 // add '<body onchange="flagChange()"> to all pages needed
 function flagChange() {
-	//alert("change flagged");
-	//document.getElementById("chgflg").hidden=false;
+//	alert("change flagged");
 	chgFlag += 1;
 	return true;
 	}
+
+<!-- ignore any change to the filter input field -->
+function ignorefilter() {
+	chgFlag -= 1;
+	return true;
+	}
+
 </script>
 <style>
 body { padding-top: 50px; }      <!-- add padding to top of each page for fixed navbar -->
