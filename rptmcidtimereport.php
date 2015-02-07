@@ -48,10 +48,16 @@ echo '<script src="jquery.js"></script><script src="js/bootstrap.min.js"></scrip
 </html>';
 exit;
 	}
+
 //echo "mcid: $mcid, sd: $sd, ed: $ed<br />";
-$sql = "SELECT * from `voltime` WHERE `MCID` = '$mcid' AND (`VolDate` >= '$sd' AND `VolDate` <= '$ed') ORDER BY `VTID` ASC";
+$sql = "SELECT * FROM `voltime` 
+WHERE `MCID` = '$mcid' 
+AND `VolDate` BETWEEN '$sd' AND '$ed'
+ORDER BY `VTID` ASC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
+
+if ($rowcnt > 0) {
 echo "<b>Period Entry Count:</b> $rowcnt<br />";
 // table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes
 
@@ -74,7 +80,39 @@ echo '<table class="table-condensed">';
 echo '<tr><th>Date</th><th>Vol Time</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>';
 if (count($trows) != 0) foreach ($trows as $l) { echo $l; }
 echo '</table>';	
+}
+//
+// check for previous reported volunteer service, if any
+//
+$sql = "SELECT * from `voltimeprev` 
+WHERE `TMCID` = '$mcid' 
+AND `SvcDate` BETWEEN'$sd' AND '$ed' 
+ORDER BY `SvcDate` ASC";
+$res = doSQLsubmitted($sql);
+$rowcnt = $res->num_rows;
+if ($rowcnt > 0) {
+echo '<h3>Volunteer Service Prior to Jan 1, 2014</h3>';
+echo "<b>Previous Service Entry Count:</b> $rowcnt<br />";
+// table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes
 
+$trows = array(); $totalvolhrs = $totaltranshrs = $totmiles = 0;
+while ($r = $res->fetch_assoc()) {
+$trows[] = "<tr><td>$r[SvcDate]</td><td>$r[VolHrs]</td><td>$r[TransHrs]</td><td>$r[Mileage]</td></tr>";
+$totalvolhrs += $r[VolHrs];
+$totaltranshrs += $r[TransHrs];
+$tothrs[$vc] += $r[VolHrs];
+$totmiles += $r[Mileage];
+	}
+echo "<b>Total Volunteer Hours:</b> $totalvolhrs<br />";
+echo "<b>Total Transporter Hours:</b> $totaltranshrs,&nbsp;";
+echo "<b>Total Miles Driven:</b> $totmiles<br>";
+echo "<b>Detail Records</b><br />";
+echo '<table class="table-condensed">';
+echo '<tr><th>Date</th><th>VolHrs</th><th>TransHrs<th>Mileage</th></tr>';
+if (count($trows) != 0) foreach ($trows as $l) { echo $l; }
+echo '</table>';	
+}
+echo '<br>==== END OF REPORT ====<br>';
 ?>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
