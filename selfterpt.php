@@ -16,7 +16,7 @@ $mcid = $_REQUEST[mcid];
 
 $sql = "SELECT * FROM `voltime` WHERE `MCID`= '$mcid' ORDER BY `VolDate` DESC LIMIT 20;";
 $res = doSQLsubmitted($sql);
-echo "<h4>Last 10 entries for $mcid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class=\"btn btn-xs btn-primary\" href=\"selfte.php?MCID=$mcid\">Return</a></h4>";
+echo "<h4>Last 20 entries for $mcid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class=\"btn btn-xs btn-primary\" href=\"selfte.php?MCID=$mcid\">Return</a></h4>";
 echo '<table class="table">
 <tr><th>Date</th><th>Hours</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>';
 while ($r = $res->fetch_assoc()) {
