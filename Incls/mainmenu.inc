@@ -69,11 +69,20 @@ print <<<menuPart2
 </ul>
 </li>  <!-- class="dropdown" -->
 
-<!-- ========== define Resources menu item =========== -->
+<!-- ========== define Time Entry menu item =========== -->
 <li><a onclick="return chkchg()" href="voltimeentry.php">Time Entry</a></li>
 
-<!-- ========== define Forms menu item ======== -->
-<!-- <li><a onclick="return chkchg()" href="forms.php">Forms</a></li> -->
+<!-- ========== define Courses menu dropdown ======== -->
+<li class="dropdown">
+<a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">Courses<b class="caret"></b></a>
+<ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
+	<li><a href="#">List/Display Course Info</a></li>
+	<li><a href="#">Courses Entry</a></li>	
+	<li><a href="#">View Specific Course</a></li>
+	<li><a href="#">List/Edit Course Record Entry</a></li>	
+	<li><a href="#">Create/Update Course List</a></li>
+</ul>
+</li> <!-- class="dropdown" -->
 
 <!-- ========== define reports dropdown ======= -->
 <!-- <li class="dropdown open">  example: to have open on load -->
