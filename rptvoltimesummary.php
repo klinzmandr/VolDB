@@ -58,7 +58,7 @@ return true;
 }
 </script>
 <form action="rptvoltimesummary.php" onsubmit="return chksel()">
-<select name="type" id="selid">
+<select name="type" id="selid" onchange="this.form.submit()">
 <option value=""></option>
 <option value="0">Total volunteer hours in month</option>
 <option value="1">Service record count in month</option>
@@ -67,7 +67,7 @@ return true;
 <option value=""></option>
 </select>&nbsp;&nbsp;
 <input type="hidden" name="action" value="go">
-<input type="submit" name="submit" value="submit">
+<!-- <input type="submit" name="submit" value="submit"> -->
 </form>
 
 formPart;
@@ -97,6 +97,7 @@ $res = doSQLsubmitted($sql);
 $resarray = array(); $yrarray = array();
 while ($r = $res -> fetch_assoc()) {
 	$resarray[$r[VTID]] = $r;
+	if ($r[VolDate] == '0000-00-00') continue;
 	$yr = date('Y', strtotime($r[VolDate]));
 	$yrarray[$yr] += 1; 
 }
@@ -109,6 +110,7 @@ $accum = prepaccum($yrcount);
 $mcidcatcher = array(); $motot = array();
 foreach ($resarray as $r) {
 //	echo '<pre> data '; print_r($r); echo '</pre>';
+	if ($r[VolDate] == '0000-00-00') continue;
 	if ($r[VolDate] == '') continue;
 	$yr = date('Y', strtotime($r[VolDate]));
 	$mo = date('n', strtotime($r[VolDate]));
@@ -136,7 +138,6 @@ foreach ($resarray as $r) {
 		$motot[$yr][$mo][mcidcount] += 1;
 		$mcidcount[$mcid] += 1; 
 	}
-
 }
 // echo "type: $type<br>";
 if ($type == 0) {
@@ -169,6 +170,8 @@ foreach ($accum as $yr => $val) {
 		}
 	}
 	echo '</tr><tr><td>Mo Total:</td>';		// add monthly totals at bottom
+//	echo "yr: $yr<br>";
+//	echo '<pre> motot '; print_r($motot); echo '</pre>';
 	foreach ($motot[$yr] as $k => $v) {
 		if ($type == 0) $fv = number_format($v[tothrs]);
 		elseif ($type == 1) $fv = number_format($v[count]);
