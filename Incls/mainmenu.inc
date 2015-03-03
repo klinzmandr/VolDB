@@ -76,12 +76,10 @@ print <<<menuPart2
 <li class="dropdown">
 <a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">Courses<b class="caret"></b></a>
 <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
-	<li><a href="#">List/Display Course Info</a></li>
-	<li><a href="#">Courses Entry</a></li>	
-	<li><a href="#">View Specific Course</a></li>
-	<li><a href="#">List/Edit Course Record Entry</a></li>	
-	<li><a href="#">Create/Update Course List</a></li>
-</ul>
+	<li><a onclick="return chkchg()" href="edentry.php">Enter Course Data</a></li>
+	<li><a onclick="return chkchg()" href="edcourses.php">List/Add/Update/Display Course Info</a></li>
+	<li><a onclick="return chkchg()" href="edlisteditrecord.php">List/Edit Course Record Entry</a></li>	
+	</ul>
 </li> <!-- class="dropdown" -->
 
 <!-- ========== define reports dropdown ======= -->
@@ -95,6 +93,7 @@ print <<<menuPart2
 	<li><a href="rptcategorydetail.php" target="_blank">Category Service Detail</a></li>
 	<li><a href="rptvoltimesummary.php" target="_blank">Vol Time Summary</a></li>
 	<li><a href="rptmcidtimereport.php" target="_blank">List Time for MCID</a></li>
+	<li><a href="rptmcidedreport.php" target="_blank">List Courses for MCID</a></li>
 	<li><a href="rptvolunteerroster.php" target="_blank">Volunteer Roster</a></li>
 	<li><a href="rptvolexception.php" target="_blank">Volunteer Exception Report</a></li>
 	<li><a href="rptmaillogviewer.php" target="_blank">Review Mail Log</a></li>
