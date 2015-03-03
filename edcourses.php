@@ -49,7 +49,7 @@ if ($action == 'delete') {
 $sql = "SELECT * FROM `courses` WHERE '1' ORDER BY `CourseId` ASC;";
 $res = doSQLsubmitted($sql);
 
-echo '<table border=1 class="table-condensed">';
+echo '<table border=0 class="table-condensed">';
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> bboard '; print_r($r); echo '</pre>';
 	if ($r[CourseName] == '**NewRec**') $r[CourseName] = '';;
