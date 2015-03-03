@@ -20,7 +20,7 @@ include 'Incls/seccheck.inc';
 if ($_SESSION['SecLevel'] != 'voladmin') {
 		echo '<div class="container"><h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to perform volunteer time data entry.</h4>
-		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded 			to &apos;voladmin&apos; in order to perform this function.</p><br />
+		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded to &apos;voladmin&apos; in order to perform this function.</p><br />
 		<a class="btn btn-primary" href="admin.php">RETURN</a></div>
 		</body></html>';
 		exit;
@@ -48,6 +48,7 @@ while ($r = $res->fetch_assoc()) {
 	}
 $vols = rtrim($vols,',') . ']';
 
+/*
 $catrec = readdblist('VolCategorys');	// create string for form typeahead
 $catarray = formatdbrec($catrec);
 $cats = '[';
@@ -56,6 +57,7 @@ foreach ($catarray as $c) {
 	$cats .= "'$c',";
 	}
 $cats = rtrim($cats,',') . ']';
+*/
 
 $mciderr = array(); $rowcnt = 0;
 // check if this is an update, string to validate mcid's is in vols string
@@ -391,7 +393,7 @@ $('#search8').typeahead({source: vols})
 $('#search9').typeahead({source: vols})
 $('#search10').typeahead({source: vols})
 </script>
-<script>
+<!-- <script>
  var cats = $cats; 
 $('#cat1').typeahead({source: cats})
 $('#cat2').typeahead({source: cats})
@@ -403,7 +405,7 @@ $('#cat7').typeahead({source: cats})
 $('#cat8').typeahead({source: cats})
 $('#cat9').typeahead({source: cats})
 $('#cat10').typeahead({source: cats})
-</script>
+</script> -->
 
 </body>
 </html>
