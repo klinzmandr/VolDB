@@ -94,6 +94,7 @@ print <<<menuPart2
 	<li><a href="rptvoltimesummary.php" target="_blank">Vol Time Summary</a></li>
 	<li><a href="rptmcidtimereport.php" target="_blank">List Time for MCID</a></li>
 	<li><a href="rptmcidedreport.php" target="_blank">List Courses for MCID</a></li>
+	<li><a href="rptcoursesinrange.php" target="_blank">Courses in Date Range</a></li>
 	<li><a href="rptvolunteerroster.php" target="_blank">Volunteer Roster</a></li>
 	<li><a href="rptvolexception.php" target="_blank">Volunteer Exception Report</a></li>
 	<li><a href="rptmaillogviewer.php" target="_blank">Review Mail Log</a></li>

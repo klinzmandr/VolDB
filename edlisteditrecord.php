@@ -48,9 +48,7 @@ if ($action == 'update') {
 //	echo '<pre> Update parameters '; print_r($vararray); echo '</pre>';
 
 // unset array val's that we are not updating
-	$courseid = $vararray[Agency] . ':' . $vararray[CourseId];
-	unset($vararray[Agency]);
-	$vararray[CourseId] = $courseid;
+	echo "Update to record $vararray[VCID] complete.<br>";
 	unset($vararray[VCID]);
 	unset($vararray[MCID]);
 	unset($vararray[action]);
@@ -60,6 +58,7 @@ if ($action == 'update') {
 	sqlupdate('volcourses',$vararray, $where);	  // now apply changes
 
 	$action = '';
+	
 	}
 	
 echo '<div class="container"><h3>Edit Course Record</h3>';
@@ -67,6 +66,7 @@ if (($action == '') OR ($recno == 0)) {
 echo '<p>Select a specific record to edit by clicking its corresponding record number.</p>';
 
 print <<<pagePart1
+
 <form action="edlisteditrecord.php" method="post" class="form">
 Start:<input autofocus type="text" name="sd" value="$sd" onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" size="12" maxlength="12" style="width: 105px;">
 End: <input type="text" name="ed" value="$ed" onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" size="12" maxlength="12" style="width: 105px;">
@@ -85,14 +85,13 @@ ORDER BY `CourseDate` DESC, `CourseId` ASC;";
 	$rowcnt = $res->num_rows;
 	echo "Records found in date range: $rowcnt<br />";
 	while ($r = $res->fetch_assoc()) {
-		list($agency, $courseid) = explode(':',$r[CourseId]);
 //		echo '<pre>course '; print_r($r); echo '</pre>';
 		$rcdlink = "<a href=\"edlisteditrecord.php?action=updform&VCID=$r[VCID]\">$r[VCID]</a>";
 		echo "<tr><td>$rcdlink</td>
 		<td>$r[MCID]</td>
 		<td>$r[CourseDate]</td>
-		<td>$agency</td>
-		<td>$courseid</td>
+		<td>$r[Agency]</td>
+		<td>$r[CourseId]</td>
 		<td>$r[CourseDuration]</td>
 		<td>$r[CourseNotes]</td></tr>";
 		}
@@ -111,30 +110,36 @@ if ($action == 'updform') {
 		$sql = "SELECT * FROM `volcourses` where `VCID` = '$recno'";
 		$res = doSQLsubmitted($sql);
 		$r = $res->fetch_assoc();
-		list($agency, $courseid) = explode(':',$r[CourseId]);
 		print <<<inForm1
-		<script>
-function initForm(theDoc) {
-	initAllFields(theDoc.VTForm);
-	return true;
-	}
-function initAllFields(form) {
-// Initialize all form controls
-  with (form) {
-		initSelect(VolCategory,"$r[CourseDescription]");
-  	}
-	}
-function initSelect(control,value) {
-// Initialize a selection list (single valued)
-	if (value == "") return;
-	for (var i = 0; i < control.length; i++) {
-		if (control.options[i].value == value) {
-			control.options[i].selected = true;
-			break;
-			}
+<script>
+function chkform(form) {
+	var errmsg = "";
+	var d = form.CourseDate.value;
+	if (d.length == 0) {
+		errmsg += "Agency designation must be supplied\\n";
 		}
-	}
+	var l = form.Agency.value;
+	if (l.length == 0) {
+		errmsg += "Agency designation must be supplied\\n";
+		}
+	form.Agency.value = l.toUpperCase();
+	var v = form.CourseId.value
+	if (v.length == 0) {
+		errmsg += "Course Id must be entered\\n";
+		}
+	var t = form.CourseDuration.value
+	if (t.length == 0) {
+		errmsg += "Course duration must be entered\\n";
+		}
+	if (errmsg.length > 0) {
+		errmsg += "\\nPlease correct noted errors";
+		alert(errmsg);
+		return false;
+		}
+	return true;
+}
 </script>
+
 <script>
 function confirmdelete() {
 	var r=confirm("This record will be premanently deleted.\\n\\nConfirm this action by clicking OK.");	
@@ -144,14 +149,14 @@ function confirmdelete() {
 </script>
 
 <h5>Enter new values and submit</h5>
-<form name="VCForm" id="VTForm" action="edlisteditrecord.php" method="get">
+<form name="VCForm" id="VTForm" action="edlisteditrecord.php" method="get" onsubmit="return chkform(this)">
 <h4>Record Number: $r[VCID]</h4> 
 <b>MCID: $r[MCID]</b><br />
 <input type="hidden" name="VCID" value="$r[VCID]">
 <input type="hidden" name="MCID" value="$r[MCID]">
 Date: <input onchange="ValidateDate(this)" type="text" name="CourseDate" value="$r[CourseDate]" style="width: 105px;">
-<br>Agency: <input type="text" name="Agency" maxsize=8 value="$agency">
-<br>Course Id: <input type="text" name="CourseId" maxsize=30 value="$courseid">
+<br>Agency: <input type="text" name="Agency" maxsize=8 value="$r[Agency]">
+<br>Course Id: <input type="text" name="CourseId" maxsize=30 value="$r[CourseId]">
 <br>Duration: <input type="text" name="CourseDuration" value="$r[CourseDuration]" style="width: 105px;">
 <br>Notes: <input type="text" name="CourseNotes" value="$r[CourseNotes]"><br /><br />
 <input type="hidden" name="action" value="update">
