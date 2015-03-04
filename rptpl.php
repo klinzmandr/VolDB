@@ -57,6 +57,7 @@ $dbinuse<br>
 <option value="%voldb/vol%">Volunteers</option>
 <option value="%voldb/send%">Mail Send</option>
 <option value="%voldb/ind%">List Self Admin</option>
+<option value="%voldb/ed%">Educ Admin</option>
 </select>
 <input type="hidden" name="testdb" value="$testdb">
 &nbsp;&nbsp;<input type="submit" name= "submit" value="Submit">
