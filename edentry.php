@@ -155,7 +155,20 @@ var num = fld.value;
 	}
 </script>
 <script>
-function isOK(fld) {
+function isOK1(fld) {
+	fld.style.background = 'White';
+	return true;
+	}
+</script>
+<script>
+function isOK2(fld) {
+	var id = fld.value;
+	var chk = id.indexOf(":");
+	if (chk <= 1) {
+		alert("Invalid course identifier entered");
+		fld.style.background = 'Pink';
+		return false;
+		}
 	fld.style.background = 'White';
 	return true;
 	}
@@ -191,6 +204,7 @@ function chkform(frm) {
 	for (i = 0; i < 10; i++) {
 		if (date[i].style.backgroundColor == "Pink") errcnt += 1;
 		if (hrs[i].style.backgroundColor == "Pink") { errcnt += 1; }
+		if (ed[i].style.backgroundColor == "Pink") { errcnt += 1; }
 		}
 	if (errcnt > 0) {
 		alert("Please correct the highlighted error fields.");
@@ -213,90 +227,90 @@ function deactivatesubmit() {
 <tr>
 <!-- row 1 -->
 <td><input autofocus name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search1" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search1" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" id="hrs" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed1" data-provide="typeahead" data-items="5" autocomplete="off" size="30"/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed1" data-provide="typeahead" data-items="5" autocomplete="off" size="30"/></td>
 <td><input type="text" name="note[]" size="40"  autocomplete="off"></td>
 </tr>
 
 <!-- row 2 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search2" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search2" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed2" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed2" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40></td>
 </tr>
 
 <!-- row 3 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search3" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search3" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed3" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed3" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40></td>
 </tr>
 
 <!-- row 4 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search4" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isO1K(this)" name="id[]" type="text" id="search4" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed4" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed4" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 5 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search5" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search5" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed5" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed5" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 6 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search6" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search6" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed6" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed6" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 7 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search7" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search7" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed7" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed7" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 8 -->
 <tr>
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search8" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search8" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed8" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed8" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 9 -->
 <tr>
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search9" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search9" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed9" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed9" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 10 -->
 <tr>
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="id[]" type="text" id="search10" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
+<td><input onchange="isOK1(this)" name="id[]" type="text" id="search10" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK(this)" name="ed[]" type="text" id="ed10" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed10" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 </table>
