@@ -155,8 +155,10 @@ function confirmdelete() {
 <input type="hidden" name="VCID" value="$r[VCID]">
 <input type="hidden" name="MCID" value="$r[MCID]">
 Date: <input onchange="ValidateDate(this)" type="text" name="CourseDate" value="$r[CourseDate]" style="width: 105px;">
-<br>Agency: <input type="text" name="Agency" maxsize=8 value="$r[Agency]">
-<br>Course Id: <input type="text" name="CourseId" maxsize=30 value="$r[CourseId]">
+<br>Agency: $r[Agency];
+<!-- <input type="text" name="Agency" maxsize=8 value="$r[Agency]"> -->
+<br>Course Id: $r[CourseId];
+<!-- <input type="text" name="CourseId" maxsize=30 value="$r[CourseId]"> -->
 <br>Duration: <input type="text" name="CourseDuration" value="$r[CourseDuration]" style="width: 105px;">
 <br>Notes: <input type="text" name="CourseNotes" value="$r[CourseNotes]"><br /><br />
 <input type="hidden" name="action" value="update">
