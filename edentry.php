@@ -57,6 +57,12 @@ while ($r = $res->fetch_assoc()) {
 	$edlist .= "'$c',";
 	}
 $edlist = rtrim($edlist,',') . ']';
+if (strlen($edlist) <= 5) { 
+	echo '<h2>No courses registered to populate the typeahead field.</h2>
+	<h3>Courses are registered using the &apos;List/Add/Update/Display Course Info&apos; menu item.</h3>';
+	echo '<a class="btn btn-primary" href="admin.php">RETURN</a></body></html>';
+	exit;
+	}
 // echo '<pre> courses '; print_r($edlist); echo '</pre>';
 
 $mciderr = array(); $rowcnt = 0;
