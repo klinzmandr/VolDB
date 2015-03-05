@@ -41,7 +41,9 @@ pagePart1;
 exit;
 	}
 //echo '<h3>Volunteer Service Analysis&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
-$sql = "SELECT * from `voltime` WHERE `VolDate` >= '$sd' AND `VolDate` < '$ed' ORDER BY `VTID` ASC";
+$sql = "SELECT * from `voltime` 
+WHERE `VolDate` BETWEEN '$sd' AND '$ed' 
+ORDER BY `VTID` ASC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
 if ($rowcnt > 0) {
