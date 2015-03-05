@@ -56,6 +56,7 @@ if ($rowcnt > 0) {
 		list($courseid,$notes) = explode('/',$r[VolNotes]);
 		list($agency, $cid) = explode(':', $courseid);
 		$edarray[$agency][$cid][$r[VolDate]][count] += 1;
+				$edarray[$agency][$cid][$r[VolDate]][hours] += $r[VolTime];
 		}
 //	echo '<pre> edarray '; print_r($edarray); echo '</pre>';
 	foreach ($edarray as $k => $v) { 
@@ -63,13 +64,13 @@ if ($rowcnt > 0) {
 		foreach ($v as $kk => $vv) {
 			foreach ($vv as $kkk => $vvv) {
 				$id = $k . ':' . $kk . ':' . $kkk;
-				echo "<a href=\"rptcoursesinrange.php?action=attendees&course=$id\">";
-				echo "Course ID; $kk, Date: $kkk, Attendees: $vvv[count]</a><br>";
+				echo "Course ID: <a href=\"rptcoursesinrange.php?action=attendees&course=$id\">";
+				echo "$kk, Date: $kkk</a>, Attendees: $vvv[count], Ed Hours: $vvv[hours]<br>";
 				}
 			}
 		echo '</ul><br>';
 		}
-	echo "<h4>NOTE: click course listing to get attendee list</h4>";
+	echo "<h4>NOTE: click course id to get attendee list</h4>";
 	}
 }
 
