@@ -108,10 +108,10 @@ function chkform(form) {
 <br>Course Identifier:<br>
 <input type="text" name="CourseId" value="$r[CourseId]" size="30" maxlength="30"  placeholder="Course Idenifier">(Unique Course Identifier: max = 30)
 <br>Duration: <input type="text" name="CourseDuration" value="$r[CourseDuration]" size="8" placeholder="Duration"> Hours
-<br>Course Name:<br>
+<br>Course Full Name:<br>
 <input type="text" name="CourseName" value="$r[CourseName]" size="80"  placeholder="Course Name">
 
-<br>Course Description<br>
+<br>Course Description/Outline<br>
 <!-- <input type="text" name="CourseDescription" value="$r[CourseDescription]" size="200"  placeholder="Course Description"> -->
 
 <textarea name="CourseDescription" rows=10 cols=90 id=area1>

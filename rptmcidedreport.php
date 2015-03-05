@@ -50,10 +50,11 @@ exit;
 	}
 
 //echo "mcid: $mcid, sd: $sd, ed: $ed<br />";
-$sql = "SELECT * FROM `volcourses` 
+$sql = "SELECT * FROM `voltime` 
 WHERE `MCID` = '$mcid' 
-AND `CourseDate` BETWEEN '$sd' AND '$ed'
-ORDER BY `CourseDate` DESC";
+	AND `VolCategory` = 'Education' 
+	AND `VolDate` BETWEEN '$sd' AND '$ed'
+ORDER BY `VolDate` DESC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
 
@@ -64,7 +65,9 @@ echo "<b>Period Entry Count:</b> $rowcnt<br />";
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> ed rec '; print_r($r); echo '</pre>';
 //	list($agency, $courseid) = explode(':',$r[CourseId]);
-	$trows[] = "<tr><td>$r[Agency]<td>$r[CourseId]</td><td>$r[CourseDate]</td><td>$r[CourseDuration]</td><td>$r[CourseNotes]</td></tr>";
+	list($courseid,$notes) = explode('/',$r[VolNotes]);
+	list($agency, $cid) = explode(':', $courseid);
+	$trows[] = "<tr><td>$agency<td>$cid</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$notes</td></tr>";
 $totaledhrs += $r[CourseDuration];
 	}
 echo "<b>Total Educ. Hours:</b> $totaledhrs<br />";

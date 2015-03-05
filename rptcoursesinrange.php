@@ -42,7 +42,10 @@ exit;
 if ($action == 'list') {
 echo '<h3>Courses in Date Range&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
 echo "Start Date: $sd, End Date: $ed<br>";
-$sql = "SELECT * from `volcourses` WHERE `CourseDate` BETWEEN '$sd' AND '$ed' ORDER BY `VCID` ASC";
+$sql = "SELECT * from `voltime` 
+WHERE `VolCategory` = 'Education' 
+	AND `VolDate` BETWEEN '$sd' AND '$ed' 
+ORDER BY `VTID` ASC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
 if ($rowcnt > 0) {
@@ -50,7 +53,9 @@ if ($rowcnt > 0) {
 	$edarray = array(); 
 	while ($r = $res->fetch_assoc()) {
 //		echo '<pre>'; print_r($r); echo '</pre>';
-		$edarray[$r[Agency]][$r[CourseId]][$r[CourseDate]][count] += 1;
+		list($courseid,$notes) = explode('/',$r[VolNotes]);
+		list($agency, $cid) = explode(':', $courseid);
+		$edarray[$agency][$cid][$r[VolDate]][count] += 1;
 		}
 //	echo '<pre> edarray '; print_r($edarray); echo '</pre>';
 	foreach ($edarray as $k => $v) { 
@@ -72,10 +77,10 @@ if ($action == 'attendees') {
 	$course = $_REQUEST['course'];
 	list($agency, $courseid, $coursedate) = explode(':', $course);
 //	echo "create attendee list for course $agency, $courseid, $coursedate<br>";
-	$sql = "SELECT * FROM `volcourses` 
-		WHERE `Agency` = '$agency' 
-		AND `CourseId` = '$courseid' 
-		AND `CourseDate` = '$coursedate'";
+	$sql = "SELECT * FROM `voltime` 
+		WHERE `VolNotes` LIKE '%$agency%' 
+		AND `VolNotes` LIKE '%$courseid%' 
+		AND `VolDate` = '$coursedate'";
 	$res = doSQLsubmitted($sql);
 	echo "<div class=\"container\"><h3>Attendee List&nbsp;&nbsp;<a class=\"btn btn-primary\" href=\"javascript:self.close();\">CLOSE</a></h3>";
 	echo "<h4>Agency: $agency<br>Course: $courseid<br>Date: $coursedate</h4><ul>";

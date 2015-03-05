@@ -36,6 +36,7 @@ pagePart1;
 $action = isset($_REQUEST['action'])? $_REQUEST['action'] : "";
 $seqnbr = isset($_REQUEST['CID'])? $_REQUEST['CID'] : ""; 
 
+// delete course record
 if ($action == 'delete') {
 //	echo "delete $seqnbr requested<br>";
 	$sql = "DELETE FROM `courses` WHERE `CID` = '$seqnbr';";
@@ -46,30 +47,36 @@ if ($action == 'delete') {
 		echo "Error on delete of note $seqnbr<br>";
 	}
 
-$sql = "SELECT * FROM `courses` WHERE '1' ORDER BY `CourseId` ASC;";
+// produce course listing
+$sql = "SELECT * FROM `courses` WHERE '1' ORDER BY `Agency` ASC, `CourseId` ASC;";
 $res = doSQLsubmitted($sql);
 
 echo '<table border=0 class="table-condensed">';
+if (($_SESSION['SessionUser'] == $r[UserID]) || ($_SESSION['SecLevel'] == 'voladmin'))
+	echo '<tr><th>Edit</th><th>Delete</th><th>Print</th><th>Agency</th><th>CourseId</th><th>Course Full Name</th></tr>';
+else	echo '<tr><th>Print</th><th>Agency</th><th>CourseId</th></tr>'; 		
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> bboard '; print_r($r); echo '</pre>';
-	if ($r[CourseName] == '**NewRec**') $r[CourseName] = '';;
-	
-//echo "<pre> course outline:->$r[CourseOutline]<-</pre><br>";
-	echo "<tr><td colspan=4><b>Course ID:</b>&nbsp;<span style=\"font-size: larger;\">$r[CourseId]</span></td></tr>";
-	echo "<tr><td>Course Nbr: $r[CID]</td><td>Duration: $r[CourseDuration] Hours</td><td>";
+	if ($r[CourseName] == '**NewRec**') $r[CourseName] = '';
+//	$cid = $r[Agency] . ':' . $r[CourseId];
+	echo '<tr>';
+	if (($_SESSION['SessionUser'] == $r[UserID]) || ($_SESSION['SecLevel'] == 'voladmin'))
+		echo "<td><a href=\"edupdate.php?CID=$r[CID]&action=update\"<span title=\"Edit Course\" class=\"glyphicon glyphicon-pencil\" style=\"color: blue; font-size: 20px\"></span></a>&nbsp;&nbsp;&nbsp;</td>";
+	if (($_SESSION['SessionUser'] == $r[UserID]) || ($_SESSION['SecLevel'] == 'voladmin'))
+		echo "<td><a onclick=\"return confirmContinue()\" href=\"edcourses.php?CID=$r[CID]&action=delete\"<span title=\"Delete Course\" class=\"glyphicon glyphicon-trash\" style=\"color: blue; font-size: 20px\"></span></a>&nbsp;&nbsp;&nbsp;</td>";	
+	echo "<td><a href=\"edprint.php?CID=$r[CID]&action=print\"<span title=\"Print Course\" class=\"glyphicon glyphicon-print\" style=\"color: blue; font-size: 20px\"></span></a></td>";
+	echo "<td>$r[Agency]</td><td>$r[CourseId]</td><td>$r[CourseName]";
+//	echo "<td>Course Nbr: $r[CID]</td><td>";
+//	echo "<tr><td>Course Nbr: $r[CID]</td><td>Duration: $r[CourseDuration] Hours</td><td>";
 
-	if (($_SESSION['SessionUser'] == $r[UserID]) || ($_SESSION['SecLevel'] == 'voladmin'))
-		echo "<a href=\"edupdate.php?CID=$r[CID]&action=update\"<span title=\"Update Course\" class=\"glyphicon glyphicon-pencil\" style=\"color: blue; font-size: 20px\"></span></a>&nbsp;&nbsp;&nbsp;";
-	if (($_SESSION['SessionUser'] == $r[UserID]) || ($_SESSION['SecLevel'] == 'voladmin'))
-		echo "<a onclick=\"return confirmContinue()\" href=\"edcourses.php?CID=$r[CID]&action=delete\"<span title=\"Delete Course\" class=\"glyphicon glyphicon-trash\" style=\"color: blue; font-size: 20px\"></span></a>&nbsp;&nbsp;&nbsp;";	
-	echo "<a href=\"edprint.php?CID=$r[CID]&action=print\"<span title=\"Print Course\" class=\"glyphicon glyphicon-print\" style=\"color: blue; font-size: 20px\"></span></a>";
+
 	echo '</td></tr>';
 
-	echo "<tr><td><b>Agency</b>:&nbsp;$r[Agency]</td>";
-	echo "<td colspan=2><b>Course Name:</b>&nbsp;$r[CourseName]</td></tr>";
-	echo "<tr><td colspan=3><b>Course Description:</b>&nbsp;$r[CourseDescription]</td></tr>";
+//	echo "<tr><td><b>Agency</b>:&nbsp;$r[Agency]</td>";
+//	echo "<td colspan=2><b>Course Name:</b>&nbsp;$r[CourseName]</td></tr>";
+//	echo "<tr><td colspan=3><b>Course Description:</b>&nbsp;$r[CourseDescription]</td></tr>";
 
-	echo "<tr><td colspan=3 align=\"center\">=================================</td><tr>";
+//	echo "<tr><td colspan=3 align=\"center\">=================================</td><tr>";
 	}
 
 ?>

@@ -68,6 +68,8 @@ if (strlen($edlist) <= 5) {
 $mciderr = array(); $rowcnt = 0;
 // check if this is an update, string to validate mcid's is in vols string
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+// update the voltime record with education info
 if ($action == 'upd') {
 	// capture input arrays and apply the values to the db
 	$date = $_REQUEST['date'];
@@ -88,13 +90,12 @@ if ($action == 'upd') {
 		$flds = array();
 		list($agency, $courseid) = explode(':', $ed[$i]);
 		$flds[MCID] = $mcid;
-		$flds[CourseDate] = $date[$i];
-		$flds[Agency] = $agency;
-		$flds[CourseDuration] = $hrs[$i];
-		$flds[CourseId] = $courseid;
-		$flds[CourseNotes] = $note[$i];
+		$flds[VolDate] = $date[$i];
+		$flds[VolTime] = $hrs[$i];
+		$flds[VolCategory] = 'Education';
+		$flds[VolNotes] = $ed[$i] . '/' . $note[$i];	// course + notes
 //		echo "<pre>updcount $i: "; print_r($flds); echo '</pre>';
-		$rows = sqlinsert('volcourses',$flds);			// returns the number of rows inserted
+		$rows = sqlinsert('voltime',$flds);			// returns the number of rows inserted
 		$rowcnt += 1;
 		}
 		//echo 'vol string:' . $vols .'<br />';
