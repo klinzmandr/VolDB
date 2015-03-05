@@ -15,7 +15,7 @@ include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("previous month"));
-$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('previous month'));
+$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
 $cats = isset($_REQUEST['cats']) ? $_REQUEST['cats'] : '';
 $details = isset($_REQUEST['details']) ? 'ON' : 'OFF';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
