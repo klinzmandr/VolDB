@@ -78,7 +78,7 @@ print <<<menuPart2
 <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
 	<li><a onclick="return chkchg()" href="edentry.php">Enter Course Data</a></li>
 	<li><a onclick="return chkchg()" href="edcourses.php">List/Add/Update/Display Course Info</a></li>
-	<li><a onclick="return chkchg()" href="edlisteditrecord.php">List/Edit Course Attendance Record</a></li>	
+	<!-- <li><a onclick="return chkchg()" href="edlisteditrecord.php">List/Edit Course Attendance Record</a></li> -->	
 	</ul>
 </li> <!-- class="dropdown" -->
 
