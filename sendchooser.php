@@ -61,6 +61,7 @@ echo "<input type=\"checkbox\" name=\"chkr\"
 onchange='checkAll(document.sndform.chkr, document.sndform[\"tokey[]\"])'></td><td>&nbsp;<b>Check/Uncheck All</b><br></td></tr>";
 
 foreach ($lines as $l) {
+	$l = rtrim($l);
 	if (strlen($l) <= 0) { continue; } 
 	if (substr_compare($l,'//',0,2) == 0) { continue; }
 	list($tla, $desc) = explode(":",$l);
