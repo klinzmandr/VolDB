@@ -14,7 +14,7 @@ session_start();
 include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 
-$sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("previous month"));
+$sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-01-01', strtotime("now"));
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('now'));
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
