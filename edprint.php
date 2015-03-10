@@ -25,7 +25,7 @@ $r = $res->fetch_assoc();
 
 print <<<pagePart1
 <div class="container">
-<h3>Eduction Course $seqnbr</h3>
+<h3>Education Course $seqnbr</h3>
 <table class="table">
 <tr><td><h4>$r[CourseId]</h4></td></tr>
 <tr><td><b>Agency:</b>&nbsp;$r[Agency]</td></td>
