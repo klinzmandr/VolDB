@@ -73,7 +73,7 @@ if ($action == "update") {
 	}
 
 // get member record from ActiveMCID and display the info in update form
-echo "<h3>Member Information for ".$mcid."</h3>";
+echo "<h3>Volunteer Information for ".$mcid."</h3>";
 $sql = "SELECT * FROM `members` WHERE MCID = '$mcid'";
 $res = doSQLsubmitted($sql);
 //$res = readMCIDrow($mcid);

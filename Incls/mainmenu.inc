@@ -117,7 +117,8 @@ function setupmcid(theForm)  {
 		theForm.action = "volinfotabbed.php";		// assume an exact MCID entered
 		return true;
 		}
-	if (fld == "") { theForm.filter.value = "--none--"; } // else search for it
+//	if (fld == "") { theForm.filter.value = "--none--"; } // else search for it
+	if (fld == "") { theForm.action = "volsearchlist.php"; } // else search for it
 	return true;
 	}
 </script>
