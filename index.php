@@ -12,9 +12,6 @@ session_start();
 //include 'Incls/vardump.inc';
 include 'Incls/datautils.inc';
 
-unset($_SESSION['TEST_MODE']);
-//$_SESSION['TEST_MODE'] = 'TEST_MODE';  //force use of test data
-
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '' ;
 $mcid = isset($_REQUEST['MCID']) ? $_REQUEST['MCID'] : '';
 $email = isset($_REQUEST['EmailAddress']) ? $_REQUEST['EmailAddress'] : '';
@@ -108,9 +105,9 @@ sqlupdate('members', $updarray, "`MCID` = '$mcid'");
 
 $msg = $mcid . " has updated their lists via self update";
 addmaillogentry($msg);
-$_SESSION['SessionUser'] = $mcid;
+$_SESSION['VolSessionUser'] = $mcid;
 addlogentry($msg);
-unset($_SESSION['SessionUser']);	
+unset($_SESSION['VolSessionUser']);	
 	}  // end if $action == "upd"
 
 $sql = "SELECT * FROM `members` WHERE `MCID` = '$mcid' AND `EmailAddress` = '$email';";

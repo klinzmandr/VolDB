@@ -1,12 +1,12 @@
 <?php
 date_default_timezone_set('America/Los_Angeles');
 
-$_SESSION['SessionLength'] = 15*60;		// session length in seconds
-$sessexpiration = isset($_SESSION['SessionTimer']) ? $_SESSION['SessionTimer'] : 0;
+$_SESSION['VolSessionLength'] = 15*60;		// session length in seconds
+$sessexpiration = isset($_SESSION['VolSessionTimer']) ? $_SESSION['VolSessionTimer'] : 0;
 $currenttime= time();
 //echo "current: $currenttime, sessexpiration: $sessexpiration<br>";
 if ($currenttime <= $sessexpiration) {			// session is live, extend it
-	$_SESSION['SessionTimer'] = $currenttime + $_SESSION['SessionLength'];
+	$_SESSION['VolSessionTimer'] = $currenttime + $_SESSION['VolSessionLength'];
 	//echo "time extended<br>";	
 	}
 else {

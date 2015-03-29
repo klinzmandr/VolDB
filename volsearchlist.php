@@ -12,7 +12,7 @@ session_start();
 include 'Incls/seccheck.inc';
 include "Incls/datautils.inc";
 //include "Incls/vardump.inc";
-if ($_SESSION['SecLevel'] == 'readonly') include 'Incls/romenu.inc';
+if ($_SESSION['VolSecLevel'] == 'readonly') include 'Incls/romenu.inc';
 else include 'Incls/mainmenu.inc';
 
 
@@ -77,7 +77,7 @@ if ($nbrofrows == 1) {
 		echo "only 1 match<br />";
 		$results->data_seek(0);
 		$row = $results->fetch_assoc();
-		$mcid = $_SESSION['ActiveMCID'] = $row['MCID'];
+		$mcid = $_SESSION['VolActiveMCID'] = $row['MCID'];
 print <<<oneBullet
 <form action="volinfotabbed.php" name="FORM_NAME" method="post">
 <input autofocus type="text" name="filter" value="$mcid" />

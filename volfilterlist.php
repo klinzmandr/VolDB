@@ -11,7 +11,7 @@
 <?php
 session_start();
 //include 'Incls/seccheck.inc';
-unset($_SESSION['ActiveMCID']);
+unset($_SESSION['VolActiveMCID']);
 //include 'Incls/vardump.inc';
 include 'Incls/mainmenu.inc';
 include 'Incls/datautils.inc';
@@ -43,7 +43,7 @@ if ($nbrofrows == 1) {
 		echo "only 1 match<br />";
 		$results->data_seek(0);
 		$row = $results->fetch_assoc();
-		$filter = $_SESSION['ActiveMCID'] = $row['MCID'];
+		$filter = $_SESSION['VolActiveMCID'] = $row['MCID'];
 print <<<oneBullet
 <form action="volinfotabbed.php" name="oneform" method="post">
 <input type="text" name="filter" value="$filter" />

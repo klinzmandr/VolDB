@@ -23,17 +23,17 @@ $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter']: "";
 $filter = $filterflag = rtrim($filter);
 if ($filter == "--none--") {
 	$filter = "";
-	unset($_SESSION['ActiveMCID']);
+	unset($_SESSION['VolActiveMCID']);
 	unset($_REQUEST['filter']);
 	}
 if ($filter != "") {
-	$_SESSION['ActiveMCID'] = $filter;
+	$_SESSION['VolActiveMCID'] = $filter;
 	}
 	
 include 'Incls/mainmenu.inc';
 
 echo "<div class=container>";
-$mcid = $_SESSION['ActiveMCID'];
+$mcid = $_SESSION['VolActiveMCID'];
 $action = $_REQUEST['action'];
 if ($filterflag == "--none--") { 
 	$m = "<p><b>Use of the MCID field</b></p><p>The MCID field is used to access and update member/contact informaton.  No MCID entered will provide access to a page to do a general search of the entire database.</p>
@@ -99,7 +99,7 @@ $citieslist = createddown();
 print <<<pagePart1
 <script>
 var reason = "";
-var secLevel = "$_SESSION[SecLevel]";
+var secLevel = "$_SESSION[VolSecLevel]";
 // validate form to ensure required fields are entered
 function validateForm(theForm) {
 	//alert("validation entered");

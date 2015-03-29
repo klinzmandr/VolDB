@@ -36,7 +36,7 @@ echo '<input type="hidden" name="action" value="view">
 </form>
 </td><td>';
 if ($action == 'del') {
-	if ($_SESSION['SecLevel'] != 'voladmin') {
+	if ($_SESSION['VolSecLevel'] != 'voladmin') {
 		echo '<h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to maintain these lists.</h4>
 		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded 			to &apos;voladmin&apos; in order to modify any lists.</p>
@@ -68,7 +68,7 @@ if ($action == 'view') {
 	$r = $res->fetch_assoc();
 	// echo '<pre>'; print_r($r); echo '</pre>';
 	$recno = $r[LogID]; $datetime = $r[DateTime]; $user = $r[User]; 
-	$seclevel = $r[SecLevel]; $mailtext =  $r[MailText];
+	$seclevel = $r[VolSecLevel]; $mailtext =  $r[MailText];
 print <<<recOut
 	<a class="btn btn-danger" href="rptmaillogviewer.php?action=del&recno=$recno">DELETE</a></td></tr></table>
 	Record Number: $recno<br />

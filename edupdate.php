@@ -19,7 +19,7 @@ echo '</div>';
 $action = isset($_REQUEST['action'])? $_REQUEST['action'] : "";
 $seqnbr = isset($_REQUEST['CID'])? $_REQUEST['CID'] : ""; 
 
-if ($_SESSION['SecLevel'] != 'voladmin') {
+if ($_SESSION['VolSecLevel'] != 'voladmin') {
 		echo '<div class="container"><h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to perform this function.</h4>
 		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded to &apos;voladmin&apos; in order to perform this function.</p><br />
@@ -67,7 +67,7 @@ $sql = "SELECT * FROM `courses` WHERE `CID` = '$seqnbr';";
 $res = doSQLsubmitted($sql);
 $r = $res->fetch_assoc();
 $seqnbr = $r[CID];
-$userid = $_SESSION['SessionUser'];
+$userid = $_SESSION['VolSessionUser'];
 if ($r[CourseName] == '**NewRec**') $r[CourseName] = '';;
 
 //echo '<pre> db '; print_r($r); echo '</pre>';

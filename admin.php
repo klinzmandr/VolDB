@@ -11,28 +11,21 @@
 session_start();
 //include 'Incls/vardump.inc';
 
-unset($_SESSION['ActiveMCID']);
-unset($_SESSION['RNSeq']);
-unset($_SESSION['DB_ERROR']);
+unset($_SESSION['VolActiveMCID']);
+unset($_SESSION['VolDB_ERROR']);
 if ((($_REQUEST['action']) == 'logout')) {
 	include 'Incls//datautils.inc';
 	addlogentry("Logging Out");
-	unset($_SESSION['SessionTimer']);
-	unset($_SESSION['SessionUser']);
-	unset($_SESSION['SecLevel']);
-	unset($_SESSION['TEST_MODE']);
+	unset($_SESSION['VolSessionTimer']);
+	unset($_SESSION['VolSessionUser']);
+	unset($_SESSION['VolSecLevel']);
 	include 'Incls/seccheck.inc';
 	}
 if ((($_REQUEST['action']) == 'login')) {
-	unset($_SESSION['TEST_MODE']);
 	//echo "login request received<br>";
 	$userid = $_REQUEST['userid'];
 	$password = $_REQUEST['password'];
 	if ($userid != "") {
-		if (stripos($userid,"mbrdemo") !== FALSE) {
-			$_SESSION['TEST_MODE'] = TRUE;
-			//addlogentry("Demo mode estalished - using test database");	
-			}
 		include 'Incls/datautils.inc';	
 		$ok = checkcredentials($userid, $password);
 		if ($ok) {
@@ -41,7 +34,6 @@ if ((($_REQUEST['action']) == 'login')) {
 			}
 		else {
 			addlogentry("Failed login attempt with password: $password");
-			unset($_SESSION['TEST_MODE']);
 			echo "Failed login attempt<br>";
 			}
 		}
@@ -49,15 +41,13 @@ if ((($_REQUEST['action']) == 'login')) {
 
 //include 'Incls/vardump.inc';
 
-if (isset($_SESSION['SessionUser'])) {
+if (isset($_SESSION['VolSessionUser'])) {
 	include 'Incls/mainmenu.inc';
 	echo "<div class=\"container\">";
-	echo '<h4>Session user logged in: ' . $_SESSION['SessionUser'] . '</h4>';
-	echo '<h5>Security level: ' . $_SESSION['SecLevel'] . '</h5>';
+	echo '<h4>Session user logged in: ' . $_SESSION['VolSessionUser'] . '</h4>';
+	echo '<h5>Security level: ' . $_SESSION['VolSecLevel'] . '</h5>';
 	echo "<form class=\"form-inline\" action=\"admin.php\" method=\"post\"  id=\"xform\">";
-	if (isset($_SESSION['TEST_MODE']))
-		echo "<h4 style=\"color: #FF0000; \">TEST MODE ENABLED - using test database for session</h3>";
-  echo "<h3>Volunteer Home Page&nbsp  <button  class=\"btn btn-large btn-primary\" name=\"action\" value=\"logout\" type=\"submit\" form=\"xform\" class=\"btn\">Logout</button></h3></form>";
+	echo "<h3>Volunteer Home Page&nbsp  <button  class=\"btn btn-large btn-primary\" name=\"action\" value=\"logout\" type=\"submit\" form=\"xform\" class=\"btn\">Logout</button></h3></form>";
 	}
 else {
 	echo "<div class=\"container\">

@@ -13,22 +13,16 @@ $EmailFROM = 'vols@pacificwildlifecare.org';
 $EmailTO = 'pacificwildlifecare@gmail.com';
 // ====== End Installation Parameters ==========
 
-if (!isset($_SESSION['TEST_MODE'])) {
-	// production database
-	$db = ProdDBName;
-		}
-else {
-	// test database
-	$db = TestDBName;
-	}
+$db = ProdDBName;
+
 $mysqli = new mysqli("localhost", DBUserName, DBPassword, $db);
 
 if ($mysqli->connect_errno) {
 		$errno = $mysqli->connect_errno;
     echo "Failed to connect to MySQL: (" . $errno . ") " . $mysqli->connect_error."<br>";
-    $_SESSION['DB_ERROR'] = $db;
+    $_SESSION['VolDB_ERROR'] = $db;
     }
-$_SESSION['DB_InUse'] = $db;
+$_SESSION['VolDB_InUse'] = $db;
 addlogentry('Page Load');
 // auto returns to code following the 'include' statement
 // echo "Initial Connection Info: ".$mysqli->host_info . "<br>DB in use: $db<br>";
@@ -41,7 +35,7 @@ var EmailAddr = \"$EmailFROM\";
 function doSQLsubmitted($sql) { 
 global $mysqli;
 
-if (isset($_SESSION['DB_ERROR'])) return(FALSE);
+if (isset($_SESSION['VolDB_ERROR'])) return(FALSE);
 //echo "sql: ".$sql."<br>";
 $res = $mysqli->query($sql);
 if (substr_compare($sql,"DELETE",0,6,TRUE) == 0) {
@@ -131,7 +125,7 @@ global $mysqli;
 	$errno = $mysqli->errno;
 	$errmsg = $mysqli->error;
 	if ($errno == 1049) {
-		$db = $_SESSION['DB_ERROR'];
+		$db = $_SESSION['VolDB_ERROR'];
 		print <<<errNoDB
 <div class="alert">
 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -155,9 +149,9 @@ errMsg;
 // ------------------------- add new log entry ----------------------------
 function addlogentry($text) {
 	global $mysqli;
-	if (isset($_SESSION['DB_ERROR'])) return(FALSE);
-	$user = $_SESSION['SessionUser'];
-	$seclevel = $_SESSION['SecLevel'];
+	if (isset($_SESSION['VolDB_ERROR'])) return(FALSE);
+	$user = $_SESSION['VolSessionUser'];
+	$seclevel = $_SESSION['VolSecLevel'];
 	$page = $_SERVER['PHP_SELF'];
 	$txt = addslashes($text);
 	$sql = "INSERT INTO `log` (`User`, `SecLevel`, `Page`, `SQL`) VALUES ('$user', '$seclevel', '$page', '$txt');";
@@ -174,9 +168,9 @@ function addlogentry($text) {
 // ------------------------- add new MAIL log entry ----------------------------
 function addmaillogentry($text) {
 	global $mysqli;
-	if (isset($_SESSION['DB_ERROR'])) return(FALSE);
-	$user = $_SESSION['SessionUser'];
-	$seclevel = $_SESSION['SecLevel'];
+	if (isset($_SESSION['VolDB_ERROR'])) return(FALSE);
+	$user = $_SESSION['VolSessionUser'];
+	$seclevel = $_SESSION['VolSecLevel'];
 	$txt = addslashes($text);
 	$sql = "INSERT INTO `maillog` (`User`, `SecLevel`, `MailText`) VALUES ('$user', '$seclevel', '$txt');";
 	//echo "Log: $sql<br>";
@@ -295,9 +289,9 @@ function checkcredentials($userid, $password) {
 		}
 	if (($r[UserID] == $userid) && ($r[Password] == $password)) {
 		//echo "found match - user: $uid, pw: $pw<br>";
-		$_SESSION['SessionTimer'] = time() + $_SESSION['SessionLength'];
-		$_SESSION['SecLevel'] = $r[Role];
-		$_SESSION['SessionUser'] = $userid;
+		$_SESSION['VolSessionTimer'] = time() + $_SESSION['VolSessionLength'];
+		$_SESSION['VolSecLevel'] = $r[Role];
+		$_SESSION['VolSessionUser'] = $userid;
 		return(true);
 		}
 	echo "Userid: $r[UserID], password: $r[Password]<br />";

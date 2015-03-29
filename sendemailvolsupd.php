@@ -32,7 +32,7 @@ $emarrayin = $_REQUEST['tokey'];
 
 // delete senders email address from list
 //echo '<pre>emarrayin before '; print_r($emarrayin); echo '</pre>';
-//$from = $_SESSION['SessionUser'];
+//$from = $_SESSION['VolSessionUser'];
 $from = $_REQUEST['sender'];
 foreach ($emarrayin as $k => $v) {
 	if (stripos($v, $from) !== FALSE) {
@@ -127,18 +127,10 @@ for ($i = 0; $i < count($emarray); $i++) {
 	$finmsg = wordwrap($finmsg);
 
 	$mresp = TRUE; 
-	if (isset($_SESSION[TEST_MODE])) {
-			echo "Test mode on - mail not sent to " . htmlentities($to) . "<br />";
-			$logmsg .= "Test mode on - mail not sent to ".htmlentities($to)."<br>\n";
-			//$mresp = mail($to, $subject, $finmsg, $headers, $foption);
-			}
-		else {
-			//echo "Test mode on - mail not sent to " . htmlentities($to) . "<br />";
-			//$logmsg .= "Test mode on - mail not sent to ".htmlentities($to)."<br>\n";
-		  $mresp = mail($to, $subject, $finmsg, $headers, $foption);
-			}
-		
-	 if ($mresp == FALSE) {
+	
+	$mresp = mail($to, $subject, $finmsg, $headers, $foption);
+	
+ if ($mresp == FALSE) {
 	 	$toaddr = htmlentities($to, ENT_COMPAT,'ISO-8859-1', true);
 		$logmsg .= "**ERROR: mail function failed on " . $toaddr . "<br>\n";
 		echo "**ERROR: mail function failed on " . $toaddr . "<br>";

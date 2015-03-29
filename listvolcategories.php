@@ -18,7 +18,7 @@ include 'Incls/seccheck.inc';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 echo '<div class="container">';
 if ($action == 'display') {
-	if ($_SESSION['SecLevel'] != 'voladmin') {
+	if ($_SESSION['VolSecLevel'] != 'voladmin') {
 		echo '<h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to maintain this list.</h4>
 		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded to &apos;voladmin&apos; in order to modify any lists.</p>
