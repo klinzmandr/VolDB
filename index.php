@@ -51,8 +51,8 @@ $email = $r[EmailAddress];
 print<<<outForm1
 <h2>Volunteer information for $fname $lname ($r[MCID])</h2>
 <h4>Not $fname $lname? <a class="btn btn-danger" href="$HomeURL">EXIT NOW</a></h4>
-<p>Following are the lists available.  Those that you are subscribed to are checked.  Please update this list by checking or unchecking those lists you wish to receive notices from and click the SUBMIT button to update your profile.</p>
-<p>Please use the free form notes area to list home and/or cell phone number or other contact inforamtion that might be needed.</p>
+<p>Following are the lists available.  Those that you are subscribed to are checked.  Please update this list by checking or unchecking those lists you wish to receive notices from and click the &apos;Update Info&apos; button to update your profile.</p>
+<p>Please use the free form notes area to list home and/or cell phone number or other contact information that might be needed.</p>
 <form action="index.php" method="post">
 Email Address: <input type="text" name="EmailAddress" value="$email"><br />
 City: <input type="text" name="City" value="$city" >&nbsp;&nbsp;
@@ -73,7 +73,7 @@ foreach ($AllListsArray as $k => $v) {
 		}
 	}
 print<<<outForm2
-</td><td valign="top">NOTES: Please note secondary phone numbers and other pertenaint information.<br><textarea name="Notes" rows="10" cols="60">$r[Notes]</textarea></td></tr>
+</td><td valign="top">NOTES: Please note secondary phone numbers and other pertinent information.<br><textarea name="Notes" rows="10" cols="60">$r[Notes]</textarea></td></tr>
 </td></tr></table>
 <input type="hidden" name="action" value="upd">
 <input type="hidden" name="MCID" value="$mcid">
@@ -123,10 +123,7 @@ $r = $res->fetch_assoc();
 print<<<pageBody
 <h3>Volunteer Update Utility</h3>
 
-<p>This page provides access to your volunteer information used by PWC to communicate with you.  This information is accessed using your email address and the unique identifier assigned to you when your information was entered into the volunteer database.</p>
-<p>Included in this information are those mailing lists that you have subscribed to.</p>
-<p>You may review and update all of this information by clicking on the link below.</p>
-<p>You may update any information that is provided including the mailing lists that you which to be assoicated with.</p>
+<h4>You information has been updated.</h4>
 <!-- <a class="btn btn-success" href="index.php?action=form&EmailAddress=$email&MCID=$mcid">Review/Update Your Volunteer Info</a><br /><br /> -->
 <!-- <button class="btn btn-success" autofocus form_id="inform" type="submit">Review/Update Your Volunteer Info</button> -->
 <form id="inform" action="index.php" method="post">
@@ -135,7 +132,7 @@ print<<<pageBody
 <input type="hidden" name="action" value="form" />
 <input class="btn btn-success" type="submit" name="submit" value="Review/Update Your Volunteer Info" />
 </form><br />
-<a class="btn btn-primary" href="$HomeURL">Cancel and go to PWC&apos;s Home Page</a>
+<a class="btn btn-primary" href="$HomeURL">Go to PWC&apos;s Home Page</a>
 </div>  <!-- container -->
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
