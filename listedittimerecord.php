@@ -9,7 +9,7 @@
 <body onLoad="initForm(this)" onchange="flagChange()">
 <?php
 session_start();
-//include 'Incls/vardump.inc';
+// include 'Incls/vardump.inc';
 include 'Incls/seccheck.inc';
 include 'Incls/mainmenu.inc';
 include 'Incls/datautils.inc';
@@ -27,6 +27,7 @@ if ($_SESSION['VolSecLevel'] != 'voladmin') {
 
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-d', strtotime('-1 month'));
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime(now));
+$vcat = isset($_REQUEST['vcat']) ? $_REQUEST['vcat'] : '%';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 $recno = isset($_REQUEST['recno']) ? $_REQUEST['recno'] : 0;
 
@@ -57,25 +58,35 @@ if ($action == 'update') {
 
 	$action = '';
 	}
-echo '<div class="container"><h3>Edit Time Record</h3>';
 
+
+echo '<div class="container"><h3>Edit Time Record</h3>';
 if (($action == '') OR ($recno == 0)) {
 	
-	echo '<p>Specify the time period for the time records to list.  Select a specific record to edit by clicking its corresponding record number.</p>';
+	echo '<p>Specify the date range and volunteer category for the time records to list.  Select a specific record to edit by clicking its corresponding record number.</p>';
 
-print <<<pagePart1
+print <<<pagePart1a
 <form action="listedittimerecord.php" method="post" class="form">
 Start:<input autofocus type="text" name="sd" value="$sd" onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" size="12" maxlength="12" style="width: 105px;">
 End: <input type="text" name="ed" value="$ed" onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" size="12" maxlength="12" style="width: 105px;">
-<!-- Rec Nbr:&nbsp;<input type="text" style="width: 50px;" name=recno value=''> -->
+VolCategory: <select name=vcat>
+<option value='%'></option>
+pagePart1a;
+echo loaddbselect('VolCategorys');
+print <<<pagePart1b
+<option value='Education'>Education</option>
+</select>
 <input type="hidden" name="action" value="updform">
 <input type="submit" name="submit" Value="Submit">
 </form>
 
-pagePart1;
+pagePart1b;
 
-$sql = "SELECT * FROM `voltime` where (`VolDate` >= '$sd' AND `VolDate` <= '$ed')
-ORDER BY `VolDate` DESC;";
+	$sql = "SELECT * FROM `voltime` 
+		WHERE (`VolDate` >= '$sd' AND `VolDate` <= '$ed')
+			AND `VolCategory` LIKE '$vcat' 
+		ORDER BY `VolDate` DESC;";
+//	echo "sql: $sql<br>";
 	$res = doSQLsubmitted($sql);
 	echo '<table class="table-condensed">
 	<tr><th>RecNbr</th><th>MCID</th><th>ServiceDate</th><th>VolTime</th><th>Milage</th><th>Category</th><th>Notes</th></tr>';
@@ -85,8 +96,10 @@ ORDER BY `VolDate` DESC;";
 		//echo '<pre>'; print_r($r); echo '</pre>';
 		$rcdlink = "<a href=\"listedittimerecord.php?action=updform&recno=$r[VTID]\">$r[VTID]</a>";
 		echo "<tr><td>$rcdlink</td><td>$r[MCID]</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td>";
+		$tothrs += $r[VolTime];
 		}
-	echo '</table>----- END OF REPORT -----
+	echo "</table>Total Hours Recorded: $tothrs<br>";
+	echo '----- END OF REPORT -----
 <script src="Incls/datevalidation.js"></script>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -101,6 +114,7 @@ if ($action == 'updform') {
 		$sql = "SELECT * FROM `voltime` where `VTID` = '$recno'";
 		$res = doSQLsubmitted($sql);
 		$r = $res->fetch_assoc();
+		echo '<pre> time record '; print_r($r); echo '</pre>';		
 		print <<<inForm1
 		<script>
 function initForm(theDoc) {
@@ -148,6 +162,7 @@ Category: <select name="VolCategory" >
 inForm1;
 echo loaddbselect('VolCategorys');
 print<<<inForm2
+<option value='Education'>Education</option>  
 </select></td>
 Notes: <input type="text" name="VolNotes" value="$r[VolNotes]"><br /><br />
 <input type="hidden" name="action" value="update">
