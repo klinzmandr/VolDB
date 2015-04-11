@@ -3,6 +3,7 @@ function prepaccum($nbr) {
 	$a = array();
 	$clist = readdblist('VolCategorys');
 	$clarray = formatdbrec($clist);
+	$clarray[Education] = 'Education';
 //	echo '<pre> catlist '; print_r($clarray); echo '</pre>';
 	ksort($clarray);
 //	echo "year count: $nbr<br>";
@@ -105,7 +106,7 @@ while ($r = $res -> fetch_assoc()) {
 $yrcount = count($yrarray);
 $accum = prepaccum($yrcount);
 
-// echo '<pre> accum '; print_r($accum); echo '</pre>';
+//echo '<pre> accum '; print_r($accum); echo '</pre>';
 
 $mcidcatcher = array(); $motot = array();
 foreach ($resarray as $r) {
