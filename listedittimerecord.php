@@ -114,7 +114,7 @@ if ($action == 'updform') {
 		$sql = "SELECT * FROM `voltime` where `VTID` = '$recno'";
 		$res = doSQLsubmitted($sql);
 		$r = $res->fetch_assoc();
-		echo '<pre> time record '; print_r($r); echo '</pre>';		
+//		echo '<pre> time record '; print_r($r); echo '</pre>';		
 		print <<<inForm1
 		<script>
 function initForm(theDoc) {
