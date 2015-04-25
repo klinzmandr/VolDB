@@ -423,8 +423,10 @@ echo '<div class="tab-pane fade" id="lists">
 
 $text = readdblist('EmailLists');
 $listkeys = formatdbrec($text);
+//echo '<pre> keys '; print_r($listkeys); echo '</pre>';
 foreach ($listkeys as $k => $v) {
-	//echo "key: $k, value: $v<br />";
+	if (strlen($k) <= 1) continue;
+//	echo "key: $k, value: $v<br />";
 	if (stripos($lists, $k) !== FALSE) {
 		echo "<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\" checked>$v<br>";
 		}
