@@ -45,6 +45,23 @@ if ($action == 'update') {
 	//echo "update: $text<br>";
 	updatedblist('EmailLists',$text);
 	$action = '';
+	// now flush all member records with non-null list fields to delete old unused list id's
+	$sql = "SELECT `MCID`,`Lists` FROM `members` WHERE `Lists` IS NOT NULL;";
+	$res = doSQLsubmitted($sql);
+	$nbr_rows = $res->num_rows;
+	$dbrawlistarray = readdblist('EmailLists');
+	$dblistarray = formatdbrec($dbrawlistarray);
+	while ($r = $res->fetch_assoc()) {
+		$mbrlists = explode(',', $r[Lists]);					// get list(s) for a member
+		$i = 0;			// use as array index for unset
+		foreach ($mbrlists as $l) {										// for each list, confirm it is valid
+			if (array_key_exists($l, $dblistarray)) { $i++; continue; }	// if valid, continue
+			unset($mbrlists[$i]);	$i++;											// otherwise, delete it from list
+			$updarray[Lists] = implode(',', $mbrlists);
+			$mcid = $r[MCID];
+			sqlupdate('members', $updarray, "`MCID` = '$mcid'");
+			}
+		}	
 	}
 	
 if ($action == '') {
