@@ -1,7 +1,9 @@
 <?php
 date_default_timezone_set('America/Los_Angeles');
 
-$_SESSION['VolSessionLength'] = 15*60;		// session length in seconds
+//$_SESSION['VolSessionLength'] = 15*60;		// session length in seconds
+$_SESSION['VolSessionLength'] = 30*60;		// session length in seconds
+
 $sessexpiration = isset($_SESSION['VolSessionTimer']) ? $_SESSION['VolSessionTimer'] : 0;
 $currenttime= time();
 //echo "current: $currenttime, sessexpiration: $sessexpiration<br>";
