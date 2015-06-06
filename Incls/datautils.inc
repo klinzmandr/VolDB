@@ -241,6 +241,7 @@ function formatdbrec($txt) {
 	$res = array();
 	$lines = explode("\n",$txt); 
 	foreach ($lines as $l) {
+		$l = rtrim($l);
 		if (strlen($l) <= 0) { continue; } 
 		if (substr_compare($l,'//',0,2) == 0) { continue; }
 		list($tla,$desc) = explode(":", $l);
