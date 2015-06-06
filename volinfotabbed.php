@@ -94,7 +94,7 @@ $eaddr=$row['EmailAddress']; $city=$row['City']; $state=$row['State'];
 $zip=$row['ZipCode']; $priphone=$row['PrimaryPhone'];
 $memstatus=$row['MemStatus'];$memdate=$row['MemDate'];
 $mctype=$row['MCtype'];$inact=$row['Inactive'];$inactdate=$row['Inactivedate'];
-$e_mail=$row['E_Mail'];$nomail=$row['NoMail']; $notes=$row['Notes'];$lists=$row[Lists];
+$e_mail=$row['E_Mail'];$mail=$row['Mail']; $notes=$row['Notes'];$lists=$row[Lists];
 $citieslist = createddown();
 print <<<pagePart1
 <script>
@@ -179,7 +179,7 @@ function initAllFields(form) {
 		initRadio(MemStatus,"$memstatus");
 		initSelect(MCType,"$mctype");
 		initRadio(E_mail,"$e_mail");
-		initRadio(NoMail,"$nomail");
+		initRadio(Mail,"$mail");
 		initRadio(Inactive,"$inact");
   	}
 	}
@@ -290,6 +290,8 @@ if ((!emailFilter.test(fld.value)) || (fld.value.match(illegalChars))) {
 	return false;
 	}
 fld.style.background = 'White';
+document.getElementById("EMR1").checked = true;
+document.getElementById("EMR2").checked = false;
 return true;
 }
 </script>
@@ -351,7 +353,7 @@ $('#CI').typeahead({source: citylist})
 
 <div class="row">
 <div class="col-sm-4">Phone: <input type="text" name="PrimaryPhone" value="$priphone" size="12" maxlength="12" style="width: 125px;" onchange="return ValidatePhone(this)"  placeholder="Primary Phone" /></div>
-<div class="col-sm-4">Email: <input placeholder="Email" onchange="ValidateEmail(this)" style="width: 200px;" name="EmailAddress" value="$eaddr"></td></tr></div>
+<div class="col-sm-4">Email: <input id="EMA" placeholder="Email" onchange="ValidateEmail(this)" style="width: 200px;" name="EmailAddress" value="$eaddr"></td></tr></div>
 </div>
 <!-- </div>  well -->
 <!-- </div>  tab pane -->
@@ -383,14 +385,40 @@ print <<<pagePart3
 <div class="col-sm-3">
 Date Joined:<input onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" name="MemDate" value="$memdate" style="width: 100px;">
 </div>  <!-- col-sm-4 -->
+<script>
+function chkvalidemail(fld) {
+	var val = fld.value;
+	if (val === 'TRUE') {
+		if (document.getElementById("EMA").value == "") {
+			document.getElementById("EMR1").checked = false;
+			document.getElementById("EMR2").checked = true;
+			alert("NO Email Address Available!");
+			}
+		}
+	return true;
+	}
+</script>
+<script>
+function confirmNO(fld) {
+	if (document.getElementById("EMR2").checked === true) {
+		r = confirm("Volunteers must have an ACTIVE email address.\\n\\nAre you sure you want to set this flag to NO?");
+		if (r == false) {
+			document.getElementById("EMR1").checked = true;
+			document.getElementById("EMR2").checked = false;
+			return false;
+			}
+		}
+	return true;		
+}
+</script>
 
 <div class="col-sm-3">Email OK?: 
-<input type="radio" name="E_mail" value="TRUE" />Yes
-<input type="radio" name="E_mail" value="FALSE" />No
+<input id="EMR1" type="radio" name="E_mail" value="TRUE" onchange="return chkvalidemail(this)" />Yes
+<input id="EMR2" type="radio" name="E_mail" value="FALSE" onchange="return confirmNO(this)" />No
 </div>
 <div class="col-sm-3">Mail OK?: 
-<input type="radio" name="NoMail" value="TRUE" />Yes
-<input type="radio" name="NoMail" value="FALSE" />No
+<input type="radio" name="Mail" value="TRUE" />Yes
+<input type="radio" name="Mail" value="FALSE" />No
 </div>
 </div>  <!-- row -->
 <div class="row">
