@@ -9,7 +9,7 @@
 <body>
 <?php 
 session_start();
-//include 'Incls/vardump.inc';
+// include 'Incls/vardump.inc';
 include 'Incls/datautils.inc';
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '' ;
@@ -33,7 +33,6 @@ echo '<div class="container">';
 // create form for display
 if ($action == 'form') {
 
-//$sql = "SELECT * FROM `members` WHERE `MCID` = '$mcid' AND `EmailAddress` = '$email';";
 $sql = "SELECT * FROM `members` WHERE `MCID` = '$mcid';";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
@@ -53,13 +52,44 @@ print<<<outForm1
 <h4>Not $fname $lname? <a class="btn btn-danger" href="$HomeURL">EXIT NOW</a></h4>
 <p>Following are the lists available.  Those that you are subscribed to are checked.  Please update this list by checking or unchecking those lists you wish to receive notices from and click the &apos;Update Info&apos; button to update your profile.</p>
 <p>Please use the free form notes area to list home and/or cell phone number or other contact information that might be needed.</p>
-<form action="index.php" method="post">
-Email Address: <input type="text" name="EmailAddress" value="$email"><br />
-City: <input type="text" name="City" value="$city" >&nbsp;&nbsp;
-Primary Contact Phone: <input type="text" name="PrimaryPhone" value="$phone"><br />
+<form action="index.php" method="post" onsubmit="return validateLists()">
+Email Address: <input type="text" id="EMA" name="EmailAddress" value="$email"><br />
+City: <input type="text" id="CITY" name="City" value="$city" >&nbsp;&nbsp;
+Primary Contact Phone: <input id="PN" type="text" name="PrimaryPhone" value="$phone"><br />
 
 <table border="1">
 <tr><td valign="top">LISTS:<br />
+
+<script>
+function validateLists() {
+	var cnt = 0; var error = ""; error = "";
+	var fld = document.getElementsByName("Lists[]");
+	for(var i=0; i < fld.length; i++) {
+		if(fld[i].checked) cnt += 1; }
+	if (cnt == 0) {
+  	$('#errorModal').modal({ keyboard: true, show: true });				
+		error += "A volunteer must be registered on at least one mailing list.\\n";
+		}
+	var inp = document.getElementById("EMA"); 
+	if (inp.value == "") {
+		error += "An email address must be provided for a volunteer.\\n";
+	  }
+	inp = document.getElementById("CITY"); 
+	if (inp.value == "") {
+		error += "A city location must be provided for a volunteer.\\n";
+	  }
+	inp = document.getElementById("PN"); 
+	if (inp.value == "") {
+		error += "A phone number must be provided for a volunteer.\\n";
+	  }
+	if (error != "") {
+		alert("Please correct the following error(s):\\n\\n"+error);
+  	return false;
+  	}
+  return true;	
+  }
+</script>
+
 outForm1;
 $AllLists = readdblist('EmailLists');
 $AllListsArray = formatdbrec($AllLists);
@@ -81,9 +111,36 @@ print<<<outForm2
 </form>
 <br /><br />
 You may also merely 
-<a class="btn btn-info btn-default" href="$HomeURL">CANCEL</a> this form and return to the PWC Home Page.<br />
+<a class="btn btn-default" href="$HomeURL">CANCEL</a> this form and return to the PWC Home Page.<br><br>
 
 outForm2;
+echo '
+<!-- ============== List Error Modal  ============== -->  
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myErrorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myErrorModalLabel">Volunteer Mailing Lists</h4>
+      </div>
+    <div class="modal-body">
+   <p>A volunteer must be registered on at least one (1) mailing list.</p>
+   <p>If you do not wish to serve as a volunteer, please notify the Administrative staff at the Center by calling 805-772-9494 and leaving a message or send an email to vols@pacificwildlifecare.org to indicate your wish to be relieved from any further volunteer service requests.</p>
+   <p>Thank you.</p>
+    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- end of modal -->
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
+';
+
 exit(0);
 	} // end: if $action="form"
 
@@ -134,9 +191,10 @@ print<<<pageBody
 </form><br />
 <a class="btn btn-primary" href="$HomeURL">Go to PWC&apos;s Home Page</a>
 </div>  <!-- container -->
+
+pageBody;
+?>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
-pageBody;
-?>
