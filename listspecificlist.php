@@ -9,6 +9,7 @@
 <body>
 <?php
 session_start();
+// include 'Incls/vardump.inc';
 include 'Incls/seccheck.inc';
 include 'Incls/mainmenu.inc';
 include 'Incls/datautils.inc';
@@ -21,15 +22,25 @@ echo '
 if ($action != "") echo ": $listname";
 echo '</h3>
 <form action="listspecificlist.php" method="post">
+<table class="table"><td>
 <select onchange="this.form.submit()" name="listname" size="1">
 <option value="">Select List Name</option>';
 loaddbselect('EmailLists');
 echo '</select>
 <input type="hidden" name="action" value="display">
-</form>';
+</td>';
+if ($_SESSION['VolSecLevel'] == 'voladmin')
+ echo '<td><a class="btn btn-danger" href="listspecificlist.php?listname=VolInactive&action=display">List Inactives</a>
+</td>';
 
-if (strlen($action) > 0) {	
-	$sql = "SELECT * FROM `members` WHERE `Lists` LIKE '%$listname%';";
+echo '</table></form>';
+
+if ($action == 'display') {	
+	$sql = "SELECT * FROM `members` 
+	WHERE `Lists` LIKE '%$listname%'
+	AND `Lists` NOT LIKE '%VolInactive%';";
+	if ($listname == 'VolInactive') 
+		$sql = "SELECT * FROM `members`	WHERE `Lists` LIKE '%$listname%';";
 	$res = doSQLsubmitted($sql);
 	$rowcnt = $res->num_rows;
 	if ($rowcnt == 0) {
@@ -42,7 +53,7 @@ if (strlen($action) > 0) {
 <tr><th>MCID</th><th>Last Name</th><th>First Name</th><th>City</th><th>Email</th><th>PhoneNumber</th><th>Notes/Additional Phone Numbers</th></tr>';
 	$emarray = array();
 	while($r = $res->fetch_assoc()) {
-		//echo '<pre>List members '; print_r($r); echo '</pre>';
+//		echo '<pre>List members '; print_r($r); echo '</pre>';
 		$emarray[] = $r[EmailAddress];
 		echo "<tr><td><a href=\"volinfotabbed.php?filter=$r[MCID]\">$r[MCID]</a></td>
 		<td>$r[LName]</td><td>$r[FName]</td><td>$r[City]</td><td>$r[EmailAddress]</td><td>$r[PrimaryPhone]</td><td>$r[Notes]</td></tr>";	

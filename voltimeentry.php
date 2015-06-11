@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Add New Admin User</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-</head>
-<body>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="./Incls/datevalidation.js"></script>
 <?php
 session_start();
 //include 'Incls/vardump.inc';
@@ -29,12 +17,17 @@ if ($_SESSION['VolSecLevel'] != 'voladmin') {
 // create the string to download with the page as an array
 // we will also use this string to validate the MCID's returned as input
 
-$sql = "SELECT `MCID`,`FName`,`LName` from `members` WHERE `MemStatus` = 2 ORDER BY `MCID`;";
+$sql = "SELECT `MCID`,`FName`,`LName` from `members` 
+WHERE `MemStatus` = 2
+	AND	`Lists` NOT LIKE '%VolInactive%'  
+ORDER BY `MCID`;";
 $res = doSQLsubmitted($sql);
+$rowcount = $res->num_rows;
+// echo "rowcount: $rowcount<br>";
 if ($res->num_rows == 0) {
-	
-	echo '<h2>No volunteers named to populate the typeahead field.</h2>
-	<h3>volunteers are identified in membership database as a member status of 2.  Please check to ensure that the volunteer roster is current and complete in the database.</h3>';
+	echo '<h2>No volunteers exists to populate the typeahead field.</h2>
+	<h3>Volunteers are identified in membership database as a member status of 2.  Please check to ensure that the volunteer roster is current and complete in the database.</h3>
+	<b>NOTE: volunteers marked as &apos;Inactive&apos; will not be listed.</b><br><br>';
 	echo '<a class="btn btn-primary" href="admin.php">RETURN</a></body></html>';
 	exit;
 	}
@@ -47,17 +40,6 @@ while ($r = $res->fetch_assoc()) {
 	$vols .= "'$mcid,$lname,$fname',";
 	}
 $vols = rtrim($vols,',') . ']';
-
-/*
-$catrec = readdblist('VolCategorys');	// create string for form typeahead
-$catarray = formatdbrec($catrec);
-$cats = '[';
-foreach ($catarray as $c) {
-	$c = rtrim($c);
-	$cats .= "'$c',";
-	}
-$cats = rtrim($cats,',') . ']';
-*/
 
 $mciderr = array(); $rowcnt = 0;
 // check if this is an update, string to validate mcid's is in vols string
@@ -102,8 +84,7 @@ if ($action == 'upd') {
 		}
 	}
 
-// define the intake page
-print <<<pagePart1
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,6 +93,10 @@ print <<<pagePart1
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body onchange="flagChange()">
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="./Incls/datevalidation.js"></script>
+
 <div class="well">
 
 <h2>Volunteer Time Data Entry <a class="btn btn-primary" href="admin.php" onclick="return chkchg()">RETURN</a></h2>
@@ -194,186 +179,127 @@ function deactivatesubmit() {
 <table border="0" class="table table-condensed">
 <tr><th>Date</th><th>Name (MCID, Last, First)</th><th>Hours</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>
 <tr>
+<!-- Input row 01 -->
 <td><input autofocus name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search1" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" id="hrs" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input name="mileage[]" type="text" id="mileage" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat1" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart1;
-echo loaddbselect('VolCategorys');
-print<<<pagePart2
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 02 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search2" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)>" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat2" data-provide="typeahead" data-items="5" autocomplete="off" ></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart2;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart3
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" ></td>
 </tr>
-<tr>
+
+<!-- Input row 03 --><tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search3" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)>" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat3" data-provide="typeahead" data-items="5" autocomplete="off" ></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart3;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart4
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" ></td>
 </tr>
+<!-- Input row 04 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search4" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-	<td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat4" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
+<td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-pagePart4;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart5
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 05 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search5" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat5" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart5;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart6
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 06 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search6" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input name="mileage[]" type="text" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat6" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart6;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart7
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 07 -->
 <tr>
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search7" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat7" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart7;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart8
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 08 -->
 <tr>
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search8" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat8" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart8;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart9
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 09 -->
 <tr>
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search9" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat9" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart9;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart10
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
+<!-- Input row 10 -->
 <tr>
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search10" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-
-<!-- <td><input name="category[]" type="text" id="cat10" data-provide="typeahead" data-items="5" autocomplete="off" /></td> -->
-
 <td><select name="category[]" >
 <option value=""></option>
-pagePart10;
-echo loaddbselect('VolCategorys');
-
-print<<<pagePart11
-
+<?=loaddbselect('VolCategorys')?>
 </select></td>
-
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
 </table>
+<!-- END -->
 <input type="hidden" name="action" value="upd">
 <input id="sub-btn" name="submit" value="SUBMIT" type="submit" onclick="deactivatesubmit()">
 </form>
@@ -381,7 +307,7 @@ print<<<pagePart11
 
 <script src="js/bootstrap3-typeahead.js"></script>
 <script>
- var vols = $vols; 
+ var vols = <?=$vols?>; 
 $('#search1').typeahead({source: vols})
 $('#search2').typeahead({source: vols})
 $('#search3').typeahead({source: vols})
@@ -393,21 +319,6 @@ $('#search8').typeahead({source: vols})
 $('#search9').typeahead({source: vols})
 $('#search10').typeahead({source: vols})
 </script>
-<!-- <script>
- var cats = $cats; 
-$('#cat1').typeahead({source: cats})
-$('#cat2').typeahead({source: cats})
-$('#cat3').typeahead({source: cats})
-$('#cat4').typeahead({source: cats})
-$('#cat5').typeahead({source: cats})
-$('#cat6').typeahead({source: cats})
-$('#cat7').typeahead({source: cats})
-$('#cat8').typeahead({source: cats})
-$('#cat9').typeahead({source: cats})
-$('#cat10').typeahead({source: cats})
-</script> -->
 
 </body>
 </html>
-pagePart11;
-?>

@@ -67,6 +67,7 @@ foreach ($listcounter as $a => $b) {
 		}
 	else {
 		//echo "$a: $b<br />";
+		if ($a == 'VolInactive') continue;
 		echo $syslistsarray[$a] . ": ". $b . "<br>";
 		}
 	}
@@ -81,7 +82,10 @@ echo "</ul><br>";
 
 echo '</td></tr>';  // end of 1st row
 echo '<tr><td colspan="2" align="center">'; 		// start 2nd row
+
+// now included on the Member Exceptions report
 // vols with no mailing lists
+/*
 echo '
 <h4>List of volunteers with NO Mailing Lists</h4>';
 
@@ -102,7 +106,7 @@ while($r = $res->fetch_assoc()) {
 	}
 echo '</td></tr>';
 echo '</div></table>';
-
+*/
 
 
 ?>

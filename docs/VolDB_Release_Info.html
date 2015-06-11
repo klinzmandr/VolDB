@@ -15,7 +15,25 @@
  	      	   white-space: pre-wrap;      /* CSS3 */
  	      	   word-wrap: break-word;      /* IE 5.5+ */ }
 	</style></head><body><div class="note" id="VolDB Release Info"><a name="voldb release info"></a><h1>VolDB Release Info</h1>
-Version 1.10 (uploaded 3/20/15)
+Version 1.12 ( uploaded 6/11/15)
+<ul><li dir="ltr">changed login session length to 30 minutes in Incls/seccheck.inc
+</li><li dir="ltr">fixed end of line problem in formatdbrec routine of Incls/datautils.inc
+</li><li dir="ltr">fixed validation logic in mbrinfotabbed dealing with email flags and entered email address
+</li><li dir="ltr">added lists column to rptvolexceptions report.
+</li><li dir="ltr">modified voltimeentry to exclude inactive vols plus cleaned up existing code.
+</li><li dir="ltr">added field validation to index.php to prevent entry of empty fields.
+</li><li dir="ltr">added inactive volunteer functionality to listalllists, listspecificlist,rptvoleception, rptvolunteerroster,sendchooser, vlinfotabbed, voltimeentry.
+</li><li dir="ltr">added documentation VolunteerInactiveList text and pdf files</li></ul>
+
+Version 1.11 (uploaded 3/29/15)
+<ul><li dir="ltr">fixed text errors on index.php
+</li><li dir="ltr">fixed listedittimerecord to cater for education category and add vol category filter on select
+</li><li dir="ltr">fixed rptvoltimesummary to cater for education category
+</li><li dir="ltr">removed debut code from listedittimerecord
+</li><li dir="ltr">fixed volinfotabbed to handle null list entry
+</li><li dir="ltr">added facility to listcreatenew to flush old list names from member records when any update to email lists is made.</li></ul>
+
+Version 1.10 (uploaded 3/25/15)
 <ul><li dir="ltr">added general search in volunteer fields when input mcid filter is empty
 </li><li dir="ltr">localized all session variables to be unique for voldb to prevent cross talk between volddb and mbrdb for users logged into both at the same time.</li></ul>
 
@@ -50,17 +68,17 @@ Version 1.4 (Uploaded 4/30/14)
 </li><li dir="ltr">added rptvolexpeption report to the main menu
 </li><li dir="ltr">modified volinfotabbed to merge volunteer detail tab with main information tab.
 </li><li dir="ltr">changed sending mail address in sendemailvolsupd to '<a style="color:#3465A4" href="info@pacificwildlifecare.org'">info@pacificwildlifecare.org'</a> to get around SPAM checkers.
-</li><li dir="ltr">added at bottom of page a comma separated list of all emails to listspecificlist suitable for copy and pasting into email clients.
+</li><li dir="ltr">added at bottom of page <span style="color:#555753;text-decoration:underline">a</span> comma separated list of all emails to listspecificlist suitable for copy and pasting into email clients.
 </li><li dir="ltr">modified index.php to log list self admin action to voldb activity log for rpt.php
-</li><li dir="ltr">removed security restriction of having to be a voladmin to do vol record updates.
+</li><li dir="ltr">removed security restriction of having to be <span style="color:#555753;text-decoration:underline">a</span> voladmin to do vol record updates.
 </li><li dir="ltr">fixed default date range in rptmcidtimereport to be last calendar month.
 </li><li dir="ltr">fixed rptmaillogviewer drop down action to use 'onchange'
 </li><li dir="ltr">modfied listspecificlist to drop memstatus and mctype and added notes to get extra space for phone numbers.</li></ul>
 
 Version 1.3 (Uploaded 3/20/2014)
-<ul><li dir="ltr">added ability to delete a vol time entry record on listedittimerecord
+<ul><li dir="ltr">added ability to delete <span style="color:#555753;text-decoration:underline">a</span> vol time entry record on listedittimerecord
 </li><li dir="ltr">added function to turn submit button RED on voltimeentry form to prevent inadvertent double entry (hopefully).
-</li><li dir="ltr">modified sendemailvols to check for page modifications before allowing navigation to a different page.</li></ul>
+</li><li dir="ltr">modified sendemailvols to check for page modifications before allowing navigation to <span style="color:#555753;text-decoration:underline">a</span> different page.</li></ul>
 
 Version 1.2 (Uploaded 3/6/2014)
 <ul><li dir="ltr">added admpasswordupd into directory. It had been inadvertently left behind.

@@ -16,7 +16,10 @@ include 'Incls/datautils.inc';
 echo '<div class="container"><h3>Volunteer Roster&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
 
 //echo "mcid: $mcid, sd: $sd, ed: $ed<br />";
-$sql = "SELECT * from `members` WHERE `MemStatus` = 2 ORDER BY `MCID` ASC";
+$sql = "SELECT * from `members` 
+WHERE `MemStatus` = 2
+AND `Lists` NOT LIKE '%VolInactive%' 
+ORDER BY `MCID` ASC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
 echo "<b>Total Volunteer Count:</b> $rowcnt<br />";

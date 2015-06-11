@@ -9,10 +9,12 @@
 <body onchange="flagChange()">
 <?php
 session_start();
+//include 'Incls/vardump.inc';
 include 'Incls/seccheck.inc';
 include 'Incls/mainmenu.inc';
 include 'Incls/datautils.inc';
 
+$seclevel = $_SESSION['VolSecLevel'];
 print <<<pagePart1
 <script type="application/javascript">
 function checkAll(chk,fld)  {
@@ -54,10 +56,15 @@ return true;
 echo '<table class="table">';
 echo "<form method=post name=\"sndform\" action=\"sendemailvols.php\" onsubmit='return confirmbox(document.sndform[\"tokey[]\"])'>";
 
-echo '<tr><th width="80">
-<input type="submit" name="submit" value="Submit" onclick="return chkem()">
-</th><th>List Name</th></tr><tr><td>';
-echo "<input type=\"checkbox\" name=\"chkr\" 
+echo '<tr>
+<th width="80">
+<input type="submit" name="submit" value="Submit" onclick="return chkem()"></th>
+<th>List Name</th>';
+if ($_SESSION['VolSecLevel'] == 'voladmin')
+ echo '<td><a class="btn btn-danger" href="sendemailvols.php?tokey[]=VolInactive">Send to Inactives</a></td>';
+echo '</tr>';
+echo "
+<tr><td><input type=\"checkbox\" name=\"chkr\" 
 onchange='checkAll(document.sndform.chkr, document.sndform[\"tokey[]\"])'></td><td>&nbsp;<b>Check/Uncheck All</b><br></td></tr>";
 
 foreach ($lines as $l) {

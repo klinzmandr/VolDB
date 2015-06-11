@@ -14,7 +14,7 @@
 
 <?php
 session_start();
-//Include "Incls/vardump.inc";
+// include "Incls/vardump.inc";
 include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 include 'Incls/createcitydd.inc';
@@ -122,13 +122,24 @@ function validateForm(theForm) {
 	//reason += validatePassword(theForm.pwd);
 	reason += validateEmpty(theForm.EmailAddress);
 	reason += validateEmpty(theForm.PrimaryPhone);
-	//reason += validateEmpty(theForm.from);    
+	reason += validateLists();    
 	if (reason != "") {
   	alert("Some fields need attention:\\n\\n" + reason);
   	return false;
 		}
 	return true;
 	}
+
+function validateLists() {
+	var cnt = 0; var error = "";
+	var fld = document.getElementsByName("mlist[]");
+	for(var i=0; i < fld.length; i++) {
+		if(fld[i].checked) cnt = cnt + 1; }
+	if (cnt == 0) {
+		var error = "Lists Error: a volunteer must be registered on at least one mailing list.\\n";
+		}
+  return error;
+  }
 	
 function validateCorrSal(fld) {
   var error = "";
@@ -421,7 +432,8 @@ function confirmNO(fld) {
 <input type="radio" name="Mail" value="FALSE" />No
 </div>
 </div>  <!-- row -->
-<div class="row">
+<!-- the Inactive and DateInactive are hidden to prevent any changes here -->
+<div hidden class="row">
 <div class="col-sm-3">Mbr Inactive?: 
 <input onclick="setInactiveDate()" type="radio" name="Inactive" value="TRUE" />Yes
 <input onclick="clearInactiveDate()" type="radio" name="Inactive" value="FALSE" />No
@@ -443,7 +455,7 @@ function confirmNO(fld) {
 </div>	<!-- tab pane -->
 
 pagePart3;
-// Tab 4 email lists - displayed if member status = 2 -->
+// Tab 4 email lists  -->
 
 echo '<div class="tab-pane fade" id="lists">
 <div class="well">
@@ -451,28 +463,34 @@ echo '<div class="tab-pane fade" id="lists">
 
 $text = readdblist('EmailLists');
 $listkeys = formatdbrec($text);
+if ($_SESSION['VolSecLevel'] == 'voladmin') $listkeys[VolInactive] = 'Vol Inactive';
 //echo '<pre> keys '; print_r($listkeys); echo '</pre>';
 foreach ($listkeys as $k => $v) {
 	if (strlen($k) <= 1) continue;
 //	echo "key: $k, value: $v<br />";
 	if (stripos($lists, $k) !== FALSE) {
-		echo "<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\" checked>$v<br>";
+		echo "
+		<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\" checked>$v<br>";
 		}
 	else {
-		echo "<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\">$v<br>";
+		echo "
+		<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\">$v<br>";
 		}
 	//echo "key: $k, value: $v<br>";
 	}
 
-echo '</div>  <!-- well -->
+//echo '<a href="#errorModal" data-toggle="modal" data-keyboard="true">test error modal</a>';
+
+echo '
+</div>  <!-- well -->
 </div>  <!-- tab pane -->
 <!-- end all tab definitions -->
-</div>  <!-- tab content -->';
-
-?>
+</div>  <!-- tab content -->
 <input type="hidden" name="action" value="update">
 </form>
 </div>
-<hr></div><br /><br />
+<hr></div><br /><br />';
+
+?>
 </body>
 </html>
