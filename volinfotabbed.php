@@ -14,10 +14,11 @@
 
 <?php
 session_start();
-// include "Incls/vardump.inc";
+//include "Incls/vardump.inc";
 include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 include 'Incls/createcitydd.inc';
+include 'Incls/mainmenu.inc';
 
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter']: "";
 $filter = $filterflag = rtrim($filter);
@@ -29,29 +30,15 @@ if ($filter == "--none--") {
 if ($filter != "") {
 	$_SESSION['VolActiveMCID'] = $filter;
 	}
-	
-include 'Incls/mainmenu.inc';
 
 echo "<div class=container>";
 $mcid = $_SESSION['VolActiveMCID'];
 $action = $_REQUEST['action'];
-if ($filterflag == "--none--") { 
-	$m = "<p><b>Use of the MCID field</b></p><p>The MCID field is used to access and update member/contact informaton.  No MCID entered will provide access to a page to do a general search of the entire database.</p>
-	<p>Click the <a href=\"mbrsearchlist.php\">general search</a> button and enter any string of characters to search the all or part of the first name, last name, label name, address, or email addresses of the entire database.  This will produce a listing of ALL records that contain the target string entered.</p>
-	<p>When a target list of records is displayed, click the bullet at the left of the associated MCID to access the specific member's record./p>
-	<p>Once a single member record has been accessed, its correspondence and fund information records will be available by clicking on the main menu at the top of the page.  That MCID will remain the 'active' until a new MCID is selected or you click the \"Home\" menu choice.</p>";
-	echo "<h2>No MCID entered.</h2>";
-	echo "<br />";
-	echo "$m";
-	echo "<h4><a class=\"btn btn-large btn-primary\" href=\"mbrsearchlist.php\" name=\"filter\" value=\"--none--\">General Search</a></h4></div>";
-	exit;
-	}
 
 if (($action == "") AND ($mcid == "")) {
 	$mcinfo = "<h3>Volunteer/Contact Informaton</h3>"; 
 	$mcinfo .= "<p>This page will display all information of the volunteer's Member Id (MCID) selected by using the MCID selected via the &apos;Lookup&apos; function.  It will remain &apos;active&apos; until another is selected by either returning to the Home page or by using the &apos;Lookup&apos; to select a new one.</p>";
-	//$mcinfo .= "<br /><h4><a href=\"voladdition.php\">Add New Volunteer</h4></a>Using this link to begin the process of adding a new member into the database.<br />";
-	//$mcinfo .= "<br /><h4><a href=\"voladdnewuser.php\">Add New User</h4></a>Using this link to begin the process of adding a new user into the database.<br />";
+
 	echo $mcinfo;
 	exit;
 	}
@@ -73,7 +60,6 @@ if ($action == "update") {
 	}
 
 // get member record from ActiveMCID and display the info in update form
-echo "<h3>Volunteer Information for ".$mcid."</h3>";
 $sql = "SELECT * FROM `members` WHERE MCID = '$mcid'";
 $res = doSQLsubmitted($sql);
 //$res = readMCIDrow($mcid);
@@ -81,6 +67,8 @@ if ($res->num_rows == 0) {
 	echo "<h3>No MCID record found.  Please retry.</h3><br /><br />";
 	echo "<p>Enter part or all of new MCID in the &apos;LOOKUP&apos; box and try again.</p>";
 	//echo "<a class=\"btn btn-large btn-primary\" href=\"index.php\">CANCEL AND RETURN</a><br /><br />";
+	echo '<script src="jquery.js"></script>';
+	echo '<script src="js/bootstrap.min.js"></script>';
 	exit;
 	} 
 // get row data from result
@@ -96,7 +84,10 @@ $memstatus=$row['MemStatus'];$memdate=$row['MemDate'];
 $mctype=$row['MCtype'];$inact=$row['Inactive'];$inactdate=$row['Inactivedate'];
 $e_mail=$row['E_Mail'];$mail=$row['Mail']; $notes=$row['Notes'];$lists=$row[Lists];
 $citieslist = createddown();
-print <<<pagePart1
+?>
+
+<h3>Volunteer Information for <?=$mcid?></h3>
+
 <script>
 var reason = "";
 var secLevel = "$_SESSION[VolSecLevel]";
@@ -124,7 +115,7 @@ function validateForm(theForm) {
 	reason += validateEmpty(theForm.PrimaryPhone);
 	reason += validateLists();    
 	if (reason != "") {
-  	alert("Some fields need attention:\\n\\n" + reason);
+  	alert("Some fields need attention:\n\n" + reason);
   	return false;
 		}
 	return true;
@@ -136,7 +127,7 @@ function validateLists() {
 	for(var i=0; i < fld.length; i++) {
 		if(fld[i].checked) cnt = cnt + 1; }
 	if (cnt == 0) {
-		var error = "Lists Error: a volunteer must be registered on at least one mailing list.\\n";
+		var error = "Lists Error: a volunteer must be registered on at least one mailing list.\n";
 		}
   return error;
   }
@@ -154,7 +145,7 @@ function validateEmpty(fld) {
   if (fld.value.length == 0) {
   	fld.style.background = '#F7645E';
   	if (reason == "") {
-    	error = "Required field(s) have not been filled in.\\n" }
+    	error = "Required field(s) have not been filled in.\n" }
     	} 
     else {
     	fld.style.background = 'White';
@@ -187,11 +178,11 @@ function initAllFields(form) {
 // Initialize all form controls
   with (form) {
 //		initRadio(ttaken,"$ttaken");
-		initRadio(MemStatus,"$memstatus");
-		initSelect(MCType,"$mctype");
-		initRadio(E_mail,"$e_mail");
-		initRadio(Mail,"$mail");
-		initRadio(Inactive,"$inact");
+		initRadio(MemStatus,"<?=$memstatus?>");
+		initSelect(MCType,"<?=$mctype?>");
+		initRadio(E_mail,"<?=$e_mail?>");
+		initRadio(Mail,"<?=$mail?>");
+		initRadio(Inactive,"<?=$inact?>");
   	}
 	}
 	
@@ -268,17 +259,14 @@ function clearInactiveDate(fld) {
 
 <script>
 function ValidatePhone(fld)  {
-//alert("validation entered");
 var errmsg = "";
-var stripped = fld.value.replace(/[\(\)\.\-\ \/]/g, '');
-if (stripped.length != 10) { 
-	errmsg += "Invalid phone number.  Please include the Area Code.\\n";
+var stripped = fld.value.replace(/[\(\)\.\-\ \/]/g, "");
+if ((stripped.length != 10) || (isNaN(stripped))) { 
+	errmsg += "Invalid phone number.  Please include the Area Code.\n";
 	}
-if(!stripped.match(/^[0-9]{10}/))  { 
-	errmsg += "Invalid phone number entered.\\n";
-	}
+
 if (errmsg.length > 0) {
-	errmsg += "\\nValid formats: 123-456-7890 or 123 456 7890 or (123)456-7890 or 1234567890";
+	errmsg += "\nValid formats: 123-456-7890 or 123 456 7890 or (123)456-7890 or 1234567890";
 	fld.style.background = '#F7645E';
 	alert(errmsg);
 	return false;
@@ -289,6 +277,7 @@ fld.style.background = 'White';
 return true;
 }
 </script>
+
 <script>
 function ValidateEmail(fld)  {
 //alert("validation entered");
@@ -298,6 +287,8 @@ var illegalChars= /[\(\)\<\>\,\?\;\:\\\"\[\]]/ ;
 if ((!emailFilter.test(fld.value)) || (fld.value.match(illegalChars))) { 
 	fld.style.background = 'Pink';
 	alert("Invalid email address entered.");
+	document.getElementById("EMR1").checked = false;
+	document.getElementById("EMR2").checked = true;
 	return false;
 	}
 fld.style.background = 'White';
@@ -315,35 +306,39 @@ return true;
   <li class=""><a href="#home" data-toggle="tab">Home</a></li>
   <!-- <li class=""><a href="#detail" data-toggle="tab">Detail</a></li> -->
   <li class=""><a href="#notes" data-toggle="tab">Notes</a></li>
-  
-pagePart1;
 
-if ($memstatus == 2) echo '<li class=""><a href="#lists" data-toggle="tab">Lists</a></li>';
-
-print <<<pagePart2
+<?php 
+	if ($memstatus == 2) 
+		echo '
+			<li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
+			<li class=""><a href="#time" data-toggle="tab">Time</a></li>
+			<li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
+			';
+?>
 </ul>
+
 <!-- Tab 1 Demographic information -->
 <div id="myTabContent" class="tab-content">
 <div class="tab-pane fade active in" id="home">
 <div class="well">
 <h4>Contact Information</h4>
 <div class="row">
-<div class="col-sm-4">First: <input placeholder="First Name" autofocus type="text" name="FName" value="$fname" onchange="setflds(document.mcform)"></div>
-<div class="col-sm-4">Last: <input placeholder="Last Name" type="text" name="LName" value="$lname" onchange="setflds(document.mcform)"></div>
+<div class="col-sm-4">First: <input placeholder="First Name" autofocus type="text" name="FName" value="<?=$fname?>" onchange="setflds(document.mcform)"></div>
+<div class="col-sm-4">Last: <input placeholder="Last Name" type="text" name="LName" value="<?=$lname?>" onchange="setflds(document.mcform)"></div>
 </div>
 
 <div class="row">
-<div class="col-sm-4">Label Line: <input placeholder="Label Line" name="NameLabel1stline" value="$lab1line"></div>
-<div class="col-sm-5">Correspondence Sal:<input placeholder="Correspondence Salutation" name="CorrSal" value="$corrsal"></div>
+<div class="col-sm-4">Label Line: <input placeholder="Label Line" name="NameLabel1stline" value="<?=$lab1line?>"></div>
+<div class="col-sm-5">Correspondence Sal:<input placeholder="Correspondence Salutation" name="CorrSal" value="<?=$corrsal?>"></div>
 </div>
 <div class="row">
-<div class="col-sm-4">Org: <input placeholder="Organization" name="Organization" value="$org"></div>
-<div class="col-sm-4">Addr Line: <input placeholder="Address Line" name="AddressLine" value="$addr"></div>
+<div class="col-sm-4">Org: <input placeholder="Organization" name="Organization" value="<?=$org?>"></div>
+<div class="col-sm-4">Addr Line: <input placeholder="Address Line" name="AddressLine" value="<?=$addr?>"></div>
 </div>
 <div class="row">
-<div class="col-sm-4">City: <input id="CI" placeholder="City" name="City" value="$city" autocomplete="off" onblur="loadcity()"></div>
-<div class="col-sm-2">State: <input id="ST" placeholder="State	" type="text" name="State" value="$state" style="width: 50px; " /></div>
-<div class="col-sm-3">Zip: <input id="ZI" type="text" name="ZipCode" value="$zip" size="5" maxlength="5" style="width: 100px;"  placeholder="Zip" /></div>
+<div class="col-sm-4">City: <input id="CI" placeholder="City" name="City" value="<?=$city?>" autocomplete="off" onblur="loadcity()"></div>
+<div class="col-sm-2">State: <input id="ST" placeholder="State	" type="text" name="State" value="<?=$state?>" style="width: 50px; " /></div>
+<div class="col-sm-3">Zip: <input id="ZI" type="text" name="ZipCode" value="<?=$zip?>" size="5" maxlength="5" style="width: 100px;"  placeholder="Zip" /></div>
 </div>
 <script src="js/bootstrap3-typeahead.js"></script>
 <script>
@@ -358,13 +353,13 @@ function loadcity() {
 </script>
 
 <script>
-var citylist = $citieslist;
+var citylist = <?=$citieslist?>;
 $('#CI').typeahead({source: citylist})
 </script>
 
 <div class="row">
-<div class="col-sm-4">Phone: <input type="text" name="PrimaryPhone" value="$priphone" size="12" maxlength="12" style="width: 125px;" onchange="return ValidatePhone(this)"  placeholder="Primary Phone" /></div>
-<div class="col-sm-4">Email: <input id="EMA" placeholder="Email" onchange="ValidateEmail(this)" style="width: 200px;" name="EmailAddress" value="$eaddr"></td></tr></div>
+<div class="col-sm-4">Phone: <input type="text" name="PrimaryPhone" value="<?=$priphone?>" size="12" maxlength="12" style="width: 125px;" onchange="return ValidatePhone(this)"  placeholder="Primary Phone" /></div>
+<div class="col-sm-4">Email: <input id="EMA" placeholder="Email" onchange="ValidateEmail(this)" style="width: 200px;" name="EmailAddress" value="<?=$eaddr?>"></td></tr></div>
 </div>
 <!-- </div>  well -->
 <!-- </div>  tab pane -->
@@ -386,25 +381,23 @@ Mbr Status:&nbsp;
 <div class="col-sm-5 col-sm-offset-1">
 Mbr Type:<select name="MCType" size="1" onChange="checkmbr(this)">
 <option value=""></option>
-pagePart2;
+<?php
 loaddbselect('MCTypes');
-print <<<pagePart3
+?>
 </select>
 </div>  <!-- col-sm-5 -->
 </div>  <!-- row -->
 <div class="row">
 <div class="col-sm-3">
-Date Joined:<input onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" name="MemDate" value="$memdate" style="width: 100px;">
+Date Joined:<input onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" name="MemDate" value="<?=$memdate?>" style="width: 100px;">
 </div>  <!-- col-sm-4 -->
 <script>
 function chkvalidemail(fld) {
 	var val = fld.value;
-	if (val === 'TRUE') {
-		if (document.getElementById("EMA").value == "") {
-			document.getElementById("EMR1").checked = false;
-			document.getElementById("EMR2").checked = true;
-			alert("NO Email Address Available!");
-			}
+	if (document.getElementById("EMA").value == "") {
+		document.getElementById("EMR1").checked = false;
+		document.getElementById("EMR2").checked = true;
+		alert("NO Email Address Available!");
 		}
 	return true;
 	}
@@ -412,7 +405,7 @@ function chkvalidemail(fld) {
 <script>
 function confirmNO(fld) {
 	if (document.getElementById("EMR2").checked === true) {
-		r = confirm("Volunteers must have an ACTIVE email address.\\n\\nAre you sure you want to set this flag to NO?");
+		r = confirm("Volunteers must have an ACTIVE email address.\n\nAre you sure you want to set this flag to NO?");
 		if (r == false) {
 			document.getElementById("EMR1").checked = true;
 			document.getElementById("EMR2").checked = false;
@@ -424,8 +417,8 @@ function confirmNO(fld) {
 </script>
 
 <div class="col-sm-3">Email OK?: 
-<input id="EMR1" type="radio" name="E_mail" value="TRUE" onchange="return chkvalidemail(this)" />Yes
-<input id="EMR2" type="radio" name="E_mail" value="FALSE" onchange="return confirmNO(this)" />No
+<input id="EMR1" type="radio" name="E_mail" value="TRUE" onclick="return chkvalidemail(this)" />Yes
+<input id="EMR2" type="radio" name="E_mail" value="FALSE" onclick="return confirmNO(this)" />No
 </div>
 <div class="col-sm-3">Mail OK?: 
 <input type="radio" name="Mail" value="TRUE" />Yes
@@ -444,23 +437,23 @@ function confirmNO(fld) {
 </div>  <!-- tab pane -->
 
 
-<!-- Tab 3 member notes -->
+<!-- Tab 2 member notes -->
 <div class="tab-pane fade" id="notes">
 <div class="well">
 <h4>Notes</h4>
 <div class="row">
-<div class="col-sm-6"><textarea name="Notes" rows="3" cols="60">$notes</textarea></div>
+<div class="col-sm-6"><textarea name="Notes" rows="3" cols="60"><?=$notes?></textarea></div>
 </div>  <!-- row -->
 </div>  <!-- well -->
 </div>	<!-- tab pane -->
 
-pagePart3;
-// Tab 4 email lists  -->
+<!-- Tab 3 email lists  -->
 
-echo '<div class="tab-pane fade" id="lists">
+<div class="tab-pane fade" id="lists">
 <div class="well">
-<h4>Email Lists</h4>';
+<h4>Email Lists</h4>
 
+<?php
 $text = readdblist('EmailLists');
 $listkeys = formatdbrec($text);
 if ($_SESSION['VolSecLevel'] == 'voladmin') $listkeys[VolInactive] = 'Vol Inactive';
@@ -479,9 +472,89 @@ foreach ($listkeys as $k => $v) {
 	//echo "key: $k, value: $v<br>";
 	}
 
-//echo '<a href="#errorModal" data-toggle="modal" data-keyboard="true">test error modal</a>';
+?>
+</div>  <!-- well -->
+</div>  <!-- tab pane -->
+<!-- tab 4 time -->
+<div class="tab-pane fade" id="time">
+<div class="well">
+<h4>Volunteer Time Served</h4>
+<?php
+$sql = "SELECT * FROM `voltime` 
+WHERE `MCID` = '$mcid' 
+ORDER BY `voltime` DESC;";
+$res = doSQLsubmitted($sql);
+$rowcnt = $res->num_rows;
 
-echo '
+if ($rowcnt > 0) {
+echo "<b>Period Entry Count:</b> $rowcnt<br />";
+// table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes
+
+while ($r = $res->fetch_assoc()) {
+$trows[] = "<tr><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
+$vc = 'Uncategorized';
+if (strlen($r[VolCategory]) > 0) $vc = $r[VolCategory];
+$totalvolhrs += $r[VolTime];
+$tothrs[$vc] += $r[VolTime];
+$totmiles += $r[VolMileage];
+	}
+echo "<b>Total Miles Driven:</b> $totmiles,&nbsp;";
+echo "<b>Total Volunteer Hours:</b> $totalvolhrs<br />";
+echo "<b>Total Hours by Category:</b><br />";
+if (count($tothrs) != 0) {
+	foreach ($tothrs as $k => $v) echo "&nbsp;&nbsp;&nbsp;$k: $v<br />";
+	}
+echo "<b>Detail Records</b><br />";
+echo '<table class="table-condensed">';
+echo '<tr><th>Date</th><th>Vol Time</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>';
+if (count($trows) != 0) foreach ($trows as $l) { echo $l; }
+echo '</table>---- End of Report ----<br>';	
+}
+else {
+	echo 'NO TIME RECORDS TO REPORT<br>';
+}
+
+?>
+</div>  <!-- well -->
+</div>  <!-- tab pane -->
+
+
+<!-- tab 5 courses -->
+<div class="tab-pane fade" id="courses">
+<div class="well">
+<h4>Courses Attended</h4>
+<?php
+$sql = "SELECT * FROM `voltime` 
+WHERE `MCID` = '$mcid' 
+	AND `VolCategory` = 'Education' 
+ORDER BY `VolDate` DESC";
+$res = doSQLsubmitted($sql);
+$rowcnt = $res->num_rows;
+
+if ($rowcnt > 0) {
+echo "<b>Entry Count:</b> $rowcnt<br />";
+// table: voltime: CourseId,CourseDate,CourseDuration,CourseName,CourseNotes
+
+while ($r = $res->fetch_assoc()) {
+//	echo '<pre> ed rec '; print_r($r); echo '</pre>';
+//	list($agency, $courseid) = explode(':',$r[CourseId]);
+	list($courseid,$notes) = explode('/',$r[VolNotes]);
+	list($agency, $cid) = explode(':', $courseid);
+	$erows[] = "<tr><td>$agency<td>$cid</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$notes</td></tr>";
+$totaledhrs += $r[VolTime];
+	}
+echo "<b>Total Educ. Hours:</b> $totaledhrs<br />";
+echo "<b>Detail Records</b><br />";
+echo '<table class="table-condensed">';
+echo '<tr><th>Agency</th><th>CourseId</th><th>CourseDate</th><th>Dur.</th><th>Notes</th></tr>';
+if (count($erows) != 0) foreach ($erows as $l) { echo $l; }
+echo '</table>==== END OF REPORT ====<br>';	
+}
+else {
+	echo 'NO COURSE RECORDS TO REPORT<br>';
+	}
+?>
+
 </div>  <!-- well -->
 </div>  <!-- tab pane -->
 <!-- end all tab definitions -->
@@ -489,8 +562,8 @@ echo '
 <input type="hidden" name="action" value="update">
 </form>
 </div>
-<hr></div><br /><br />';
-
-?>
+<hr>
+</div>
+<br /><br />';
 </body>
 </html>
