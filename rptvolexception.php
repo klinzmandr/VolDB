@@ -22,21 +22,29 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 echo '<div class="container">
 <h3>Volunteer Exception Report&nbsp;&nbsp;
 <a class="btn btn-default" href="javascript:self.close();">CLOSE</a></h3>';
-echo "Expiration period: $expperiod days<br>";
+echo "<b>Expiration period: $expperiod days</b><br><br>";
 if ($action == '') {
 print <<<pagePart1
-<p>This report is to provide an exemption listing of all those in the membership database that have reported service time.</p>
-<p>This report has the following sections: 
+
+<p>This report has the following sections which will only appear in the report if there are any MCIDs that qualify.
 <ol>
-<li>List of all volunteers that have not had any time entered within the last $expperiod days.  These members should be reviewed and the membership record mofidied to an inactive status if warranted.</li>
-<li>List of all those who are not listed as a volunteer but has reported time within the last $expperiod days. These MCIDs should be reviewed and updated appropraitely.</li>
-<li>List of all volunteer records that are marked as &apos;VolInactive&apos;. These MCIDs should be reviewed and reclassified as either members or donors.</li>
+<li><b>MCIDs with NO reported volunteer time in the expiration period.</b><br>
+This section of the report should be printed out and provided to the Center Operations Committee (COPS) to review and approve reclassification of any/all of MCIDs listed to a non-volunteer status.  
+Reclassification steps must be performed by an administrative user and consists of adding 'Inactive' to the mailing lists of the MCID record then changing the Member Status and Member Type fields of the supporter record to a member or donor designation.  Other mailing lists selected should be left for future reference.
+</li>
+<li><b>MCIDs that HAVE reported volunteer time during the expiration period.</b><br>
+All MCIDs listed in this section of the report should be reclassified as a volunteer by changing the Member Status and Member Type fields of the supporter record to a volunteer designation.</li>
+<li><b>MCIDs that are marked as 'Inactive'.</b><br>
+The MCIDs listed need to be reviewed and an administrative user must either remove the 'Inactive' flag from the Lists of the volunteer OR change the Member Status and Member Type fields of the supporter record to a member or donor designation.</li>
+<li><b>MCIDs that are not on ANY email list.</b><br>
+Any MCID listed in this section should be assumed to have withdrawn from being a volunteer.  These MCIDs should be reclassified by changing the Member Status and Member Type fields of the supporter record to a member or donor designation.
+</li>
 </p>
-</ol>
-<p>More information regarding <a href="./docs/VolunteerInactiveList.pdf" target="_blank">inactive volunteer identification and corresponding procedures</a> are available.</p>
 <br />
 
 <a class="btn btn-success" href="rptvolexception.php?action=continue">CONTINUE</a>
+<br><br>
+<a href="./docs/VolunteerInactiveList.pdf" target="_blank">More information about inactive volunteers is available.</a>
 pagePart1;
 exit;
 }
