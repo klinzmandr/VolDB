@@ -482,7 +482,7 @@ foreach ($listkeys as $k => $v) {
 <?php
 $sql = "SELECT * FROM `voltime` 
 WHERE `MCID` = '$mcid' 
-ORDER BY `voltime` DESC;";
+ORDER BY `VolDate` DESC;";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
 
