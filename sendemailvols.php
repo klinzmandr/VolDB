@@ -32,8 +32,13 @@ foreach ($tokey as $t) {
 $tostr = rtrim($tostr," OR ") . ')';
 // echo "tostr: $tostr<br />";
 
-$sql = "SELECT `MCID`,`FName`,`LName`,`EmailAddress` FROM `members` WHERE `MemStatus` = 2 AND $tostr ORDER BY 'LName' ASC";
-//echo "SQL: $sql<br />";
+$sql = "SELECT `MCID`,`FName`,`LName`,`EmailAddress` 
+FROM `members` 
+WHERE `MemStatus` = 2 
+	AND `E_Mail` = 'TRUE'
+	AND $tostr 
+	ORDER BY 'LName' ASC";
+// echo "SQL: $sql<br />";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
 if ($rowcnt == 0) {
