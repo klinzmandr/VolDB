@@ -30,7 +30,9 @@ echo '</select>
 <input type="hidden" name="action" value="display">
 </td>';
 if ($_SESSION['VolSecLevel'] == 'voladmin')
- echo '<td><a class="btn btn-danger" href="listspecificlist.php?listname=VolInactive&action=display">List Inactives</a>
+ echo '<td>
+ <a class="btn btn-warning" href="listspecificlist.php?listname=AUL&action=display">List Active/Unlisted</a>
+ <a class="btn btn-danger" href="listspecificlist.php?listname=VolInactive&action=display">List Inactives</a>
 </td>';
 
 echo '</table></form>';
@@ -40,6 +42,8 @@ if ($action == 'display') {
 	WHERE `Lists` LIKE '%$listname%'
 	AND `Lists` NOT LIKE '%VolInactive%';";
 	if ($listname == 'VolInactive') 
+		$sql = "SELECT * FROM `members`	WHERE `Lists` LIKE '%$listname%';";
+	if ($listname == 'AUL') 
 		$sql = "SELECT * FROM `members`	WHERE `Lists` LIKE '%$listname%';";
 	$res = doSQLsubmitted($sql);
 	$rowcnt = $res->num_rows;
