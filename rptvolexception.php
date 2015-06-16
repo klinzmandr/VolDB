@@ -15,7 +15,7 @@ include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 include 'Incls/letter_print_css.inc';
 
-$expperiod = 60;					// period in days for time reporting period
+$expperiod = 90;					// period in days for time reporting period
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
@@ -57,6 +57,7 @@ SUM( `voltime`.`VolTime` ) AS `TotTime`,
  FROM `voltime`, `members` 
 WHERE `voltime`.`MCID` = `members`.`MCID` 
 AND `Lists` NOT LIKE '%VolInactive%' 
+AND `Lists` NOT LIKE '%AUL%' 
 GROUP BY `voltime`.`MCID`;
 ";
 // echo "sql: $sql<br>";
