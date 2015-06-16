@@ -6,10 +6,6 @@
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
-<body>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="./Incls/datevalidation.js"></script>
 <?php
 session_start();
 //include 'Incls/vardump.inc';
@@ -49,21 +45,23 @@ $vols = rtrim($vols,',') . ']';
 // echo '<pre> vols '; print_r($vols); echo '</pre>';
 
 // create the course list for the typeahead
-$sql = "SELECT * FROM `courses` WHERE 1";
+$sql = "SELECT * FROM `courses` WHERE 1 ORDER BY `Agency` ASC, `CourseId` ASC";
 $res = doSQLsubmitted($sql);
-$edlist = '[';
+$edlistdd = '<option></option>';
 while ($r = $res->fetch_assoc()) {
-	$c = rtrim($r[Agency]) . ':' . rtrim($r[CourseId]);
-	$edlist .= "'$c',";
+	if ($r[Agency] == '') continue;
+	$c = '<option>' . rtrim($r[Agency]) . ':' . rtrim($r[CourseId]) . '</option>';
+	$edlistdd .= "$c";
 	}
-$edlist = rtrim($edlist,',') . ']';
-if (strlen($edlist) <= 5) { 
+
+if (strlen($edlistdd) <= 5) { 
 	echo '<h2>No courses registered to populate the typeahead field.</h2>
 	<h3>Courses are registered using the &apos;List/Add/Update/Display Course Info&apos; menu item.</h3>';
 	echo '<a class="btn btn-primary" href="admin.php">RETURN</a></body></html>';
 	exit;
 	}
-// echo '<pre> courses '; print_r($edlist); echo '</pre>';
+
+// echo '<pre> courses '; print_r($edlistdd); echo '</pre>';
 
 $mciderr = array(); $rowcnt = 0;
 // check if this is an update, string to validate mcid's is in vols string
@@ -112,14 +110,11 @@ if ($action == 'upd') {
 
 // define the intake page
 print <<<pagePart1
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<title>Course Data Entry</title>
-<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-</head>
 <body onchange="flagChange()">
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="./Incls/datevalidation.js"></script>
+
 <div class="well">
 
 <h2>Course Data Entry <a class="btn btn-primary" href="admin.php" onclick="return chkchg()">RETURN</a></h2>
@@ -164,8 +159,7 @@ function isOK1(fld) {
 <script>
 function isOK2(fld) {
 	var id = fld.value;
-	var chk = id.indexOf(":");
-	if (chk <= 1) {
+	if (id.length == 0) {
 		alert("Invalid course identifier entered");
 		fld.style.background = 'Pink';
 		return false;
@@ -230,7 +224,7 @@ function deactivatesubmit() {
 <td><input autofocus name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search1" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" id="hrs" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed1" data-provide="typeahead" data-items="5" autocomplete="off" size="30"/></td>
+<td> <select name="ed[]" id="ed1" onchange="isOK2(this)">$edlistdd</select>
 <td><input type="text" name="note[]" size="40"  autocomplete="off"></td>
 </tr>
 
@@ -239,7 +233,7 @@ function deactivatesubmit() {
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search2" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed2" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed2" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40></td>
 </tr>
 
@@ -248,7 +242,7 @@ function deactivatesubmit() {
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search3" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed3" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed3" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40></td>
 </tr>
 
@@ -257,7 +251,7 @@ function deactivatesubmit() {
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isO1K(this)" name="id[]" type="text" id="search4" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed4" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed4" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
@@ -266,7 +260,7 @@ function deactivatesubmit() {
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search5" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed5" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed5" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
@@ -275,7 +269,7 @@ function deactivatesubmit() {
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search6" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed6" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed6" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
@@ -284,7 +278,7 @@ function deactivatesubmit() {
 <td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search7" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed7" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed7" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
@@ -293,7 +287,7 @@ function deactivatesubmit() {
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search8" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed8" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed8" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
@@ -302,7 +296,7 @@ function deactivatesubmit() {
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search9" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed9" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed9" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
@@ -311,7 +305,7 @@ function deactivatesubmit() {
 <td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search10" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td><input onchange="isOK2(this)" name="ed[]" type="text" id="ed10" data-provide="typeahead" data-items="5" autocomplete="off" size=30/></td>
+<td> <select name="ed[]" id="ed10" onchange="isOK2(this)">$edlistdd</select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 </table>
@@ -333,19 +327,6 @@ $('#search7').typeahead({source: vols})
 $('#search8').typeahead({source: vols})
 $('#search9').typeahead({source: vols})
 $('#search10').typeahead({source: vols})
-</script>
-<script>
- var ed = $edlist; 
-$('#ed1').typeahead({source: ed})
-$('#ed2').typeahead({source: ed})
-$('#ed3').typeahead({source: ed})
-$('#ed4').typeahead({source: ed})
-$('#ed5').typeahead({source: ed})
-$('#ed6').typeahead({source: ed})
-$('#ed7').typeahead({source: ed})
-$('#ed8').typeahead({source: ed})
-$('#ed9').typeahead({source: ed})
-$('#ed10').typeahead({source: ed})
 </script>
 
 </body>
