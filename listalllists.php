@@ -24,7 +24,7 @@ echo '<table border="1" align="center" width="80%">
 
 echo '<h4>Currently Defined Mailing Lists</h4>';
 echo '<table>
-<tr><th>DB Achronym</th><th>List Description</th></tr>';
+<tr><th>DB Acronym</th><th>List Description</th></tr>';
 foreach ($lines as $l) {
 	if (strlen($l) <= 0) { continue; } 
 	if (substr_compare($l,'//',0,2) == 0) { continue; }
