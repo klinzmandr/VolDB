@@ -93,11 +93,7 @@ var reason = "";
 var secLevel = "$_SESSION[VolSecLevel]";
 // validate form to ensure required fields are entered
 function validateForm(theForm) {
-	//alert("validation entered");
-	//if (secLevel != "voladmin") {
-	//	alert("You do not have authority of make updates. " + secLevel + "!");
-	//	return false;
-	//	}
+	if (!validateLists()) return false;
 	reason = "";
 	reason += validateEmpty(theForm.FName);
 	reason += validateEmpty(theForm.LName);
@@ -112,8 +108,7 @@ function validateForm(theForm) {
 	reason += validateEmpty(theForm.MemDate);
 	//reason += validatePassword(theForm.pwd);
 	reason += validateEmpty(theForm.EmailAddress);
-	reason += validateEmpty(theForm.PrimaryPhone);
-	reason += validateLists();    
+	reason += validateEmpty(theForm.PrimaryPhone);    
 	if (reason != "") {
   	alert("Some fields need attention:\n\n" + reason);
   	return false;
@@ -122,14 +117,16 @@ function validateForm(theForm) {
 	}
 
 function validateLists() {
-	var cnt = 0; var error = "";
+	var cnt = 0; var error = ""; 
+	var memstatus = document.getElementsByName("MemStatus"); 
 	var fld = document.getElementsByName("mlist[]");
 	for(var i=0; i < fld.length; i++) {
-		if(fld[i].checked) cnt = cnt + 1; }
-	if (cnt == 0) {
-		var error = "Lists Error: a volunteer must be registered on at least one mailing list.\n";
+		if(fld[i].checked) cnt += 1; }
+	if ((memstatus[2].checked) && (cnt == 0)) {				
+		alert("A volunteer must be registered on at least one mailing list.\n");
+		return false;
 		}
-  return error;
+	return true;
   }
 	
 function validateCorrSal(fld) {
@@ -306,15 +303,18 @@ return true;
   <li class=""><a href="#home" data-toggle="tab">Home</a></li>
   <!-- <li class=""><a href="#detail" data-toggle="tab">Detail</a></li> -->
   <li class=""><a href="#notes" data-toggle="tab">Notes</a></li>
-
-<?php 
+	<li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
+	<li class=""><a href="#time" data-toggle="tab">Time</a></li>
+	<li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
+	
+<!-- <?php 
 	if ($memstatus == 2) 
 		echo '
 			<li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
 			<li class=""><a href="#time" data-toggle="tab">Time</a></li>
 			<li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
 			';
-?>
+?> -->
 </ul>
 
 <!-- Tab 1 Demographic information -->
@@ -455,7 +455,8 @@ function confirmNO(fld) {
 
 <?php
 $text = readdblist('EmailLists');
-$listkeys = formatdbrec($text);
+$listkeys[AUL] = 'Active/Unlisted';
+$listkeys += formatdbrec($text);
 if ($_SESSION['VolSecLevel'] == 'voladmin') $listkeys[VolInactive] = 'Vol Inactive';
 //echo '<pre> keys '; print_r($listkeys); echo '</pre>';
 foreach ($listkeys as $k => $v) {
