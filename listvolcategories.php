@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Maintain Vol Categories</title>
+<title>Vol Time Categories</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -26,8 +26,8 @@ if ($action == 'display') {
 		</body></html>';
 		exit;
 		}
-	echo '<h4>Current Volunteer Categories</h4>
-	<p>Modify the currently defined volunteer categories.</p>';
+	echo '<h4>Current Volunteer Time Categories</h4>
+	<p>Modify the currently defined volunteer time categories.</p>';
 	$txt = readdblist('VolCategorys');
 	echo '<form action="listvolcategories.php" method="post">	
 	<textarea name="CfgText" rows="20" cols="100">'.$txt.'</textarea>
@@ -49,8 +49,8 @@ if ($action == 'update') {
 	
 if ($action == '') {
 print <<<pagePart1
-<h3>Maintain Volunteer Categories</h3>
-<p>This function is provided to allow the creation or deletion of volunteer categories used in the volunteer management system.  These categories are used to designate areas of volunteer support during the volunteer time entry process as well as for the volunteer self time entry program.  Maintenance of the volunteer&apos;s categories is done by selection from drop down menu selection during data entry.</p>
+<h3>Maintain Volunteer Time Categories</h3>
+<p>This function is provided to allow the creation or deletion of volunteer time categories used in the volunteer management system.  These categories are used to designate areas of volunteer support during the volunteer time entry process as well as for the volunteer self time entry program.  Maintenance of the volunteer&apos;s categories is done by selection from drop down menu selection during data entry.</p>
 <p>NOTE:  these selections are merely displayed as choices during the volunteer time data entry process.  Changing or adding to this list does not effect records previously entered.</p>
 <p>Volunteer categories currently defined:</p>
 
