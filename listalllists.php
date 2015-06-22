@@ -51,9 +51,10 @@ while ($r = $res->fetch_assoc()) {
 	$listarray = explode(",",$r[Lists]);	// array of member's lists
 	$c = count($listarray);								// number of lists for MCID
 	$mcidcount[$c] += 1;
-	//echo '<pre> listarray '; print_r($listarray); echo '</pre>';
+//	echo '<pre> listarray '; print_r($listarray); echo '</pre>';
 	foreach ($listarray as $v) {
 			$listcounter[$v] += 1;
+//			if ($v == 'VolInactive') echo "mcid: $r[MCID]<br>";
 		}
 	}
 
@@ -67,7 +68,14 @@ foreach ($listcounter as $a => $b) {
 		}
 	else {
 		//echo "$a: $b<br />";
-		if ($a == 'VolInactive') continue;
+		if ($a == 'VolInactive') {
+			echo 'VolInactive: ' . $b . '<br>';
+			continue;
+			}
+		if ($a == 'AUL') {
+			echo 'Active/Unlisted: '. $b . '<br>';
+			continue;
+			}
 		echo $syslistsarray[$a] . ": ". $b . "<br>";
 		}
 	}
