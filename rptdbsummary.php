@@ -29,6 +29,7 @@ $thisyrmo = date('Y-m',strtotime(now));
 $memdatemissing = 0; $memdateYTD = 0; $memdateMo = 0; 
 $inactivetrue = 0; $inactivefalse = 0; $inactivemissing = 0; $inactive_expired = 0; 
 $neither = 0; $state = 0; $noaddr = 0; $nocity = 0; $nostate = 0; $nozip = 0; $missingall = 0;
+$nullemail = 0;
 while ($r = $res->fetch_assoc()) {
 	$memstatus=$r[MemStatus];
 	$memstatuscount[$memstatus] += 1;
@@ -67,6 +68,7 @@ while ($r = $res->fetch_assoc()) {
 	if (($r[PrimaryPhone] == "") AND ($r[EmailAddress] == "")) { $neither += 1; }
 	if ($r[E_Mail] == 'TRUE') { $okemail += 1; }
 	if ($r[E_Mail] == 'FALSE') { $noemail += 1; }
+	if ($r[E_Mail] == '') { $nullemail += 1; }
 	}
 print <<<formatMembers1
 
@@ -149,8 +151,9 @@ print <<<formatMembers3
 <div class="col-sm-4">With Neither: $neither</div>
 </div>
 <div class="row">
-<div class="col-sm-4">Email OK: $okemail</div>
-<div class="col-sm-4">Email Not OK: $noemail</div>
+<div class="col-sm-3">Email OK: $okemail</div>
+<div class="col-sm-3">Email Not OK: $noemail</div>
+<div class="col-sm-3">Email NULL: $nullemail</div>
 </div>
 </div> <!-- well -->
 
