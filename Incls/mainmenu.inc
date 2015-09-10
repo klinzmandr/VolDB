@@ -87,10 +87,10 @@ print <<<menuPart2
 <li class="dropdown">
 <a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">Reports<b class="caret"></b></a>
 <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
-	<li><a href="rptperiodsummary.php" target="_blank">Period Service Summary</a></li>	
-	<li><a href="rptperiodanalysis.php" target="_blank">Period Service Analysis</a></li>	
-	<li><a href="rptperioddetail.php" target="_blank">Period Service Detail</a></li>
-	<li><a href="rptcategorydetail.php" target="_blank">Category Service Detail</a></li>
+	<!-- <li><a href="rptperiodsummary.php" target="_blank">Period Service Summary</a></li> -->	
+	<!-- <li><a href="rptperiodanalysis.php" target="_blank">Period Service Analysis</a></li> -->	
+	<!-- <li><a href="rptperioddetail.php" target="_blank">Period Service Detail</a></li> -->
+	<li><a href="rptcategorydetail.php" target="_blank">Volunteer Service Reporting</a></li>
 	<li><a href="rptvoltimesummary.php" target="_blank">Vol Time Summary</a></li>
 	<li><a href="rptmcidtimereport.php" target="_blank">List Time for MCID</a></li>
 	<li><a href="rptmcidedreport.php" target="_blank">List Courses for MCID</a></li>
@@ -99,7 +99,9 @@ print <<<menuPart2
 	<li><a href="rptvolexception.php" target="_blank">Volunteer Exception Report</a></li>
 	<li><a href="rptmaillogviewer.php" target="_blank">Review Mail Log</a></li>
 	<li><a href="maillogchecker.php" target="_blank">Review Server Mail Log</a></li>
+	<li><a href="http://www.brownbearsw.com/cal/centervols" target="_blank">Center Vol. Schedule</a></li>
 	<li><a href="rptdbsummary.php" target="_blank">Database Summary</a></li>
+	<li><a href="http://www.pacificwildlifecare.org/BOD/PWCCaseDataCharts.pdf" target="_blank">Case Data Charts</a></li>
 	<li class="divider"></li>
 	<li><a href="rptVolUtility.html" target="_blank">Vol Utility User Info</a></li>
 	<li><a href="#">Other report(s) added as needed</a></li>

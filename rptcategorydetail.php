@@ -115,16 +115,18 @@ if ($rowcnt > 0) {
 	//echo '<pre>mcid hours '; print_r($mcidhours); echo '</pre>';
 	//echo '<pre>mcid milage '; print_r($mcidmileage); echo '</pre>';
 	//echo '<pre>category hours '; print_r($cathours); echo '</pre>';
-	echo "<h4>Period from $sd to $ed</h4>
-	Rows extracted: ".count($voldet).",&nbsp;";
-	echo "Categories reported: " . count($cats) . '<br>';
-	echo 'Unique Vol IDs reporting: ' . count($mcidcounts) . ', Total Hrs: ' . $tothrs;
-	if ($totmiles > 0) echo ", Total Mileage: $totmiles";
+	echo "<h4>Period from $sd to $ed</h4>";
+//	Rows extracted: ".count($voldet)."<br>";
+//	echo "Categories reported: " . count($cats) . '<br>';
+	echo '<b>Unique Volunteers reporting:</b> ' . count($mcidcounts) . '<br>
+	<b>Total Hrs:</b> ' . $tothrs . '<br>';
+	if ($totmiles > 0) echo "<b>Total Mileage:</b> $totmiles";
 	echo '<br>';
 //	echo '<b>Period Category service count and total hours</b><br>';
 	echo '<ul><table class="table-condnesed" border=0>';
 	
 	echo '<tr><td align="center" width="20%"><b>Category</b></td><td width="20%" align="center"><b>SvcCount</b></td><td width="20%" align="center"><b>TotHrs</b></td></tr>';
+	ksort($counts);
 	foreach ($counts as $k => $v) {
 		echo "<tr><td>$k</td><td align=\"right\">$v[count]</td><td align=\"right\">$v[hours]</td></tr>";
 		}
