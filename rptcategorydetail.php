@@ -18,6 +18,8 @@ $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("previ
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
 $cats = isset($_REQUEST['cats']) ? $_REQUEST['cats'] : '';
 $details = isset($_REQUEST['details']) ? 'ON' : 'OFF';
+$catsummary = isset($_REQUEST['catsummary']) ? 'ON' : 'OFF';
+$volsummary = isset($_REQUEST['volsummary']) ? 'ON' : 'OFF';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 echo '<div class="container"><h3>Category Service Detail&nbsp;&nbsp;<a class="btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>';
@@ -52,8 +54,13 @@ function chgcb() {
 }
 </script>';
 	echo "
-	<p>This report produces all the detail entries for one or more categories selected from the following list within the date range specified.</p>
-	<p>Unless details are requested, the report summarizes all volunteer time reported within the date range entered.  If requested, details are listed and are also provided to be downloaded as a CSV spreadsheet file.</p>
+	<p>This report produces a summary of all service records for one or more categories selected from the date range specified.</p>
+	<p>The following additional summary and/or detail reports can optionally be selected as well. All listed may be downloaded to spreadsheet software by clicking the assoicated link.
+	<ul><li>Volunteer Summary - lists each individual volunteer serving within the date range specified summarizing the number of time served, count of the different service categories served as well as the total number of hours served and total miles driven in all categories.</li>
+	<li>Category Summary - Groups each individual volunteer with service time within the date range specified by category. Individual volunteer along with their total hours served and total miles driven is provided.</li>
+	<li>Service Detail Records - all service records for all volunteers within the date range specified are listed.</li> 
+	</ul></p>
+
 <h4>Specify Date Period:</h4><ul>
 <form action=\"rptcategorydetail.php\" method=\"post\"  class=\"form\" onsubmit=\"return chkcats()\">
 Start:<input type=\"text\" name=\"sd\" id=\"sd\" value=\"$sd\" style=\"width: 105px;\">
@@ -72,7 +79,9 @@ foreach ($catsarray as $k => $c) {
 	echo "<input type=\"checkbox\" name=\"cats[]\" id=\"cats\" value=\"$k\" checked> $c<br>";
 }
 echo '</ul><br>
-<input type="checkbox" name="details" id="details"> Show details<br>
+<input type="checkbox" name="volsummary" id="volsummary"> Create Volunteer Summary&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="catsummary" id="catsummary"> Create Category Summary&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="checkbox" name="details" id="details"> List detail records<br>
 <input type="hidden" name="action" value="generate">
 <input type="submit" name="submit" Value="Submit">
 </form>
@@ -88,36 +97,43 @@ exit;
 //	echo "details flag: " . $details . "<br>";
 //	echo '<pre> cats '; print_r($cats); echo '</pre>';
 
-$sql = "SELECT * from `voltime` WHERE `VolDate` BETWEEN '$sd' AND '$ed' ORDER BY `VTID` ASC";
+$sql = "SELECT `voltime`.*, `members`.`FName`, `members`.`LName` from `voltime`, `members`
+WHERE `voltime`.`MCID` = `members`.`MCID`
+	AND `voltime`.`VolDate` BETWEEN '$sd' AND '$ed'
+ORDER BY `voltime`.`VTID` ASC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
-	
+// echo "rowcnt: $rowcnt<br>";
 if ($rowcnt > 0) {
-// table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes
 	$voldet = array(); $csv = array(); $counts = array(); $mcidcounts = array();
-	$csv[] = "MCID;SvcDate;SvcTime;Mileage;Category;Notes\n";
+	$categories = array(); $catscsv = array(); $names = array(); $ind = array();
+// table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes	
+	$catscsv[] = "VolCategory;MCID;FName;LName;TotHrs;TotMiles";
+	$csv[] = "MCID;FName,LName,SvcDate;SvcTime;Mileage;Category;Notes\n";
 	while ($r = $res->fetch_assoc()) {
-//	echo '<pre>'; print_r($r); echo '</pre>';
+//		echo '<pre>'; print_r($r); echo '</pre>';
 		if (in_array($r[VolCategory], $cats)) {
+			if (rtrim($r[VolCategory]) == '') continue;
 			$tothrs += $r[VolTime];
 			$totmiles += $r[VolMileage];
 			$counts[$r[VolCategory]][count] += 1;
 			$counts[$r[VolCategory]][hours] += $r[VolTime];
 			$mcidcounts[$r[MCID]][count] += 1;
 			$mcidcounts[$r[MCID]][hours] += $r[VolTime];
-			$voldet[] = "<tr><td>$r[MCID]</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
-			$csv[] = "\"$r[MCID]\";$r[VolDate];$r[VolTime];$r[VolMileage];$r[VolCategory];\"$r[VolNotes]\"\n";
+			$categories[$r[VolCategory]][$r[MCID]][VolTime] += $r[VolTime];
+			$categories[$r[VolCategory]][$r[MCID]]['VolMileage'] += $r[VolMileage];
+			$names[$r[MCID]] = "$r[FName];$r[LName]";
+			$ind[$r[MCID]][Count] += 1;
+			$ind[$r[MCID]][Cats][$r[VolCategory]] += 1;
+			$ind[$r[MCID]][Hours] += $r[VolTime];
+			$ind[$r[MCID]][Mileage] += $r[VolMileage];
+			
+			$voldet[] = "<tr><td>$r[MCID]</td><td>$r[FName]</td><td>$r[LName]</td><td width=\"100\">$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
+			$csv[] = "\"$r[MCID]\";\"$r[FName]|\";\"$r[LName]\";$r[VolDate];$r[VolTime];$r[VolMileage];$r[VolCategory];\"$r[VolNotes]\"\n";
 			}
 		}
-//	echo '<pre> counts '; print_r($counts); echo '</pre>';
-//	echo '<pre> MCIDs '; print_r($mcidcounts); echo '</pre>';
-//	echo '<pre>mcid count '; print_r($mcidcounts); echo '</pre>';
-	//echo '<pre>mcid hours '; print_r($mcidhours); echo '</pre>';
-	//echo '<pre>mcid milage '; print_r($mcidmileage); echo '</pre>';
-	//echo '<pre>category hours '; print_r($cathours); echo '</pre>';
+
 	echo "<h4>Period from $sd to $ed</h4>";
-//	Rows extracted: ".count($voldet)."<br>";
-//	echo "Categories reported: " . count($cats) . '<br>';
 	echo '<b>Unique Volunteers reporting:</b> ' . count($mcidcounts) . '<br>
 	<b>Total Hrs:</b> ' . $tothrs . '<br>';
 	if ($totmiles > 0) echo "<b>Total Mileage:</b> $totmiles";
@@ -140,12 +156,62 @@ if ($rowcnt > 0) {
 		}
 	echo '</table>';
 */
+
+// output volunteer summary if requested
+	if ($volsummary == 'ON') {
+		echo '<h4>Volunteer Individual Summary&nbsp;&nbsp;
+		<a class="btn btn-success btn-xs" href="rptcategorydetail.php">Start Over</a></h4>';
+//		echo '<pre> ind '; print_r($ind); echo '</pre>';
+		echo "<a href=\"downloads/VolSummary.csv\" download=\"VolSummary.csv\">DOWNLOAD CSV FILE</a>";
+		echo "<button type=\"button\" class=\"btn btn-xs btn-default\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Fields separated by semicolon(;)\nText fields are quoted.\"><span class=\"glyphicon glyphicon-info-sign\" style=\"color: blue; font-size: 20px\"></span></button>";
+		echo '<table border=0 class="table-condensed">
+		<tr><th>MCID</th><th>Name</th><th>SvcCnt</th><th>CatCnt</th><th>TotHrs</th><th>TotMiles</th></tr>';
+		$vscsv[] = "MCID;Name;SvcCnt;CatCnt;TotHrs;TotMiles\n";
+		ksort($ind);
+		foreach ($ind as $k => $v) {
+			$t = $v[Hours]; $m = $v[Mileage]; $cc = count($v[Cats]); $c = $v[Count];
+			list($fn,$ln) = explode(';',$names[$k]);
+			echo "<tr><td>$k</td><td>$fn&nbsp;$ln</td><td align=right>$c</td><td align=right>$cc</td><td align=right>$t</td><td align=right>$m</td></tr>";
+			$vscsv[] = "$k;\"$fn $ln\";$c;$cc;$t;$m\n";
+//			echo "Key: $k, cats count: " . count($v[Cats]); 
+//			echo "<pre> v "; print_r($v); echo '</pre>';
+			}
+		echo '</table>';
+		file_put_contents('downloads/VolSummary.csv',$vscsv);
+		}
+
+// output category summary if requested
+	if ($catsummary == 'ON') {
+//		echo '<pre> catsarray '; print_r($cats); echo '</pre>';
+		echo '<h4>Volunteer Category Summary&nbsp;&nbsp;
+		<a class="btn btn-success btn-xs" href="rptcategorydetail.php">Start Over</a></h4>';
+		echo "<a href=\"downloads/VolCategorySummary.csv\" download=\"VolCategorySummary.csv\">DOWNLOAD CSV FILE</a>";
+		echo "<button type=\"button\" class=\"btn btn-xs btn-default\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Fields separated by semicolon(;)\nText fields are quoted.\"><span class=\"glyphicon glyphicon-info-sign\" style=\"color: blue; font-size: 20px\"></span></button>";
+		echo '<table border=0 class="table-condensed">
+		<tr><th>Category</th><th>MCID</th><th>Name</th><th>TotalHrs</th><th>TotMiles</th></tr>';
+		$cscsv[] = "Category;MCID;Name;TotalHrs;TotMiles\n";
+// $k = cat, $kk = mcid, $vv[VolTime] = total hrs, $vv[VolMileage] = total miles
+		foreach ($categories as $k => $v) { 
+			//echo "<tr><td>$k</td><td>$v[Name]</td>";
+			foreach ($v as $kk => $vv) {
+				$t = $vv[VolTime]; $m = $vv[VolMileage]; list($fn,$ln) = explode(';',$names[$kk]);
+				echo "<tr><td>$k</td><td>$kk</td><td>$fn&nbsp;$ln</td><td>$t</td><td>$m</td></tr>";
+				$cscsv[] = "$k;$kk;\"$fn $ln\";$t;$m\n"; 
+				}
+			}
+		echo '</table>';
+		file_put_contents('downloads/VolCategorySummary.csv',$cscsv);
+		}
+
+// output service details if requested
 	if ($details == 'ON') {
-		file_put_contents('downloads/CategoryServiceDetail.csv',$csv);
-		echo '<table class="table-condensed" border="0">';
+		file_put_contents('downloads/VolServiceDetail.csv',$csv);
+		echo '<h4>Volunteer Service Detail Records&nbsp;&nbsp;
+		<a class="btn btn-success btn-xs" href="rptcategorydetail.php">Start Over</a></h4>';
 		echo "<a href=\"downloads/VolServiceDetail.csv\" download=\"VolServiceDetail.csv\">DOWNLOAD CSV FILE</a>";
 		echo "<button type=\"button\" class=\"btn btn-xs btn-default\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Fields separated by semicolon(;)\nText fields are quoted.\"><span class=\"glyphicon glyphicon-info-sign\" style=\"color: blue; font-size: 20px\"></span></button>";
-		echo '<tr><th>MCID</th><th>Date</th><th>Time</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>';
+		echo '<table class="table-condensed" border="0">
+		<tr><th>MCID</th><th>FName</th><th>LName</th><th>Date</th><th>Time</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>';
 		foreach ($voldet as $k => $v) { 
 			echo "$v";
 			}
