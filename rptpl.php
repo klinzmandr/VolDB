@@ -76,7 +76,7 @@ FROM `log`
 WHERE  `DateTime` BETWEEN '$msd' AND '$med'
 	AND `SQL` LIKE 'Page%' 
 	AND `Page` LIKE '$type'
-	AND `User` NOT LIKE '%klinz%'
+	-- AND `User` NOT LIKE '%klinz%'
 ORDER BY `DateTime` ASC;";
 
 // echo "sql: $sql<br />";
@@ -143,6 +143,53 @@ echo '</td></tr></table>';
 //echo '<pre> who '; print_r($whoarray); echo '</pre>';
 //echo '<pre> combo '; print_r($comboarray); echo '</pre>';
 
+// create list of all users logged in
+$sql = "SELECT *
+FROM `log`
+WHERE  `DateTime` BETWEEN '$msd' AND '$med'
+	AND `SQL` LIKE 'Logg%'
+	AND `Page` LIKE '%voldb%' 
+	-- AND `User` NOT LIKE '%klinz%'
+ORDER BY `DateTime` ASC;";
+
+// echo "sql: $sql<br />";
+$rc = 0;
+$res = doSQLsubmitted($sql);
+$rc = $res->num_rows;
+// echo "Total Pages Used: $rc<br />";
+$user = array();
+while ($r = $res->fetch_assoc()) {
+//	echo '<pre> logged in '; print_r($r); echo '</pre>';
+	if ($r[User] == '') continue;
+	$usr = $r[User];
+//	echo '<pre> whotimemax '; print_r($whotimemax); echo '</pre>';
+	$lasttimedate = $whotimemax[$usr];
+	$lasttime = strtotime($whotimemax[$usr]) + 30*60;
+	$now = strtotime(now);
+//	echo "lasttimedate: $lasttimedate, lasttime: $lasttime, NOW: $now<br>";
+//	echo "lasttime: $lasttime, lastdate: $whotimemax[$r[User]]<br>";
+//	echo "now: $now, last: $lasttime<br>";
+	if ($now > $lasttime) continue;
+	
+	if ($r[SQL] == "Logged In") {
+		$user[$r[User]] = $r;		
+		}
+	if ($r[SQL] == "Logging Out") {
+		unset($user[$r[User]]);		
+		}
+	 
+	}
+//	echo '<pre> user '; print_r($user); echo '</pre>';
+if (count($user) > 0) {
+	echo '<h4>Current Users:</h4><ul>';
+	foreach ($user as $k => $v) {
+		$u = $v[User]; $s = $v[SecLevel]; $d = $v[DateTime];
+		echo "
+		$u ($s) at $d<br>
+		";
+		}
+	echo '</ul>';
+	}
 
 ?>
 
