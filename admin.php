@@ -30,7 +30,8 @@ if ((($_REQUEST['action']) == 'login')) {
 		$ok = checkcredentials($userid, $password);
 		if ($ok) {
 			//echo "check of user id and password passed<br>";
-			addlogentry("Logged In");
+			$loc = $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'];
+			addlogentry("Logged In@$loc");
 			}
 		else {
 			addlogentry("Failed login attempt with password: $password");

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Report on Reports</title>
+<title>Report on VolDB Reports</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -83,7 +83,7 @@ ORDER BY `DateTime` ASC;";
 $rc = 0;
 $res = doSQLsubmitted($sql);
 $rc = $res->num_rows;
-// echo "Total Pages Used: $rc<br />";
+//	echo "Total Pages Used: $rc<br />";
 $whatarray = array(); $whoarray = array(); $whotimemin = array(); $whotimemax = array();
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> rows '; print_r($r); echo '</pre>';
@@ -171,26 +171,32 @@ while ($r = $res->fetch_assoc()) {
 //	echo "now: $now, last: $lasttime<br>";
 	if ($now > $lasttime) continue;
 	
-	if ($r[SQL] == "Logged In") {
-		$user[$r[User]] = $r;		
+	$sqlparts = explode('@', $r[SQL]);
+//	echo '<pre> sqlparts '; print_r($sqlparts); echo '</pre>';
+	if ($sqlparts[0] == "Logged In") {
+		$user[$r[User]] = $r;
+		$addr[$r[User]] = $sqlparts[1];
 		}
+
 	if ($r[SQL] == "Logging Out") {
 		unset($user[$r[User]]);		
+		unset($addr[$r[User]]);
 		}
-	 
 	}
+
 //	echo '<pre> user '; print_r($user); echo '</pre>';
 if (count($user) > 0) {
-	echo '<h4>Current Users:</h4><ul>';
+	echo '<h4>Current Active Users:</h4>
+	(NOTE: IP at Center: 175.5.141.139)<ul>';
 	foreach ($user as $k => $v) {
-		$u = $v[User]; $s = $v[SecLevel]; $d = $v[DateTime];
+		$u = $v[User]; $s = $v[SecLevel]; $d = $v[DateTime]; $a = $addr[$k];
 		echo "
-		$u ($s) at $d<br>
+		$u ($s) at $d on $a<br>
 		";
 		}
 	echo '</ul>';
 	}
-
+echo '<br>----- END OF REPORT -----<br><br>';
 ?>
 
 <script src="jquery.js"></script>
