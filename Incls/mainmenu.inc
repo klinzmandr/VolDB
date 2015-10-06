@@ -100,6 +100,8 @@ print <<<menuPart2
 	<li><a href="rptmaillogviewer.php" target="_blank">Review Mail Log</a></li>
 	<li><a href="maillogchecker.php" target="_blank">Review Server Mail Log</a></li>
 	<li><a href="http://www.brownbearsw.com/cal/centervols" target="_blank">Center Vol. Schedule</a></li>
+	<li><a href="http://www.brownbearsw.com/cal/pwc_phones" target="_blank">Hotline Vol. Schedule</a></li>
+	<li><a href="http://www.brownbearsw.com/cal/pwctrans" target="_blank">Resc/Trans Vol. Schedule</a></li>
 	<li><a href="rptdbsummary.php" target="_blank">Database Summary</a></li>
 	<li><a href="http://www.pacificwildlifecare.org/BOD/PWCCaseDataCharts.pdf" target="_blank">Case Data Charts</a></li>
 	<li class="divider"></li>
