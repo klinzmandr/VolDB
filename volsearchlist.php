@@ -9,6 +9,8 @@
 <body>
 <?php
 session_start();
+unset($_SESSION['VolActiveMCID']);
+
 include 'Incls/seccheck.inc';
 include "Incls/datautils.inc";
 //include "Incls/vardump.inc";
