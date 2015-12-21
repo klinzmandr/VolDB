@@ -53,7 +53,7 @@ if ($action == "update") {
 		unset($vararray[mlist]);									// delete array
 		$vararray[Lists] = $liststring;						// add back the string
 		}
-	else $vararray[Lists] = '';									// if non are checked -----
+	else $vararray[Lists] = '';									// if none are checked -----
 	unset($vararray[action]);										// unset page action indicator
 	$where = "`MCID`='" . $mcid . "'";
 	sqlupdate('members',$vararray, $where);	
