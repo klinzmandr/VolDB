@@ -9,8 +9,10 @@
 
 <?php
 session_start();
+unset($_SESSION['VolActiveMCID']);
+
 //include 'Incls/vardump.inc';
-include 'Incls/mainmenu.inc';
+//include 'Incls/mainmenu.inc';
 include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 
@@ -99,7 +101,7 @@ function chkchg() {
 	}
 </script>
 <div class="well">
-<h2>Adding A New Volunteer</h2>
+<h2>Adding A New Volunteer  <a class="btn btn-danger" href="admin.php">CANCEL</a></h2>
 <p>This function is to add a new volunteer record to the database.</p>
 <p>This requires that a unique 5 character Member/Contact Identifier (MCID) be proposed to be used to identify that volunteer.</p>
 <p>The MCID is comprise of 3 alphabetic letters (usually the first three letters of the name of the volunteer or organizational name or any organizational achronym) plus 2 numeric digits (usually the first 2 digits of the volunteer&apos;s street address or the last 2 digits of the phone number.)  This combination provides a predictable method that facilitates easy lookup for future reference.</p>
@@ -116,7 +118,8 @@ MCID: <input type="text" name="mcid" value="">
 <input type="hidden" name="action" value="add">
 <input type="submit" name="submit" value="Add MCID" onclick="return chkchg()">
 </form><br />
-<a class="btn btn-primary" href="volinfotabbed.php">CANCEL ADDITION</a><br /><hr>
+<!-- <a class="btn btn-primary" href="volinfotabbed.php">CANCEL ADDITION</a><br /> -->
+<hr>
 </div>   <!-- col -->
 </div>  <!-- row -->
 pagePart1;
