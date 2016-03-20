@@ -99,10 +99,11 @@ $resarray = array(); $yrarray = array();
 while ($r = $res -> fetch_assoc()) {
 	$resarray[$r[VTID]] = $r;
 	if ($r[VolDate] == '0000-00-00') continue;
+	if ($r[VolDate] == '') continue;
 	$yr = date('Y', strtotime($r[VolDate]));
 	$yrarray[$yr] += 1; 
 }
-
+// echo '<pre> yrarray '; print_r($yrarray); echo('</pre>');
 $yrcount = count($yrarray);
 $accum = prepaccum($yrcount);
 
