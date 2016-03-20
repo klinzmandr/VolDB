@@ -20,6 +20,7 @@ include 'Incls/datautils.inc';
 include 'Incls/createcitydd.inc';
 include 'Incls/mainmenu.inc';
 
+$addflg = isset($_REQUEST['addflg']) ? $_REQUEST['addflg'] : '';
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter']: "";
 $filter = $filterflag = rtrim($filter);
 if ($filter == "--none--") {
@@ -55,8 +56,25 @@ if ($action == "update") {
 		}
 	else $vararray[Lists] = '';									// if none are checked -----
 	unset($vararray[action]);										// unset page action indicator
+	unset($vararray[addflg]);                   // unset new record flag 
 	$where = "`MCID`='" . $mcid . "'";
 	sqlupdate('members',$vararray, $where);	
+// add corr rec if supporter rec is new and is a voo attendee  	
+	$cflds = array();
+//	echo "MCType: ".$vararray[MCType].", addflg: $addflg<br>";
+	if ((stripos($vararray[MCType],'VOO') != FALSE) && ($addflg == 'newrec')) {   
+//    echo '<pre> vararray '; print_r($vararray); echo '</pre>';
+    $cflds[CorrespondenceType] = 'VOORegistration';
+		$cflds[DateSent] = date('Y-m-d');
+		$cflds[MCID] = $mcid;
+		$cflds[SourceofInquiry] = 'VOO';
+		$cflds[Reminders] = '';
+		$cflds[Notes] = "auto-added on VOO registration\n" . $fields[Notes];
+		//echo "<pre>donations array"; print_r($vararray); echo "</pre>";
+		//echo "<pre>correspondence array"; print_r($fields); echo "</pre>";
+		sqlinsert('correspondence', $cflds);
+		$addflg = '';        
+    }
 	}
 
 // get member record from ActiveMCID and display the info in update form
@@ -301,9 +319,7 @@ return true;
 <!-- Tab definition header  -->
 <ul id="myTab" class="nav nav-tabs">
   <li class=""><a href="#home" data-toggle="tab">Home</a></li>
-  <!-- <li class=""><a href="#detail" data-toggle="tab">Detail</a></li> -->
-  <li class=""><a href="#notes" data-toggle="tab">Notes</a></li>
-	<li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
+  <li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
 	<li class=""><a href="#time" data-toggle="tab">Time</a></li>
 	<li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
 	
@@ -389,7 +405,7 @@ loaddbselect('MCTypes');
 </div>  <!-- row -->
 <div class="row">
 <div class="col-sm-3">
-Date Joined:<input onchange="ValidateDate(this)" placeholder="YYYY-MM-DD" name="MemDate" value="<?=$memdate?>" style="width: 100px;">
+Date Joined: <?=$memdate?>
 </div>  <!-- col-sm-4 -->
 <script>
 function chkvalidemail(fld) {
@@ -425,27 +441,21 @@ function confirmNO(fld) {
 <input type="radio" name="Mail" value="FALSE" />No
 </div>
 </div>  <!-- row -->
-<!-- the Inactive and DateInactive are hidden to prevent any changes here -->
-<div hidden class="row">
-<div class="col-sm-3">Mbr Inactive?: 
-<input onclick="setInactiveDate()" type="radio" name="Inactive" value="TRUE" />Yes
-<input onclick="clearInactiveDate()" type="radio" name="Inactive" value="FALSE" />No
-</div>
-<div class="col-sm-4">Date Inactive: <input placeholder="Date Inactive" name="Inactivedate"  onchange="ValidateDate(this)" value="$inactdate"></div>
-</div>
+
+<h4>Notes</h4>
+<div class="col-sm-6"><textarea name="Notes" rows="3" cols="60"><?=$notes?></textarea></div>
 </div>  <!-- well -->
 </div>  <!-- tab pane -->
 
-
 <!-- Tab 2 member notes -->
-<div class="tab-pane fade" id="notes">
-<div class="well">
-<h4>Notes</h4>
-<div class="row">
-<div class="col-sm-6"><textarea name="Notes" rows="3" cols="60"><?=$notes?></textarea></div>
-</div>  <!-- row -->
-</div>  <!-- well -->
-</div>	<!-- tab pane -->
+<!-- <div class="tab-pane fade" id="notes"> -->
+<!-- <div class="well"> -->
+<!-- <h4>Notes</h4> -->
+<!-- <div class="row"> -->
+<!-- <div class="col-sm-6"><textarea name="Notes" rows="3" cols="80"><?=$notes?></textarea></div> -->
+<!-- </div>  row -->
+<!-- </div>  well -->
+<!-- </div>	tab pane --> 
 
 <!-- Tab 3 email lists  -->
 
@@ -561,6 +571,7 @@ else {
 <!-- end all tab definitions -->
 </div>  <!-- tab content -->
 <input type="hidden" name="action" value="update">
+<input type="hidden" name="addflg" value="<?=$addflg?>">
 </form>
 </div>
 <hr>

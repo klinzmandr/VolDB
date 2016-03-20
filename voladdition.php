@@ -17,6 +17,7 @@ include 'Incls/seccheck.inc';
 include 'Incls/datautils.inc';
 
 if ($_SESSION['VolSecLevel'] != 'voladmin') {
+  include 'Incls/mainmenu.inc';
 	echo '<div class="container"><h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to maintain these lists.</h4>
 		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded to &apos;voladmin&apos; in order to modify any lists.</p></div>
@@ -72,7 +73,7 @@ if ($action == "add") {
 		if ($res !== FALSE) {
 			//$_SESSION['VolActiveMCID'] = $fields[MCID];
 			echo "<h2>Add of MCID $mcid has been completed.</h2>";
-			echo "<a href=\"volinfotabbed.php?filter=".$fields[MCID]."\"><h3>Click to Complete MCID Info Entry</h3></a>";
+			echo "<a href=\"volinfotabbed.php?addflg=newrec&filter=".$fields[MCID]."\"><h3>Click to Complete MCID Info Entry</h3></a>";
 			exit;
 			}
 		echo "<h2>Add unsuccessful!  Try another MCID.</h2>";
