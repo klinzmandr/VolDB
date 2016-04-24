@@ -11,8 +11,8 @@
 <?php
 session_start();
 
-//include 'Incls/vardump.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/datautils.inc.php';
 
 $mcid = isset($_REQUEST['MCID']) ? $_REQUEST['MCID'] : "";
 //$addrow = isset($_REQUEST['AddRow']) ? $_REQUEST['AddRow'] : "";

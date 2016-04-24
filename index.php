@@ -9,8 +9,8 @@
 <body>
 <?php 
 session_start();
-// include 'Incls/vardump.inc';
-include 'Incls/datautils.inc';
+// include 'Incls/vardump.inc.php';
+include 'Incls/datautils.inc.php';
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '' ;
 $mcid = isset($_REQUEST['MCID']) ? $_REQUEST['MCID'] : '';
@@ -125,7 +125,7 @@ echo '
       </div>
     <div class="modal-body">
    <p>A volunteer must be registered on at least one (1) mailing list.</p>
-   <p>If you do not wish to serve as a volunteer, please notify the Administrative staff at the Center by calling 805-772-9494 and leaving a message or send an email to vols@pacificwildlifecare.org to indicate your wish to be relieved from any further volunteer service requests.</p>
+   <p>If you do not wish to serve as a volunteer, please notify the Administrative staff at the Center by calling 805-772-9494 and leaving a message or send an email to vols@pacwilica.org to indicate your wish to be relieved from any further volunteer service requests.</p>
    <p>Thank you.</p>
     </div>
       <div class="modal-footer">

@@ -10,20 +10,20 @@
 
 <?php
 session_start();
-//include 'Incls/vardump.inc';
-include 'Incls/seccheck.inc';
-include 'Incls/mainmenu.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/seccheck.inc.php';
+include 'Incls/mainmenu.inc.php';
+include 'Incls/datautils.inc.php';
 
 $tokey = $_REQUEST['tokey'];
 
 // we need to have messages to volunteers come from one address and
 // messages sent to the home rehabber list 'Sat' come from another
-// this is to allow replys to be sent to the correct in-box at pacificwildlifecare.org 
+// this is to allow replys to be sent to the correct in-box at pacwilica.org 
 // set the default for the volunteer lists and change it if it is for the 'Sat' list by itself
 $sender = $EmailFROM;
 if ((count($tokey) == 1) AND ($tokey[0] == 'Sat'))
-	$sender = 'pwcdispos@pacificwildlifecare.org';
+	$sender = 'pwchomerehab@pacwilica.org';
 
 $sql = ''; $tostr = '(';
 foreach ($tokey as $t) {
@@ -84,7 +84,7 @@ function confirmbox(fld) {
 		alert(errmsg);
 		return false;
 		}
-	var secs = counter/4;
+	var secs = counter*5;
 	var r=confirm("There are " + counter + " names selected\\n" + "which will take approximately\\n" + secs + " seconds to send.");
 	if (r==true) {
 		ProgressImage = document.getElementById('progress_image');
@@ -108,7 +108,16 @@ function confirmbox(fld) {
 <!--  --------------------- lists tab ------------------------- -->
 <div class="tab-pane fade active in" id="lists">
 <h4>Select the Email Addresses to send to:</h4>
+
 pagePart1;
+
+if ($rowcnt > 350) {
+  echo "<h3>ERROR: Max List Size Exceeded</h3>
+  <p>There are $rowcnt in the selected list(s).  This exceeds the total maximum size of 350 
+  allowed to be sent at a single time. You need to split the mailing into smaller groups.</p>
+  ";
+  exit(0);
+  }
 echo "volunteers Selected: $rowcnt<br /><br />";
 $mciderrs = array();
 echo '<table class="table table-condensed">
@@ -166,7 +175,7 @@ bkLib.onDomLoaded(function() {
 <h4>Send the message</h4>
 <p>Have a picture or document you want to send a link for?  If so click the button to open a new window with the repository listing, upload the picture or document, copy the link using the instructions provided and paste that link into your message</p>
 
-<a class="btn btn-info" href="$HomeURL/repository/upload.php" target="_blank" >Add to repository</a><br />
+<a class="btn btn-info" href="https://library.pacwilica.org/repository/.upload.php" target="_blank" >Add to repository</a><br />
 <h4>Click the following button to send the message.</h4>
 <input type="submit" name="submit" value="Send Message" ><br />
 <p style="visibility:hidden;" id="progress"/>

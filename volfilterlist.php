@@ -10,11 +10,11 @@
 
 <?php
 session_start();
-//include 'Incls/seccheck.inc';
+//include 'Incls/seccheck.inc.php';
 unset($_SESSION['VolActiveMCID']);
-//include 'Incls/vardump.inc';
-include 'Incls/mainmenu.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/mainmenu.inc.php';
+include 'Incls/datautils.inc.php';
 
 $m = "<p><b>Use of the Filer field</b></p><p>The Filter field is used to access member informaton by specifying all or the starting part of their MCID.  For example, if a members MCID is \"ABC12\" one could enter the entire string (in either upper or lower case) to access the record directly.  If one were to enter any of the beginning of the MCID (e.g. \"A\", or \"AB\", or \"ABC\" or even \"ABC1\" a list of candidate MCID's would be produced to choose your specific one from.  At any time the entry of a partial MCID produces only 1 record, it will be shown.</p>
 	<p>When ever a list of MCID records is produced, click the bullet at the left of the page associated with the MCID to access the specific member records</p>

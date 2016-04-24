@@ -10,9 +10,9 @@
 <body>
 <?php
 session_start();
-// include 'Incls/vardump.inc';
-include 'Incls/seccheck.inc';
-include 'Incls/datautils.inc';
+// include 'Incls/vardump.inc.php';
+include 'Incls/seccheck.inc.php';
+include 'Incls/datautils.inc.php';
 
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("previous month"));
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
@@ -87,7 +87,7 @@ echo '</ul><br>
 </form>
 <script src="jquery.js"></script><script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>
 ';
@@ -224,7 +224,7 @@ echo '--- End of Report ---<br>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>';
 ?>

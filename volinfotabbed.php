@@ -14,11 +14,11 @@
 
 <?php
 session_start();
-//include "Incls/vardump.inc";
-include 'Incls/seccheck.inc';
-include 'Incls/datautils.inc';
-include 'Incls/createcitydd.inc';
-include 'Incls/mainmenu.inc';
+//include "Incls/vardump.inc.php";
+include 'Incls/seccheck.inc.php';
+include 'Incls/datautils.inc.php';
+include 'Incls/createcitydd.inc.php';
+include 'Incls/mainmenu.inc.php';
 
 $addflg = isset($_REQUEST['addflg']) ? $_REQUEST['addflg'] : '';
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter']: "";

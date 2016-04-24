@@ -10,9 +10,9 @@
 <body>
 <?php
 session_start();
-// include 'Incls/vardump.inc';
-include 'Incls/seccheck.inc';
-include 'Incls/datautils.inc';
+// include 'Incls/vardump.inc.php';
+include 'Incls/seccheck.inc.php';
+include 'Incls/datautils.inc.php';
 
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-01-01', strtotime("now"));
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('now'));
@@ -31,7 +31,7 @@ End: <input type="text" name="ed" id="ed" value="$ed" style="width: 105px;">
 </form>
 <script src="jquery.js"></script><script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>
 
@@ -100,7 +100,7 @@ if ($action == 'attendees') {
 echo '<script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>';
 ?>

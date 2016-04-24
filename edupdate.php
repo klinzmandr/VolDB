@@ -9,11 +9,11 @@
 <body onchange="flagChange()">
 <?php
 session_start();
-//include 'Incls/vardump.inc';
-include 'Incls/datautils.inc';
-include 'Incls/seccheck.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/datautils.inc.php';
+include 'Incls/seccheck.inc.php';
 echo '<div class="hidden-print">';
-include 'Incls/mainmenu.inc';
+include 'Incls/mainmenu.inc.php';
 echo '</div>';
 
 $action = isset($_REQUEST['action'])? $_REQUEST['action'] : "";

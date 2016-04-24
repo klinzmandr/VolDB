@@ -9,8 +9,8 @@
 <body>
 <?php
 session_start();
-//include 'Incls/vardump.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/datautils.inc.php';
 
 $mcid = $_REQUEST[mcid];
 

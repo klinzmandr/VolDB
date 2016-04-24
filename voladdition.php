@@ -11,13 +11,13 @@
 session_start();
 unset($_SESSION['VolActiveMCID']);
 
-//include 'Incls/vardump.inc';
-//include 'Incls/mainmenu.inc';
-include 'Incls/seccheck.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+//include 'Incls/mainmenu.inc.php';
+include 'Incls/seccheck.inc.php';
+include 'Incls/datautils.inc.php';
 
 if ($_SESSION['VolSecLevel'] != 'voladmin') {
-  include 'Incls/mainmenu.inc';
+  include 'Incls/mainmenu.inc.php';
 	echo '<div class="container"><h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to maintain these lists.</h4>
 		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded to &apos;voladmin&apos; in order to modify any lists.</p></div>

@@ -37,9 +37,9 @@ function prepaccum($nbr) {
 
 <?php
 session_start();
-//include 'Incls/vardump.inc';
-include 'Incls/seccheck.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/seccheck.inc.php';
+include 'Incls/datautils.inc.php';
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';

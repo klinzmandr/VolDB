@@ -11,8 +11,8 @@
 <?php 
 session_start();
 
-//include 'Incls/vardump.inc';
-include 'Incls/datautils.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/datautils.inc.php';
 
 function clickable($string) {
 	// if anchors already exist - don't translate
@@ -136,7 +136,7 @@ for ($i = 0; $i < count($emarray); $i++) {
 		echo "**ERROR: mail function failed on " . $toaddr . "<br>";
 		}
 	
-	usleep(250000); // wait for 1/4 of a second and send next
+	usleep(5000000); // wait for 5 seconds and send next
 	}
 
 echo "<br><h4>***Bulk Email Processing Complete***</h4><br>";

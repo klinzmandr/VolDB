@@ -11,11 +11,11 @@
 session_start();
 unset($_SESSION['VolActiveMCID']);
 
-include 'Incls/seccheck.inc';
-include "Incls/datautils.inc";
-//include "Incls/vardump.inc";
-if ($_SESSION['VolSecLevel'] == 'readonly') include 'Incls/romenu.inc';
-else include 'Incls/mainmenu.inc';
+include 'Incls/seccheck.inc.php';
+include "Incls/datautils.inc.php";
+//include "Incls/vardump.inc.php";
+if ($_SESSION['VolSecLevel'] == 'readonly') include 'Incls/romenu.inc.php';
+else include 'Incls/mainmenu.inc.php';
 
 
 

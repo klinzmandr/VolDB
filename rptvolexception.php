@@ -9,11 +9,11 @@
 <body>
 <?php
 session_start();
-//include 'Incls/vardump.inc';
-include 'Incls/seccheck.inc';
-//include 'Incls/mainmenu.inc';
-include 'Incls/datautils.inc';
-include 'Incls/letter_print_css.inc';
+//include 'Incls/vardump.inc.php';
+include 'Incls/seccheck.inc.php';
+//include 'Incls/mainmenu.inc.php';
+include 'Incls/datautils.inc.php';
+include 'Incls/letter_print_css.inc.php';
 
 $expperiod = 90;					// period in days for time reporting period
 
