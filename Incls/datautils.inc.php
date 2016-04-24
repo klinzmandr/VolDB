@@ -7,10 +7,10 @@ date_default_timezone_set('America/Los_Angeles');
 
 include "../.DBParamInfo";
 
-$HomeURL = 'http://www.pacificwildlifecare.org';
+$HomeURL = 'http://apps.pacwilica.org';
 // this email address is used as a from address in the reminder system
 // defining it as blank will prevent any email messages from being sent
-$EmailFROM = 'vols@pacificwildlifecare.org';
+$EmailFROM = 'vols@pacwilica.org';
 $EmailTO = 'pacificwildlifecare@gmail.com';
 // ====== End Installation Parameters ==========
 
