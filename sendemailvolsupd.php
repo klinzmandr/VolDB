@@ -7,32 +7,23 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <?php 
 session_start();
 
-//include 'Incls/vardump.inc.php';
+//include 'Incls/vardump.inc.php';    
 include 'Incls/datautils.inc.php';
-
-function clickable($string) {
-	// if anchors already exist - don't translate
-	if (stripos($string,'<a ') !== FALSE) return($string); 
-  // make sure there is an http:// on all URLs
-  $string = preg_replace("/([^\w\/])(www\.[a-z0-9\-]+\.[a-z0-9\-]+)/i", "$1http://$2",$string);
-  // make all URLs links
-  $string = preg_replace("/([\w]+:\/\/[\w-?&;#~=\.\/\@]+[\w\/])/i","<A target=\"_blank\" href=\"$1\">$1</A>",$string);
-  // make all emails hot links
-  $string = preg_replace("/([\w-?&;#~=\.\/]+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?))/i","<A HREF=\"mailto:$1\">$1</A>",$string);
-  return $string;
-	}
 
 echo "<html><head><title>Send Mail Confirmation</title>";
 
 $emarrayin = $_REQUEST['tokey'];
 
+$fromMCID = $_SESSION['VolSessionUserMCID'];
+
 // delete senders email address from list
 //echo '<pre>emarrayin before '; print_r($emarrayin); echo '</pre>';
-//$from = $_SESSION['VolSessionUser'];
 $from = $_REQUEST['sender'];
 foreach ($emarrayin as $k => $v) {
 	if (stripos($v, $from) !== FALSE) {
@@ -40,30 +31,27 @@ foreach ($emarrayin as $k => $v) {
 		unset($emarrayin[$k]);
 		}
 	}
-//echo '<pre>emarrayin after '; print_r($emarrayin); echo '</pre>';
+// echo '<pre>emarrayin after '; print_r($emarrayin); echo '</pre>';
 
-foreach ($emarrayin as $v) {		// unpack the mcid and email address values into diff arrays
-	//echo "v: $v<br />";
-	list($mcidv, $emv) = explode(":", $v);
-	$emarray[] = $emv;
-	$mcidarray[] = $mcidv;
-	}
-//echo '<pre>emailarray '; print_r($emarray); echo '</pre>';
-//echo '<pre>mcid '; print_r($mcidarray); echo '</pre>';
-
-$subject = $_REQUEST['subject'];
+$subject = $_REQUEST['subject'] . '  (' . $fromMCID . ')';
 $message = $_REQUEST['message'];
 
+$timetosend = date('g:00 A', strtotime("now + 60 minutes"));
 echo "<div class=\"container\">
-<h1>Bulk Mail Confirmation&nbsp;&nbsp;<a href=\"admin.php\" class=\"btn btn-primary\"><strong>(RETURN)</strong></a></h1>";
+<h1>Send Mail Confirmation&nbsp;&nbsp;<a href=\"admin.php\" class=\"btn btn-primary\"><strong>(RETURN)</strong></a></h1>
+<h4>The message has been queued for sending which will commence every hour on the hour.  The next scheduled time for send processing to begin is at $timetosend.</h4>
+<p>The message subject and text will be sent to all of email reciepents.  A log record is produced and may be reviewed by looking at &apos;Reports->Review Mail Log&apos; to monitor mail processing progress.  This report will tell you when a message is being sent and the number of recipients remaining or list the recipients and the message when it has been completed.</p><br>
+<a class=\"btn btn-warning btn-xs\" target=\"_blank\" href=\"rptmaillogviewer.php\">Review Mail Log</a>
+";
 
-$tce = count($emarray); $sll = strlen($subject);
+$tce = count($emarrayin); 
+$sll = strlen($subject);
 $sl = isset($_REQUEST['subject'])? $sll : 0;
 
+//echo "tce: $tce, sl: $sl<br>";
 if (($tce == 0) || ($sl == 0)) {
 print<<<errorMsg
 <h3>ERROR: No addresses in the "TO" list OR the subject line is empty.</h3>Please correct and resubmit.<br><br>
-<a href="rptbulkemail.php">RETURN</a>
 </div>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -73,83 +61,27 @@ print<<<errorMsg
 errorMsg;
 exit;
 	}
-$logmsg = '';
-$starttime = date('r', strtotime(now));
-$logmsg .= "<br>\n<br>\n***Send Message Processing Started at $starttime***<br>\n";
-$logmsg .= "Recipient Count: $tce<br>";
-$logmsg .= "<br><strong>To:</strong><br>\n";
-foreach ($emarray as $addr) {
-	$emaddr = htmlentities($addr, ENT_COMPAT,'ISO-8859-1', true);
-	$logmsg .= "&nbsp;&nbsp;$emaddr<br>\n";
-	}
+// write info into MailQ for cron sender to process
+// first create file names: one for list, one for message
+$prefix = date('YmdHis');
+$listname = '../MailQ/' . $prefix . '.LIST';
+$msgname = '../MailQ/' . $prefix . '.MSG';
+//create message string for output
+$msgarray[] = $from; $msgarray[] = $subject; $msgarray[] = $message;
+$listval = "Original list size: $tce";
+//echo "list: $listname, msg: $msgname, lock: $lockname<br>";
+sort($emarrayin);
+file_put_contents($listname, implode("\n", $emarrayin));
+file_put_contents($msgname, implode("\n", $msgarray));
 
-$logmsg .= "<br><strong>From: </strong>$from<br>\n";
-
-$logmsg .=  "<br><b>Header:</b><br>\n";
-$headers  = 'MIME-Version: 1.0' . "\r\n";
-$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-$headers .= "From: " . $from . "\r\n";
-$headers .= "Reply-To: " . $from . "\r\n";
-$headers .= "Return-Path: " . $from . "\r\n";   // these two to set reply address
-$logmsg .= $headers . "<br>\n";
-
-$foption = "-f" . $from;												// notify of undeliverable mail to sender
-$logmsg .= '<br><b>f-option</b><br>' . $foption . "<br>\n";
-
-$trmsgx = clickable($message); 							// turn url's into links
-
-$trans = array("\\" => ' ', "\n" => ' ', "\t"=>' ', "\r"=>' ');
-$trsub = strtr($subject, $trans);
-$trmsg  = strtr($trmsgx, $trans);
-
-$logmsg .= "<br><strong>Subject:</strong><br>\n";
-$logmsg .=  $trsub . "\n";
-$logmsg .=  "<br><strong>Message:</strong><br>\n";
-$logmsg .=  $trmsg . "<br>\n";
-
-// format email message
-$subject = "PWCVols: " . $trsub;
-
-$cnt = count($emarray);
-
-$errcnt = 0;
-//foreach ($em as $addr) {
-for ($i = 0; $i < count($emarray); $i++) {
-	$addr = $emarray[$i];
-	$mcid = $mcidarray[$i];
-	if ($addr == "") { continue; }
-	$to = $addr;
-	$finmsg = "";
-	$finmsg = $trmsg;
-	$tag = "<br><br><font size=1><center>
-	<a href=\"$HomeURL/voldb/index.php?MCID=$mcid&action=form\">Click to manage your own lists.</a></center></font>";
-	$finmsg .= $tag;
-	$finmsg = wordwrap($finmsg);
-
-	$mresp = TRUE; 
-	
-	$mresp = mail($to, $subject, $finmsg, $headers, $foption);
-	
- if ($mresp == FALSE) {
-	 	$toaddr = htmlentities($to, ENT_COMPAT,'ISO-8859-1', true);
-		$logmsg .= "**ERROR: mail function failed on " . $toaddr . "<br>\n";
-		echo "**ERROR: mail function failed on " . $toaddr . "<br>";
-		}
-	
-	usleep(5000000); // wait for 5 seconds and send next
-	}
-
-echo "<br><h4>***Bulk Email Processing Complete***</h4><br>";
-echo '<h5>Please refer to the mail log entry to review the results</h5>';
-$logmsg .= "Last end tag used: $tag<br />\n";
-$endtime = date('r', strtotime(now));
-$logmsg .= "<br>\n<br>\n***Send Message Processing Complete at $endtime***<br>\n";
-addmaillogentry($logmsg);
+// now kick the mailsender routine on its way 
+// cron will automatically schedule every hour, but this gets it start right now
+// output of command will be in mailsenderlog.txt
+$cmd = '/home/pacwilica/bin/mailsender';
+exec($cmd . " > maidsenderlog.txt &");
 
 print<<<pageBody
 </div>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
 pageBody;

@@ -14,6 +14,26 @@ include 'Incls/seccheck.inc.php';
 include 'Incls/mainmenu.inc.php';
 include 'Incls/datautils.inc.php';
 
+// in order to forward any responses to the originator of a message we need their MCID
+// which MUST be present in their admin registration info since the email address 
+// they used to log in with may differ from the one in the membership database.
+// The MCID is used as a forwarding filter in the email setup of the mail server
+
+$from = $_SESSION['VolSessionUser'];
+$sql = "SELECT `MCID` FROM `adminusers` WHERE `UserID` = '$from'";
+$res = doSQLsubmitted($sql);
+$r = $res -> fetch_assoc();
+$fromMCID = $r[MCID];
+if (strlen($fromMCID) == 0) {
+  //echo "VolSessionUser: $from, fromMCID: $r[MCID] length: " . strlen($fromMCID) . "<br>";
+  echo '<h3 style="color: red; ">ERROR: Your user registration MUST have an MCID.</h3>
+  The sender of any message MUST have their MCID registered into their administion login information.<br><br>
+  Update the admin registration info before trying again<br>
+  <a class="btn btn-danger btn-xs" href="admin.php">HOME PAGE</a>';
+  exit(0);
+} 
+$_SESSION['VolSessionUserMCID'] = $fromMCID;
+
 $seclevel = $_SESSION['VolSecLevel'];
 print <<<pagePart1
 <script type="application/javascript">

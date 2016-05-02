@@ -18,6 +18,7 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : "";
 $recno = isset($_REQUEST['recno']) ? $_REQUEST['recno'] : "";
 $userid = isset($_REQUEST['userid']) ? $_REQUEST['userid'] : "";
 $password = isset($_REQUEST['password']) ? $_REQUEST['password'] : "";
+$mcid = isset($_REQUEST['mcid']) ? $_REQUEST['mcid'] : "";
 $role = isset($_REQUEST['role']) ? $_REQUEST['role'] : "";
 $notes = isset($_REQUEST['notes']) ? $_REQUEST['notes'] : "";
 
@@ -40,6 +41,7 @@ if ($action == "addnew") {
 	//echo "Add new record number for user: $userid, password: $password, role: $role<br>";
 	$flds[UserID] = $userid;
 	$flds[Password] = $password;
+	$flds[MCID] = $mcid;
 	$flds[Role] = $role;
 	$flds[Notes] = $notes;
 	$res = sqlinsert('adminusers', $flds);
@@ -57,6 +59,7 @@ function checkflds(form) {
 	var errcnt = 0;
 	if (form.userid.value == "") errcnt +=1;
 	if (form.password.value == "") errcnt += 1;
+	if (form.mcid.value == "") errcnt += 1;
 	if (form.role.value == "") errcnt += 1;
 	if (errcnt > 0) {
 		alert ("A required field is missing.");
@@ -88,6 +91,7 @@ function trim(s)
 <form class="form" name="addform" action="voladdnewuser.php" onsubmit="return checkflds(this)">
 New User ID: <input type="text" name="userid" placeholder="Email Address">
 Password: <input type="text" name="password" value="raptor">
+MCID: <input type="text" name="mcid" value=""><br>
 Role: <select name="role">
 <option value="">Select a role for the User</option>
 <option value="voladmin">Volunteer Admin</option>
@@ -104,13 +108,13 @@ pagePart1;
 
 // list exising entries to allow delete of individual rows from DB
 
-$sql = "select * from adminusers";
+$sql = "SELECT * FROM adminusers ORDER BY `MCID` ASC;";
 $res = doSQLsubmitted($sql);
 echo "<table class=\"table-condensed\">";
-echo "<tr><td>Delete</td><td>User ID</td><td>Password</td><td>Role</td><td>Notes</td></tr>";
+echo "<tr><th>Delete</th><th>User ID</th><th>Password</th><th>MCID</th><th>Role</th><th>Notes</th></tr>";
 while ($r = $res->fetch_assoc()) {
 	//echo "<pre>user: "; print_r($r); echo "</pre>";
-	echo "<tr><td align=\"center\"><a href=\"voladdnewuser.php?action=delete&recno=$r[SeqNo]\"><img src=\"config/b_drop.png\" alt=\"DELETE\" /></a></td><td>$r[UserID]</td><td>************</td><td>$r[Role]</td><td>$r[Notes]</td></tr>";
+	echo "<tr><td align=\"center\"><a href=\"voladdnewuser.php?action=delete&recno=$r[SeqNo]\"><img src=\"config/b_drop.png\" alt=\"DELETE\" /></a></td><td>$r[UserID]</td><td>************</td><td>$r[MCID]</td><td>$r[Role]</td><td>$r[Notes]</td></tr>";
 	}
 echo "</table></div>";
 

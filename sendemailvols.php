@@ -21,6 +21,7 @@ $tokey = $_REQUEST['tokey'];
 // messages sent to the home rehabber list 'Sat' come from another
 // this is to allow replys to be sent to the correct in-box at pacwilica.org 
 // set the default for the volunteer lists and change it if it is for the 'Sat' list by itself
+// $EmailFROM is defined as the default in the datautils include
 $sender = $EmailFROM;
 if ((count($tokey) == 1) AND ($tokey[0] == 'Sat'))
 	$sender = 'pwchomerehab@pacwilica.org';
@@ -84,8 +85,7 @@ function confirmbox(fld) {
 		alert(errmsg);
 		return false;
 		}
-	var secs = counter*5;
-	var r=confirm("There are " + counter + " names selected\\n" + "which will take approximately\\n" + secs + " seconds to send.");
+	var r=confirm("There are " + counter + " names selected\\n" + "which will be immediately\\n queued for sending on the next hour.");
 	if (r==true) {
 		ProgressImage = document.getElementById('progress_image');
 		document.getElementById("progress").style.visibility="visible";
@@ -161,7 +161,11 @@ bkLib.onDomLoaded(function() {
 });
 </script>
 
+<p>Have a picture or document you want to send a link for?  If so click the button to open a new window with the repository listing, upload the picture or document, copy the link using the instructions provided and paste that link into your message</p>
+
+<a class="btn btn-info" href="https://library.pacwilica.org/repository/.upload.php" target="_blank" >Add to repository</a><br />
 <h4>Compose a message:</h4>
+Subject:
 <input type="text" name="subject" size="80" maxlength="128" /><br />
 <input type="hidden" name="message" id="message" value=""><br />
 <!--  onsubmit: move text from div area into hidden text field -->
@@ -172,15 +176,11 @@ bkLib.onDomLoaded(function() {
 </div>  <!-- tab-pane -->
 <!-- ------------- send tab ------------------------- -->
 <div class="tab-pane fade" id="send">
-<h4>Send the message</h4>
-<p>Have a picture or document you want to send a link for?  If so click the button to open a new window with the repository listing, upload the picture or document, copy the link using the instructions provided and paste that link into your message</p>
-
-<a class="btn btn-info" href="https://library.pacwilica.org/repository/.upload.php" target="_blank" >Add to repository</a><br />
-<h4>Click the following button to send the message.</h4>
+<h4>Click the following button to queue the message for sending.</h4>
 <input type="submit" name="submit" value="Send Message" ><br />
 <p style="visibility:hidden;" id="progress"/>
 <img src="Incls/progressbar.gif" width="226" height="26" alt="" /><br />DO NOT CANCEL THIS PAGE UNTIL THE MAIL SEND ROUTINE HAS COMPLETED.	A confirmation page will be displayed when that is done.</p>
-<p>The message subject and text will be sent to all of the checked email reciepents.  A confirmation page will be produced which will provide a list of any email addresses which were unable to be sent to. A log record is produced and may be reviewed by looking at &apos;Reports->Review Mail Log&apos; after the mail send processing has been completed.</p>
+<p>The message subject and text will be sent to all of the checked email reciepents.  A log record is produced and may be reviewed by looking at &apos;Reports->Review Mail Log&apos; after the mail send processing has been completed.</p>
 <input type="hidden" name="sender" value="$sender">
 </form>
 
