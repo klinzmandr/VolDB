@@ -36,11 +36,11 @@ foreach ($emarrayin as $k => $v) {
 $subject = $_REQUEST['subject'] . '  (' . $fromMCID . ')';
 $message = $_REQUEST['message'];
 
-$timetosend = date('g:00 A', strtotime("now + 60 minutes"));
+//$timetosend = date('g:00 A', strtotime("now + 60 minutes"));
 echo "<div class=\"container\">
 <h1>Send Mail Confirmation&nbsp;&nbsp;<a href=\"admin.php\" class=\"btn btn-primary\"><strong>(RETURN)</strong></a></h1>
-<h4>The message has been queued for sending which will commence every hour on the hour.  The next scheduled time for send processing to begin is at $timetosend.</h4>
-<p>The message subject and text will be sent to all of email reciepents.  A log record is produced and may be reviewed by looking at &apos;Reports->Review Mail Log&apos; to monitor mail processing progress.  This report will tell you when a message is being sent and the number of recipients remaining or list the recipients and the message when it has been completed.</p><br>
+<h4>The message has been queued for sending which will is scheduled every quarter hour.</h4>
+<p>The message subject and text will be sent to all of email reciepents.  A log record is produced for each batch. Progress may be reviewed by looking at &apos;Reports->Review Mail Log&apos;.  This report will tell you when a message is being sent and the number of recipients remaining or list the recipients and the message when it has been completed.</p><br>
 <a class=\"btn btn-warning btn-xs\" target=\"_blank\" href=\"rptmaillogviewer.php\">Review Mail Log</a>
 ";
 
@@ -64,8 +64,8 @@ exit;
 // write info into MailQ for cron sender to process
 // first create file names: one for list, one for message
 $prefix = date('YmdHis');
-$listname = '../MailQ/' . $prefix . '.LIST';
-$msgname = '../MailQ/' . $prefix . '.MSG';
+$listname = "../MailQ/$prefix.$tce.LIST";
+$msgname =  "../MailQ/$prefix.$tce.MSG";
 //create message string for output
 $msgarray[] = $from; $msgarray[] = $subject; $msgarray[] = $message;
 $listval = "Original list size: $tce";
@@ -73,12 +73,6 @@ $listval = "Original list size: $tce";
 sort($emarrayin);
 file_put_contents($listname, implode("\n", $emarrayin));
 file_put_contents($msgname, implode("\n", $msgarray));
-
-// now kick the mailsender routine on its way 
-// cron will automatically schedule every hour, but this gets it start right now
-// output of command will be in mailsenderlog.txt
-$cmd = '/home/pacwilica/bin/mailsender';
-exec($cmd . " > maidsenderlog.txt &");
 
 print<<<pageBody
 </div>
