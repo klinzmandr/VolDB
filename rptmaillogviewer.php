@@ -15,17 +15,43 @@ include 'Incls/seccheck.inc.php';
 include 'Incls/datautils.inc.php';
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+//<a href=\"rptmaillogviewer.php?action=view&ext=LIST&fn=$delname\">(View list)</a>&nbsp;
+if ($action == 'view') {
+  $fname = '../MailQ/' . $_REQUEST['fn']. '.' .$_REQUEST['ext'];
+  $file = file($fname);
+  echo '<div class="container"><a class="btn btn-warning btn-xs" href="rptmaillogviewer.php">CONTINUE</a><br>';
+  foreach ($file as $l) {
+    echo $l . '<br>';
+    }
+  echo '</div>
+  <script src="jquery.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  </body>
+  </html>';
+	exit;
+  }
 
 if ($action == 'delete') {
-  $fname = $_REQUEST['fn'];
+  $fname = '../MailQ/' . $_REQUEST['fn'];
   //echo "delete action detected for: $fname<br>";
-  unlink('../MailQ/' . $fname . '.LIST');
-  unlink('../MailQ/' . $fname . '.MSG');
+  //unlink('../MailQ/' . $fname . '.LIST');
+  //unlink('../MailQ/' . $fname . '.MSG');
+  if (file_exists($fname . '.LIST')) unlink($fname. '.LIST');
+  if (file_exists($fname . '.MSG')) unlink($fname . '.MSG');
+  if (file_exists($fname . '.LOCK')) unlink($fname . '.LOCK');
   }
 echo '<div class="container">
 <h3>Mail Log Viewer
 &nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>
 <p>Select the completed mail entry from the dropdown list. The lastest is at the top.</p>';
+echo '
+<script> 
+function confdel() {
+  if (confirm("Delete message from queue?\\n\\nAre you sure?")) return true;;
+  return false;
+  }
+</script>
+';	
 
 $sql = "SELECT * FROM `maillog` ORDER BY `LogID` DESC;";
 $res = doSQLsubmitted($sql);
@@ -37,7 +63,7 @@ echo '
 while ($r = $res->fetch_assoc()) {
 	echo "<option value=\"$r[LogID]\">$r[LogID]: $r[DateTime]</option>";	
 	}
-echo '<input type="hidden" name="action" value="view">
+echo '<input type="hidden" name="action" value="viewdb">
 </form>
 </td><td>';
 
@@ -54,11 +80,7 @@ if ($action == 'del') {
 	$sql = "DELETE FROM `maillog` WHERE `LogID` = '$recno';";
 	$rows =doSQLsubmitted($sql);
 	echo "Deleted record: $recno&nbsp;&nbsp;";
-	$recno -= 1; 
-	// echo "recno: $recno<br />";
-	if ($recno > 0) {
-		echo '<a class="btn btn-success" href="rptmaillogviewer.php?action=view&logentry='.$recno.'">View Next</a>'; 
-		}
+	echo '<a class="btn btn-success" href="rptmaillogviewer.php">CONTINUE</a>'; 
 	echo '</td></tr></table></div>  <!-- container -->
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -67,16 +89,16 @@ if ($action == 'del') {
 	exit;
 	}
 
-if ($action == 'view') {
+if ($action == 'viewdb') {
 	$recno = $_REQUEST['logentry'];
 	$sql = "SELECT * FROM `maillog` WHERE `LogID` = '$recno';";
 	$res = doSQLsubmitted($sql);
 	$r = $res->fetch_assoc();
 	// echo '<pre>'; print_r($r); echo '</pre>';
 	$recno = $r[LogID]; $datetime = $r[DateTime]; $user = $r[User]; 
-	$seclevel = $r[VolSecLevel]; $mailtext =  $r[MailText];
+	$seclevel = $r[SecLevel]; $mailtext =  $r[MailText];
 print <<<recOut
-	<a class="btn btn-danger" href="rptmaillogviewer.php?action=del&recno=$recno">DELETE</a></td></tr></table>
+	<a class="btn btn-danger" onclick="return confdel()" href="rptmaillogviewer.php?action=del&recno=$recno">DELETE</a></td></tr></table>
 	Record Number: $recno<br />
 	Date/Time: $datetime<br />
 	User: $user<br />
@@ -92,16 +114,10 @@ print <<<recOut
 recOut;
 exit(0);
 	}
-echo '
-<script> 
-function confdel() {
-  if (confirm("Cancel message from send queue?\\n\\nAre you sure?")) return true;;
-  return false;
-  }
-</script>
-';	
+	
 // display mail sending quque from MailQ dir
 $mq = scandir('../MailQ');
+//echo '<pre> mail queue '; print_r($mq); echo '</pre>';
 if (count($mq) > 2) {
   echo '</td><tr><td><br>
 <h3>List of mail message(s) being sent or queued.</h3>
@@ -109,15 +125,15 @@ The following is a list of the subject line of messages either being sent or are
 <a class="btn btn-warning btn-xs" href="rptmaillogviewer.php">REFRESH</a><br>
 ';
   sort($mq);
-  //echo '<pre> mail queue '; print_r($mq); echo '</pre>';
+//  echo '<pre> mail queue '; print_r($mq); echo '</pre>';
   foreach ($mq as $v) {
     if (substr($v,0,1) == '.') continue;
     $fpn = '../MailQ/' . $v;
-    list($msgname, $type) = explode('.', $v);
+    $delname = $msgname. '.' . $size;
+    list($msgname, $size, $type) = explode('.', $v);
   
     if ($type == 'LIST') {
-      $listmsg = file($fpn);
-      $listcount = count($listmsg);
+      $listcount = $size;
       $output = '';
       continue;
       }
@@ -128,7 +144,10 @@ The following is a list of the subject line of messages either being sent or are
     if ($type == 'MSG') {
       $msg = file($fpn); $subj = rtrim($msg[1]);
       if (strlen($output) > 0) { $output .= "$subj ($listcount remaining)"; }
-      else { $output .= "$subj ($listcount in list)&nbsp;&nbsp;<a onclick=\"return confdel()\" href=\"rptmaillogviewer.php?action=delete&fn=$msgname\">(CANCEL)</a><br>"; }
+      else { $output .= "$subj ($listcount in list)&nbsp;&nbsp;
+<a href=\"rptmaillogviewer.php?action=view&ext=LIST&fn=$delname\">(View list)</a>&nbsp;
+<a href=\"rptmaillogviewer.php?action=view&ext=MSG&fn=$delname\">(View Msg)</a>&nbsp;      
+<a onclick=\"return confdel()\" href=\"rptmaillogviewer.php?action=delete&fn=$delname\">(CANCEL)</a><br>"; }
       }
     echo $output;
     }
