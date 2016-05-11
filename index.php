@@ -26,7 +26,7 @@ if ($action == '') {
 	exit;
 	}
 
-echo "<div align=\"center\"><img src=\"".$HomeURL."/voldb/PWC680logo.jpg\" alt=\"PWC Logo\"></div>";
+//echo "<div align=\"center\"><img src=\"https://apps.pacwilica.org/voldb/PWC680logo.jpg\" alt=\"PWC Logo\"></div>";
 echo "<html><head><title>PWC List Subscribe/Unsubcribe</title></head><body>";
 echo '<div class="container">';
 
@@ -49,7 +49,7 @@ $fname = $r[FName]; $lname  = $r[LName]; $lists = $r[Lists]; $city = $r[City]; $
 $email = $r[EmailAddress];
 print<<<outForm1
 <h2>Volunteer information for $fname $lname ($r[MCID])</h2>
-<h4>Not $fname $lname? <a class="btn btn-danger" href="$HomeURL">EXIT NOW</a></h4>
+<h4>Not $fname $lname? <a class="btn btn-danger" href="https://pacwilica.org">EXIT NOW</a></h4>
 <p>Following are the lists available.  Those that you are subscribed to are checked.  Please update this list by checking or unchecking those lists you wish to receive notices from and click the &apos;Update Info&apos; button to update your profile.</p>
 <p>Please use the free form notes area to list home and/or cell phone number or other contact information that might be needed.</p>
 <form action="index.php" method="post" onsubmit="return validateLists()">
