@@ -36,6 +36,10 @@ foreach ($emarrayin as $k => $v) {
 $subject = $_REQUEST['subject'] . '  (' . $fromMCID . ')';
 $message = $_REQUEST['message'];
 
+$trans = array("\\" => ' ', "\n" => ' ', "\t"=>' ', "\r"=>' '); // remove tabs, cr, lf and double \
+$subject = strtr($subject, $trans);
+$message  = strtr($message, $trans);    // subject and message should be good to go now
+
 //$timetosend = date('g:00 A', strtotime("now + 60 minutes"));
 echo "<div class=\"container\">
 <h1>Send Mail Confirmation&nbsp;&nbsp;<a href=\"admin.php\" class=\"btn btn-primary\"><strong>(RETURN)</strong></a></h1>

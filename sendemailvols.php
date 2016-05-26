@@ -155,7 +155,8 @@ print <<<pagePart2
 <script type="text/javascript" src="js/nicEdit.js"></script>
 <script type="text/javascript">
 bkLib.onDomLoaded(function() {
-	var myNicEditor = new nicEditor({buttonList : ['fontSize', 'fontFormat', 'left', 'center', 'right', 	'bold','italic','underline','indent', 'outdent', 'ul', 'ol', 'hr', 'forecolor', 'bgcolor','link','unlink']});
+//	var myNicEditor = new nicEditor({buttonList : ['fontSize', 'fontFormat', 'left', 'center', 'right', 	'bold','italic','underline','indent', 'outdent', 'ul', 'ol', 'hr', 'forecolor', 'bgcolor','link','unlink']});
+  var myNicEditor = new nicEditor({fullPanel : true});
 	myNicEditor.setPanel('myNicPanel');
 	myNicEditor.addInstance('editarea');
 });
@@ -169,7 +170,7 @@ Subject:
 <input type="text" name="subject" size="80" maxlength="128" /><br />
 <input type="hidden" name="message" id="message" value=""><br />
 <!--  onsubmit: move text from div area into hidden text field -->
-<div id="myNicPanel" style="width: 525px;"></div>
+<div id="myNicPanel" style="width: 750px;"></div>
 <div id="editarea" style="font-size: 12px; padding: 3px; border: 1px solid #000; width: 700px; height: 350px">
 </div>  <!-- editarea -->
 <br />
