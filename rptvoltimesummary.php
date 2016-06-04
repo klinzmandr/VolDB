@@ -40,6 +40,7 @@ session_start();
 //include 'Incls/vardump.inc.php';
 include 'Incls/seccheck.inc.php';
 include 'Incls/datautils.inc.php';
+include 'Incls/letter_print_css.inc.php';
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
@@ -182,7 +183,7 @@ foreach ($accum as $yr => $val) {
 		echo "<td align=\"right\">$fv</td>";
 	}
 echo '</tr></table><br>';
-
+echo '<div class="page-break"></div>';
 }
 //echo '<pre> accum '; print_r($accum); echo '</pre>';
 echo '<br>==== END OF REPORT ====<br></div>';
