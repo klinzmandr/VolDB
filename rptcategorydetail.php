@@ -8,6 +8,11 @@
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
+
 <?php
 session_start();
 // include 'Incls/vardump.inc.php';
@@ -97,13 +102,18 @@ exit;
 //	echo "details flag: " . $details . "<br>";
 //	echo '<pre> cats '; print_r($cats); echo '</pre>';
 
+$wherelist = "('" . implode('\', \'', $cats) ."')";
+//echo '<pre>'; print_r($wherelist); echo '</pre>';
+
 $sql = "SELECT `voltime`.*, `members`.`FName`, `members`.`LName` from `voltime`, `members`
 WHERE `voltime`.`MCID` = `members`.`MCID`
+  AND `volcategory` IN $wherelist
 	AND `voltime`.`VolDate` BETWEEN '$sd' AND '$ed'
 ORDER BY `voltime`.`VTID` ASC";
 $res = doSQLsubmitted($sql);
+//echo "sql: $sql<br>";
 $rowcnt = $res->num_rows;
-// echo "rowcnt: $rowcnt<br>";
+//echo "rowcnt: $rowcnt<br>";
 if ($rowcnt > 0) {
 	$voldet = array(); $csv = array(); $counts = array(); $mcidcounts = array();
 	$categories = array(); $catscsv = array(); $names = array(); $ind = array();
@@ -112,7 +122,6 @@ if ($rowcnt > 0) {
 	$csv[] = "MCID;FName,LName,SvcDate;SvcTime;Mileage;Category;Notes\n";
 	while ($r = $res->fetch_assoc()) {
 //		echo '<pre>'; print_r($r); echo '</pre>';
-		if (in_array($r[VolCategory], $cats)) {
 			if (rtrim($r[VolCategory]) == '') continue;
 			$tothrs += $r[VolTime];
 			$totmiles += $r[VolMileage];
@@ -130,7 +139,6 @@ if ($rowcnt > 0) {
 			
 			$voldet[] = "<tr><td>$r[MCID]</td><td>$r[FName]</td><td>$r[LName]</td><td width=\"100\">$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
 			$csv[] = "\"$r[MCID]\";\"$r[FName]|\";\"$r[LName]\";$r[VolDate];$r[VolTime];$r[VolMileage];$r[VolCategory];\"$r[VolNotes]\"\n";
-			}
 		}
 
 	echo "<h4>Period from $sd to $ed</h4>";
@@ -218,13 +226,7 @@ if ($rowcnt > 0) {
 		echo	"</table>";		// row
 		}
 	}
-
-
 echo '--- End of Report ---<br>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>';
 ?>
