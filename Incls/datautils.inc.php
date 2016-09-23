@@ -155,7 +155,7 @@ function addlogentry($text) {
 	$seclevel = $_SESSION['VolSecLevel'];
 	$page = $_SERVER['PHP_SELF'];
 	$txt = addslashes($text);
-	$sql = "INSERT INTO `log` (`User`, `SecLevel`, `Page`, `SQL`) VALUES ('$user', '$seclevel', '$page', '$txt');";
+	$sql = "INSERT INTO `log` (`User`, `SecLevel`, `Page`, `Text`) VALUES ('$user', '$seclevel', '$page', '$txt');";
 	//echo "Log: $sql<br>";
 	$res = $mysqli->query($sql);
 	if (!$res) {
@@ -253,15 +253,17 @@ function formatdbrec($txt) {
 	}
 
 // read and format db configtable row into select item list
-function loaddbselect($cfglist) {
+function loaddbselect($cfglist, $show='') {
 	$txt = readdblist($cfglist);
 	$lines = explode("\n",$txt);
+	$listarray = '';
 	foreach ($lines as $l) {
 		$l = rtrim($l);
 		if (strlen($l) <= 0) { continue; } 
 		if (substr_compare($l,'//',0,2) == 0) { continue; }
 		list($tla,$desc) = explode(":", $l);
-		echo "<option value=$tla>$desc</option>";
+		if (strlen($show) == 0) echo "<option value=$tla>$desc</option>";
+		$listarray .= "<option value=$tla>$desc</option>";
 		}
 	return($listarray); 
 	}

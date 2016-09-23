@@ -84,6 +84,8 @@ if ($action == 'upd') {
 		}
 	}
 
+$showvolcats = loaddbselect('VolCategorys', 'show');
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -186,7 +188,7 @@ function deactivatesubmit() {
 <td><input name="mileage[]" type="text" id="mileage" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -198,7 +200,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)>" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" ></td>
 </tr>
@@ -210,7 +212,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)>" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" ></td>
 </tr>
@@ -222,7 +224,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -234,7 +236,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -246,7 +248,7 @@ function deactivatesubmit() {
 <td><input name="mileage[]" type="text" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -258,7 +260,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -270,7 +272,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -282,7 +284,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>
@@ -294,7 +296,7 @@ function deactivatesubmit() {
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><select name="category[]" >
 <option value=""></option>
-<?=loaddbselect('VolCategorys')?>
+<?=$showvolcats?>
 </select></td>
 <td><input name="note[]" type="text" value="" autocomplete="off" /></td>
 </tr>

@@ -72,7 +72,7 @@ End: <input type="text" name="ed" value="$ed" onchange="ValidateDate(this)" plac
 VolCategory: <select name=vcat>
 <option value='%'></option>
 pagePart1a;
-echo loaddbselect('VolCategorys');
+loaddbselect('VolCategorys');
 print <<<pagePart1b
 <option value='Education'>Education</option>
 </select>
@@ -160,7 +160,7 @@ Mileage: <input type="text" name="VolMileage" value="$r[VolMileage]" style="widt
 Category: <select name="VolCategory" >
 <option value=""></option>
 inForm1;
-echo loaddbselect('VolCategorys');
+loaddbselect('VolCategorys');
 print<<<inForm2
 <option value='Education'>Education</option>  
 </select></td>

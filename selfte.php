@@ -141,7 +141,7 @@ function chkform(form) {
 <td><select name="VolCategory" onchange="chkselection(this)">
 <option value=""></option>
 pagePart2;
-echo loaddbselect('VolCategorys');
+loaddbselect('VolCategorys');
 print<<<pagePart3
 </select></td></tr>
 <tr><td><label>Mileage:</label></td>
