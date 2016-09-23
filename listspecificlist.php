@@ -65,7 +65,7 @@ if ($action == 'display') {
 	echo '</table>';
 	
 echo '<h3>Comma seperated list of email addresses</h3>';
-$emlist = implode($emarray, ', ');
+$emlist = implode($emarray, "<br>\n");
 echo $emlist;
 echo '<br /><br />';
 echo '</div>';
