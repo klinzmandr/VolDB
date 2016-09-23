@@ -19,7 +19,6 @@ include 'Incls/datautils.inc.php';
 echo "<html><head><title>Send Mail Confirmation</title>";
 
 $emarrayin = $_REQUEST['tokey'];
-
 $fromMCID = $_SESSION['VolSessionUserMCID'];
 
 // delete senders email address from list
@@ -77,6 +76,9 @@ $listval = "Original list size: $tce";
 sort($emarrayin);
 file_put_contents($listname, implode("\n", $emarrayin));
 file_put_contents($msgname, implode("\n", $msgarray));
+
+$log = "VolEmail sent to $tce volunteers with subject: $subject";
+addlogentry($log);
 
 print<<<pageBody
 </div>
