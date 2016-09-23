@@ -36,11 +36,13 @@ echo "<div class=container>";
 $mcid = $_SESSION['VolActiveMCID'];
 $action = $_REQUEST['action'];
 
-if (($action == "") AND ($mcid == "")) {
+//if (($action == "") AND ($mcid == "")) {
+if ($mcid == "") {
 	$mcinfo = "<h3>Volunteer/Contact Informaton</h3>"; 
 	$mcinfo .= "<p>This page will display all information of the volunteer's Member Id (MCID) selected by using the MCID selected via the &apos;Lookup&apos; function.  It will remain &apos;active&apos; until another is selected by either returning to the Home page or by using the &apos;Lookup&apos; to select a new one.</p>";
-
 	echo $mcinfo;
+//	$log = "XUpdate: Info page requested with no VolActiveMCID value set.";
+//	addlogentry($log);
 	exit;
 	}
 
@@ -48,6 +50,26 @@ if (($action == "") AND ($mcid == "")) {
 if ($action == "update") {
 	$uri = $_SERVER['QUERY_STRING'];
 	parse_str($uri, $vararray);
+//	echo '<pre> input uri '; print_r($vararray); echo '</pre>';
+// adding saftey check to make sure MCID from input page is same as ActiveMCID
+// MCIDx is from the input form of the update page.
+	if ($_REQUEST['MCIDx'] != $_SESSION['VolActiveMCID']) {
+	  //echo 'MCIDx: '.$_REQUEST['MCIDx']. ', VolActiveMCID: '.$_SESSION['VolActiveMCID'].'<br>'; 
+	  echo "<h2 style=\"color: red; \">ERROR: MCID mismatch!!!</h2>
+	  <b>If this error occurs please note the actions being taken immediately prior to
+	  seeing this message and notify dave.klinzman@yahoo.com immediately. Please  
+	  provide this information and any other notes along with the MCID's involved.</b><br>";
+	  $log = 'XUpdate Error. MCIDx: '. $_REQUEST['MCIDx'] . ', VolActiveMCID: '. $_SESSION['VolActiveMCID'].'<br>';
+	  addlogentry($log);                       // log the error
+	  $log = 'SESSION ' . var_export($_SESSION, TRUE);
+	  addlogentry($log);
+	  $log = 'REQUEST ' . var_export($_REQUEST, TRUE);
+	  addlogentry($log);	                         // log the sesssion variables
+	  unset($_SESSION['VolActiveMCID']);       // force new lookup for MCID
+	  echo '<script src="jquery.js"></script>';
+	  echo '<script src="js/bootstrap.min.js"></script>';
+	  exit;
+    }
 	if (array_key_exists('mlist',$vararray)) {
 		$listarray = $vararray[mlist];						// get list array
 		$liststring = implode(",",$listarray);		// create list string
@@ -57,7 +79,9 @@ if ($action == "update") {
 	else $vararray[Lists] = '';									// if none are checked -----
 	unset($vararray[action]);										// unset page action indicator
 	unset($vararray[addflg]);                   // unset new record flag 
-	$where = "`MCID`='" . $mcid . "'";
+	unset($vararray[MCIDx]);                     // unset MCID field 
+//	echo '<pre> input after uri '; echo "mcid: $mcid, "; print_r($vararray); echo '</pre>';
+	$where = "`MCID`='".$mcid."'";
 	sqlupdate('members',$vararray, $where);	
 // add corr rec if supporter rec is new and is a voo attendee  	
 	$cflds = array();
@@ -82,6 +106,7 @@ $sql = "SELECT * FROM `members` WHERE MCID = '$mcid'";
 $res = doSQLsubmitted($sql);
 //$res = readMCIDrow($mcid);
 if ($res->num_rows == 0) {
+  unset($_SESSION['VolActiveMCID']);    // invalid MCI
 	echo "<h3>No MCID record found.  Please retry.</h3><br /><br />";
 	echo "<p>Enter part or all of new MCID in the &apos;LOOKUP&apos; box and try again.</p>";
 	//echo "<a class=\"btn btn-large btn-primary\" href=\"index.php\">CANCEL AND RETURN</a><br /><br />";
@@ -339,6 +364,7 @@ return true;
 <div class="well">
 <h4>Contact Information</h4>
 <div class="row">
+<input type="hidden" name="MCIDx" value="<?=$mcid?>">
 <div class="col-sm-4">First: <input placeholder="First Name" autofocus type="text" name="FName" value="<?=$fname?>" onchange="setflds(document.mcform)"></div>
 <div class="col-sm-4">Last: <input placeholder="Last Name" type="text" name="LName" value="<?=$lname?>" onchange="setflds(document.mcform)"></div>
 </div>
