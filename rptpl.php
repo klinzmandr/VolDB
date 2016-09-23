@@ -74,7 +74,7 @@ $msd = date('Y-m-d 00:00:00', strtotime($sd)); $med = date('Y-m-d 23:59:59', str
 $sql = "SELECT `DateTime`,`User`,`Page`
 FROM `log`
 WHERE  `DateTime` BETWEEN '$msd' AND '$med'
-	AND `SQL` LIKE 'Page%' 
+	AND `Text` LIKE 'Page%' 
 	AND `Page` LIKE '$type'
 	-- AND `User` NOT LIKE '%klinz%'
 ORDER BY `DateTime` ASC;";
@@ -147,7 +147,7 @@ echo '</td></tr></table>';
 $sql = "SELECT *
 FROM `log`
 WHERE  `DateTime` BETWEEN '$msd' AND '$med'
-	AND `SQL` LIKE 'Logg%'
+	AND `Text` LIKE 'Logg%'
 	AND `Page` LIKE '%voldb%' 
 	-- AND `User` NOT LIKE '%klinz%'
 ORDER BY `DateTime` ASC;";
