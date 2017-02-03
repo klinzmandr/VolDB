@@ -4,7 +4,7 @@
 <title>Vol Courses</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="all">
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
@@ -21,7 +21,7 @@ include 'Incls/datautils.inc.php';
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-01-01', strtotime("now"));
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('now'));
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-	echo '<div class="container"><h2>Vol. Education In Date Range&nbsp;&nbsp;<a  class="btn btn-default" href="javascript:self.close();">CLOSE</a></h2>';
+	echo '<div class="container"><h2>Volunteer Education&nbsp;&nbsp;<a  class="hidden-print btn btn-default" href="javascript:self.close();">CLOSE</a></h2>';
 	
 if ($action == '') {
 	echo '<h3>Volunteer Education within the date range specified</h3>';
@@ -40,7 +40,7 @@ exit;
 	}
 
 if ($action == 'list') {
-echo "Start Date: $sd, End Date: $ed&nbsp;&nbsp;<button id=\"btnHS\">Hide/Show Details</button><br>";
+echo "Start Date: $sd, End Date: $ed&nbsp;&nbsp;<button class=\"hidden-print\" id=\"btnHS\">Hide/Show Details</button><br>";
 $sql = "SELECT `voltime`.*, `members`.`FName`, `members`.`LName` from `voltime`, `members` 
 WHERE `voltime`.`MCID` = `members`.`MCID`
   AND `voltime`.`VolCategory` = 'Education' 

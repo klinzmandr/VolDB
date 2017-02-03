@@ -4,10 +4,15 @@
 <title>Courses Conducted</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="all">
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
+
 <?php
 session_start();
 // include 'Incls/vardump.inc.php';
@@ -17,10 +22,11 @@ include 'Incls/datautils.inc.php';
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-01-01', strtotime("now"));
 $ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('now'));
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+	
+echo '<div class="container">
+<h3>Courses Conducted In Date Range&nbsp;&nbsp;<a class="hidden-print btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
 
 if ($action == '') {
-	echo '<div class="container"><h3>Courses Conducted In Date Range&nbsp;&nbsp;<a class="btn btn-default" href="javascript:self.close();">CLOSE</a></h3>';
-
 	echo '<h4>Courses conducted by all agencies within the date range specified</h4>';
 print <<<pagePart1
 <form action="rptcoursesinrange.php" method="post"  class="form">
@@ -40,7 +46,6 @@ exit;
 	}
 
 if ($action == 'list') {
-echo '<h3>Courses in Date Range&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
 echo "Start Date: $sd, End Date: $ed<br>";
 $sql = "SELECT * from `voltime` 
 WHERE `VolCategory` = 'Education' 
@@ -64,13 +69,13 @@ if ($rowcnt > 0) {
 		foreach ($v as $kk => $vv) {
 			foreach ($vv as $kkk => $vvv) {
 				$id = $k . ':' . $kk . ':' . $kkk;
-				echo "Course ID: <a href=\"rptcoursesinrange.php?action=attendees&course=$id\">";
-				echo "$kk, Date: $kkk</a>, Attendees: $vvv[count], Ed Hours: $vvv[hours]<br>";
+				echo "<a class=\"hidden-print\" href=\"rptcoursesinrange.php?action=attendees&course=$id\">Course ID: </a>";
+				echo "$kk, Date: $kkk, Attendees: $vvv[count], Ed Hours: $vvv[hours]<br>";
 				}
 			}
 		echo '</ul><br>';
 		}
-	echo "<h4>NOTE: click course id to get attendee list</h4>";
+	echo '<h4 class="hidden-print">NOTE: click &apos;Course ID&apos; to get attendee list</h4>';
 	}
 }
 
@@ -96,11 +101,6 @@ if ($action == 'attendees') {
 	echo '</ul>===== END OF LIST =====</div><br><br>';
 	}
 
-
-echo '<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
-</body>
+echo '</body>
 </html>';
 ?>

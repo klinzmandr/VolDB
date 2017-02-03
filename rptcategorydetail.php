@@ -4,15 +4,10 @@
 <title>Category Service Detail</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="all">
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
-
 <?php
 session_start();
 // include 'Incls/vardump.inc.php';
@@ -27,7 +22,7 @@ $catsummary = isset($_REQUEST['catsummary']) ? 'ON' : 'OFF';
 $volsummary = isset($_REQUEST['volsummary']) ? 'ON' : 'OFF';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-echo '<div class="container"><h3>Category Service Detail&nbsp;&nbsp;<a class="btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>';
+echo '<div class="container"><h3>Category Service Detail&nbsp;&nbsp;<a class="hidden-print btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>';
 
 if ($action == '') {
 	echo '
@@ -226,7 +221,13 @@ if ($rowcnt > 0) {
 		echo	"</table>";		// row
 		}
 	}
+
+
 echo '--- End of Report ---<br>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>';
 ?>

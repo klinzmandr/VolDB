@@ -29,7 +29,7 @@ function prepaccum($nbr) {
 <title>Volunteer Time Summary</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="all">
 </head>
 <body>
 <script src="jquery.js"></script>
@@ -47,7 +47,7 @@ $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : '';
 
 print <<<formPart
 <div class="container">
-<h3>Volunteer Service Summary&nbsp;&nbsp;<a class="btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>
+<h3>Volunteer Service Summary&nbsp;&nbsp;<a class="hidden-print btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>
 <script>
 function chksel() {
 //	var v = document.getElementById("selid");
@@ -59,7 +59,7 @@ function chksel() {
 return true;
 }
 </script>
-<form action="rptvoltimesummary.php" onsubmit="return chksel()">
+<form class="hidden-print" action="rptvoltimesummary.php" onsubmit="return chksel()">
 <select name="type" id="selid" onchange="this.form.submit()">
 <option value=""></option>
 <option value="0">Total volunteer hours in month</option>
