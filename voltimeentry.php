@@ -182,7 +182,7 @@ function deactivatesubmit() {
 <tr><th>Date</th><th>Name (MCID, Last, First)</th><th>Hours</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>
 <tr>
 <!-- Input row 01 -->
-<td><input autofocus name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input autofocus id="d1" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search1" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" id="hrs" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input name="mileage[]" type="text" id="mileage" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -194,7 +194,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 02 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d2" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search2" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)>" autocomplete="off" /></td>
@@ -206,7 +206,7 @@ function deactivatesubmit() {
 </tr>
 
 <!-- Input row 03 --><tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d3" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search3" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)>" autocomplete="off" /></td>
@@ -218,7 +218,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 04 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d4" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search4" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -230,7 +230,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 05 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d5" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search5" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -242,7 +242,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 06 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d6" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search6" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input name="mileage[]" type="text" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -254,7 +254,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 07 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d7" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search7" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -266,7 +266,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 08 -->
 <tr>
-<td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d8" type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search8" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -278,7 +278,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 09 -->
 <tr>
-<td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d9" type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search9" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
@@ -290,7 +290,7 @@ function deactivatesubmit() {
 </tr>
 <!-- Input row 10 -->
 <tr>
-<td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d10" type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input name="id[]" type="text" id="search10" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
 <td><input type="text" name="mileage[]" value="" size="4" maxlength="4" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>

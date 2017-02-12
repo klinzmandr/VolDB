@@ -1,5 +1,6 @@
 
 function ValidateDate(fld)  {
+var dname = fld.id;
 var stripped = fld.value.replace(/[\(\)\.\-\ \/]/g, '');
 var errmsg = "";
 var d = new Date();
@@ -38,9 +39,9 @@ if(!stripped.match(/^[12][90][0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])/)) 
 	errmsg += "Invalid date entered.\n";
 	}
 var now = new Date(); 
-var nowday = now.getDate(); var nowmo = now.getMonth()+1; var nowyr = now.getFullYear();
+var nowday = now.getDate(); var nowmo = now.getMonth(); var nowyr = now.getFullYear();
 var nowms = Date.UTC(nowyr, nowmo, nowday);
-var newyr = stripped.substr(0,4); var newmo = stripped.substr(4,2); var newday = stripped.substr(6,2);
+var newyr = stripped.substr(0,4); var newmo = stripped.substr(4,2)-1; var newday = stripped.substr(6,2);
 chkms = Date.UTC(newyr, newmo, newday);
 if (chkms > nowms) {
 	errmsg += "Date entered is in the future!\n";
