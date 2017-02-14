@@ -10,10 +10,19 @@ var curr_month = new String(d.getMonth() + 1); 				//Months are zero based
 if (curr_month <= 9) curr_month = "0" + curr_month;
 var curr_year = d.getFullYear();
 
+// logic to clear the date field if improperly entered
+if (stripped == 'xx') {
+  $('#'+dname).css("background-color", "white");
+  errmsg = "";
+  $('#'+dname).val('');
+  return true;
+  }
+
+// process text entry of now and set today's date in
 var nowdate = curr_year + "-" + curr_month + "-" + curr_day;
 if (stripped == 'now') {
-	fld.value = nowdate
-	fld.style.background = "White";
+	$('#'+dname).val(nowdate);
+	$('#'+dname).css("background-color", "white")
 	return true;
 	}
 if (stripped.length == 2) {		// assume entry of dd

@@ -74,8 +74,8 @@ if ($action == 'upd') {
 		$rowcnt += 1;
 		}
 		//echo 'vol string:' . $vols .'<br />';
-		echo 'Rows applied: '.$rowcnt.'<br />';
 		//echo '<pre>mciderr ->'; print_r($mciderr); echo '</pre>';
+
 		if (count($mciderr) > 0) {
 			echo 'MCID(s) entry(s) in error: ';
 			foreach ($mciderr as $k => $v) {
@@ -98,6 +98,16 @@ $showvolcats = loaddbselect('VolCategorys', 'show');
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="./Incls/datevalidation.js"></script>
+
+<script>
+$(document).ready(function() {
+  $("#X").fadeOut(2000);
+});
+</script>
+<?php
+if ($action == 'upd') 
+echo '<h3 style="color: red; " id="X">Rows added: <?=$rowcnt?></h3>';
+?>
 
 <div class="well">
 
@@ -152,11 +162,18 @@ function chkform(frm) {
 				id[i].style.background = "Pink";
 				}
 			}
-		if (errcnt > 0) { 
-			alert("Incomplete entry. Date with no id and/or hours. Please correct");
-			return false;
-			}
+		else {
+		  hrs[i].value = "";
+		  hrs[i].style.background = "White";
+		  id[i].value = ""
+		  id[i].style.background = "White";
+		  }
 		}
+	if (errcnt > 0) { 
+		alert("Incomplete entry. Date with no id and/or hours. Please correct");
+		return false;
+		}
+		
 	for (i = 0; i < 10; i++) {
 		if (date[i].style.backgroundColor == "Pink") errcnt += 1;
 		if (hrs[i].style.backgroundColor == "Pink") { errcnt += 1; }

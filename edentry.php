@@ -97,7 +97,6 @@ if ($action == 'upd') {
 		$rowcnt += 1;
 		}
 		//echo 'vol string:' . $vols .'<br />';
-		echo 'Rows applied: '.$rowcnt.'<br />';
 		//echo '<pre>mciderr ->'; print_r($mciderr); echo '</pre>';
 		if (count($mciderr) > 0) {
 			echo 'MCID(s) entry(s) in error: ';
@@ -109,12 +108,21 @@ if ($action == 'upd') {
 	}
 
 // define the intake page
-print <<<pagePart1
+?>
 <body onchange="flagChange()">
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="./Incls/datevalidation.js"></script>
 
+<script>
+$(document).ready(function() {
+  $("#X").fadeOut(2000);
+});
+</script>
+<?php
+if ($action == 'upd') 
+echo '<h3 style="color: red; " id="X">Rows added: '.$rowcnt.'</h3>';
+?>
 <div class="well">
 
 <h2>Course Data Entry <a class="btn btn-primary" href="admin.php" onclick="return chkchg()">RETURN</a></h2>
@@ -191,15 +199,24 @@ function chkform(frm) {
 				ed[i].style.background = "Pink";
 				}
 			}
+		else {
+		  hrs[i].value = "";
+		  hrs[i].style.background = "white";
+		  id[i].value = "";
+		  id[i].style.background = "white";
+		  ed[i].value = "";
+		  ed[i].style.background = "white";
+		  }
+	  }
 		if (errcnt > 0) { 
 			alert("Incomplete entry. Date with no id, hours and/or course. Please correct");
 			return false;
 			}
-		}
+
 	for (i = 0; i < 10; i++) {
 		if (date[i].style.backgroundColor == "Pink") errcnt += 1;
-		if (hrs[i].style.backgroundColor == "Pink") { errcnt += 1; }
-		if (ed[i].style.backgroundColor == "Pink") { errcnt += 1; }
+		if (hrs[i].style.backgroundColor == "Pink")  errcnt += 1; 
+		if (ed[i].style.backgroundColor == "Pink")   errcnt += 1; 
 		}
 	if (errcnt > 0) {
 		alert("Please correct the highlighted error fields.");
@@ -221,91 +238,91 @@ function deactivatesubmit() {
 <tr><th>Date</th><th>Name (MCID, Last, First)</th><th>Hours</th><th>Course</th><th>Notes</th></tr>
 <tr>
 <!-- row 1 -->
-<td><input autofocus name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input autofocus id="d1" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search1" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" id="hrs" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed1" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed1" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input type="text" name="note[]" size="40"  autocomplete="off"></td>
 </tr>
 
 <!-- row 2 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d2" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search2" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed2" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed2" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40></td>
 </tr>
 
 <!-- row 3 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d3" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search3" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed3" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed3" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40></td>
 </tr>
 
 <!-- row 4 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d4" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isO1K(this)" name="id[]" type="text" id="search4" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed4" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed4" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 5 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d5" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search5" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed5" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed5" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 6 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d6" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search6" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input name="hrs[]" type="text" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed6" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed6" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 7 -->
 <tr>
-<td><input name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d7" name="date[]" type="text" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search7" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed7" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed7" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 8 -->
 <tr>
-<td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d8" type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search8" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed8" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed8" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 9 -->
 <tr>
-<td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d9" type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search9" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed9" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed9" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 
 <!-- row 10 -->
 <tr>
-<td><input type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
+<td><input id="d10" type="text" name="date[]" size="12" maxlength="12" style="width: 105px;" onchange="ValidateDate(this)" autocomplete="off" /></td>
 <td><input onchange="isOK1(this)" name="id[]" type="text" id="search10" data-provide="typeahead" data-items="4" autocomplete="off" /></td>
 <td><input type="text" name="hrs[]" value="" size="6" maxlength="6" style="width: 50px;" onchange="isnum(this)" autocomplete="off" /></td>
-<td> <select name="ed[]" id="ed10" onchange="isOK2(this)">$edlistdd</select>
+<td> <select name="ed[]" id="ed10" onchange="isOK2(this)"><?=$edlistdd?></select>
 <td><input name="note[]" type="text" value="" autocomplete="off" size=40/></td>
 </tr>
 </table>
@@ -316,7 +333,7 @@ function deactivatesubmit() {
 
 <script src="js/bootstrap3-typeahead.js"></script>
 <script>
- var vols = $vols; 
+ var vols = <?=$vols?>; 
 $('#search1').typeahead({source: vols})
 $('#search2').typeahead({source: vols})
 $('#search3').typeahead({source: vols})
@@ -331,5 +348,5 @@ $('#search10').typeahead({source: vols})
 
 </body>
 </html>
-pagePart1;
+
 ?>
