@@ -38,7 +38,7 @@ function prepaccum($nbr) {
 <?php
 session_start();
 //include 'Incls/vardump.inc.php';
-include 'Incls/seccheck.inc.php';
+//include 'Incls/seccheck.inc.php';
 include 'Incls/datautils.inc.php';
 include 'Incls/letter_print_css.inc.php';
 
@@ -110,7 +110,7 @@ $accum = prepaccum($yrcount);
 
 //echo '<pre> accum '; print_r($accum); echo '</pre>';
 
-$mcidcatcher = array(); $motot = array();
+$mcidcatcher = array(); $motot = array(); $mcidmoarray = array();
 foreach ($resarray as $r) {
 //	echo '<pre> data '; print_r($r); echo '</pre>';
 	if ($r[VolDate] == '0000-00-00') continue;
@@ -131,17 +131,28 @@ foreach ($resarray as $r) {
 	$accum[$yr][$cat][$mo][avg] = number_format($avg, 2);
 	$motot[$yr][$mo][count] += 1;
 	$motot[$yr][$mo][tothrs] += $vt;
-	$motot[$yr][$mo][totavg] = number_format($motot[$yr][$mo][tothrs] / $motot[$yr][$mo][count],2);
+	$motot[$yr][$mo][totavg] = 
+    number_format($motot[$yr][$mo][tothrs] / $motot[$yr][$mo][count],2);
+
+	$mcidmokey = $yr . $mo . $mcid;    // unique mcid per month
+	if (!in_array($mcidmokey, $mcidmoarray)) {
+	   $motot[$yr][$mo][mcidcount] += 1;
+	   $mcidmoarray[] = $mcidmokey;
+	   }
 	
 	$mcidkey = $yr . $cat . $mo . $mcid; 
 	if (!array_key_exists($mcidkey, $mcidcatcher)) {
 		$mcidcatcher[$mcidkey] += 1;
 		$accum[$yr][$cat][$mo][mcids] += 1;
 		$uniquemcids += 1;
-		$motot[$yr][$mo][mcidcount] += 1;
+//		$motot[$yr][$mo][mcidcount] += 1;
 		$mcidcount[$mcid] += 1; 
 	}
 }
+
+//echo '<pre> mcidcatcher '; print_r($mcidcatcher); echo '</pre>';
+//echo '<pre> motot-2017 '; print_r($motot[2017]); echo '</pre>';
+//echo '<pre> accum-2017-CtrVol '; print_r($accum[2017][CtrVol]); echo '</pre>';
 // echo "type: $type<br>";
 if ($type == 0) {
 	echo '<h4>Volunteer Hours Served</h4>'; }
@@ -161,10 +172,12 @@ krsort($accum);
 foreach ($accum as $yr => $val) {
 	echo '<table class="table-condensed" border=1>
 <tr><td>YEAR: ' . $yr . '</td><td width="50" align="right"><b>Jan</b></td><td width="50" align="right"><b>Feb</b></td><td width="50" align="right"><b>Mar</b></td><td width="50" align="right"><b>Apr</b></td><td width="50" align="right"><b>May</b></td><td width="50" align="right"><b>Jun</b></td><td width="50" align="right"><b>Jul</b></td><td width="50" align="right"><b>Aug</b></td><td width="50" align="right"><b>Sep</b></td><td width="50" align="right"><b>Oct</b></td><td width="50" align="right"><b>Nov</b></td><td width="50" align="right"><b>Dec</b></td></tr>';
+//echo "year: $yr<br>";
+//echo '<pre> val '; print_r($val); echo '</pre>';
 	foreach ($val as $k => $v) {
-		echo "<tr><td>$k</td>";
+		echo "<tr><td>$k</td>";  // $k is the vol category
 		ksort($v);
-		foreach($v as $kk => $vv) {			// add totals for each category
+		foreach($v as $kk => $vv) {			// add  mo totals for each category
 			if ($type == 0) $fvv = number_format($vv[hours]);
 			elseif ($type == 1) $fvv = number_format($vv[count]);
 			elseif ($type == 2) $fvv = number_format($vv[mcids]);
