@@ -7,6 +7,8 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <?php
 session_start();
 //include 'Incls/vardump.inc.php';
@@ -26,6 +28,7 @@ echo "<b>Total Volunteer Count:</b> $rowcnt<br />";
 // table: voltime: VTID,VTDT,MCID,VolDate,VolTime,VolMilage,VolCategory,VolNotes
 
 while ($r = $res->fetch_assoc()) {
+if (strlen($r[EmailAddress]) > 0) $emarray[] = $r[EmailAddress];
 $trows[] = "<tr><td>$r[MCID]</td><td>$r[FName]&nbsp;$r[LName]</td><td>$r[MemStatus]</td><td>$r[MCtype]</td>
 <td>$r[PrimaryPhone]</td><td>$r[EmailAddress]</td><td>$r[City]</td><td>$r[Lists]</td></tr>";
 	}
@@ -35,8 +38,13 @@ echo '<tr><th>MCID</th><th>Name</th><th>MemStat</th><th>MemType</th><th>Phone</t
 foreach ($trows as $l) { echo $l; }
 echo '</table>';	
 
+sort($emarray);
+
+echo '<h3>Volunteer Email Address List</h3><pre>';
+foreach ($emarray as $v) {
+  echo $v . "\n";
+  }
 ?>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
+</pre>
 </body>
 </html>
