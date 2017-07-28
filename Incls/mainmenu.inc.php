@@ -104,6 +104,7 @@ print <<<menuPart2
 	<li><a href="http://www.brownbearsw.com/cal/pwc_phones" target="_blank">Hotline Vol. Schedule</a></li>
 	<li><a href="http://www.brownbearsw.com/cal/pwctrans" target="_blank">Resc/Trans Vol. Schedule</a></li>
 	<li><a href="rptdbsummary.php" target="_blank">Database Summary</a></li>
+	<li><a href="../charts" target="_blank">Database Charts</a></li>
 	<li><a href="http://www.pacificwildlifecare.org/BOD/PWCCaseDataCharts.pdf" target="_blank">Case Data Charts</a></li>
 	<li class="divider"></li>
 	<li><a href="rptVolUtility.html" target="_blank">Vol Utility User Info</a></li>
