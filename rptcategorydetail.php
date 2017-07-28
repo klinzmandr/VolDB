@@ -8,6 +8,11 @@
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
+
 <?php
 session_start();
 // include 'Incls/vardump.inc.php';
@@ -22,7 +27,7 @@ $catsummary = isset($_REQUEST['catsummary']) ? 'ON' : 'OFF';
 $volsummary = isset($_REQUEST['volsummary']) ? 'ON' : 'OFF';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-echo '<div class="container"><h3>Category Service Detail&nbsp;&nbsp;<a class="hidden-print btn btn-default btn-xs" href="javascript:self.close();">CLOSE</a></h3>';
+echo '<div class="container"><h3>Category Service Detail&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="javascript:self.close();">CLOSE</a>&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="rptcategorydetail.php">RE-DO</a></h3>';
 
 if ($action == '') {
 	echo '
@@ -52,8 +57,7 @@ function chgcb() {
 	}
 	return;
 }
-</script>';
-	echo "
+</script>
 	<p>This report produces a summary of all service records for one or more categories selected from the date range specified.</p>
 	<p>The following additional summary and/or detail reports can optionally be selected as well. All listed may be downloaded to spreadsheet software by clicking the assoicated link.
 	<ul><li>Volunteer Summary - lists each individual volunteer serving within the date range specified summarizing the number of time served, count of the different service categories served as well as the total number of hours served and total miles driven in all categories.</li>
@@ -62,11 +66,12 @@ function chgcb() {
 	</ul></p>
 
 <h4>Specify Date Period:</h4><ul>
-<form action=\"rptcategorydetail.php\" method=\"post\"  class=\"form\" onsubmit=\"return chkcats()\">
-Start:<input type=\"text\" name=\"sd\" id=\"sd\" value=\"$sd\" style=\"width: 105px;\">
-End: <input type=\"text\" name=\"ed\" id=\"ed\" value=\"$ed\" style=\"width: 105px;\">
-</ul>";
+<form action="rptcategorydetail.php" method="post"  class="form" onsubmit="return chkcats()">
+Start:<input type="text" name="sd" id="sd" value="'.$sd.'" style="width: 105px;">
+End:  <input type="text" name="ed" id="ed" value="'.$ed.'" style=\"width: 105px;">
 
+<input type="submit" name="submit" Value="Submit">
+</ul>';
 $cats = readdblist('VolCategorys');
 $catsarray = formatdbrec($cats);
 asort($catsarray);
@@ -85,14 +90,13 @@ echo '</ul><br>
 <input type="hidden" name="action" value="generate">
 <input type="submit" name="submit" Value="Submit">
 </form>
-<script src="jquery.js"></script><script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>
 ';
 exit;
 	}
+	
+// SUMMARY REPORTING STARTS HERE
 //echo '<h3>Volunteer Service Analysis&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
 //	echo "details flag: " . $details . "<br>";
 //	echo '<pre> cats '; print_r($cats); echo '</pre>';
@@ -150,16 +154,87 @@ if ($rowcnt > 0) {
 		echo "<tr><td>$k</td><td align=\"right\">$v[count]</td><td align=\"right\">$v[hours]</td></tr>";
 		}
 	echo '</table></ul>';
-/*
-	echo '<p><b>Period volunteer service counts and total hours</b></p>
-	<table class="table-condensed">';
-	echo '<th>VolID</th><th>SvcCount</th><th>TotHrs</th>';
-	foreach ($mcidcounts as $k => $v) {
-		echo "<tr><td>$k</td><td>$v[count]</td><td>$v[hours]</td></tr>";
-		}
-	echo '</table>';
-*/
+  ksort($counts);
+  $str = '';
+  if (count($counts) > 0) {
+    foreach ($counts as $k => $v) {
+      $str1 .= "['$k'," . $v[count] . "],";
+      $str2 .= "['$k'," . $v[hours] . "],";
+      }
+  $piechartdata1 = rtrim($str1, ','); 
+  $piechartdata2 = rtrim($str2, ','); 
+  }
+//echo "piechartdata: $piechartdata1<br>";
+// chart1 output here
+?>
 
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+// Load the Visualization API and the corechart package.
+google.charts.load('current', {'packages':['corechart']});
+
+// Set a callback to run when the Google Visualization API is loaded.
+google.charts.setOnLoadCallback(drawChart1);
+
+// Callback that creates and populates a data table,
+// instantiates the pie chart, passes in the data and
+// draws it.
+function drawChart1() {
+
+  // Create the data table.
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Count');
+  data.addColumn('number', 'Total');
+  data.addRows(
+  [<?=$piechartdata1?>]);
+  // [['one',1],['two',2],['three',3]]);
+
+  // Set chart options
+  var options = {'title':'Service Distribution (Count)',
+                 'width':400,
+                 'height':300};
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.PieChart(document.getElementById('chart1'));
+  chart.draw(data, options);
+}
+
+<!-- chart2 output here-->
+// Set a callback to run when the Google Visualization API is loaded.
+google.charts.setOnLoadCallback(drawChart2);
+
+// Callback that creates and populates a data table,
+// instantiates the pie chart, passes in the data and
+// draws it.
+function drawChart2() {
+
+  // Create the data table.
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Hours');
+  data.addColumn('number', 'Total');
+  data.addRows(
+  [<?=$piechartdata2?>]);
+  // [['one',1],['two',2],['three',3]]);
+
+  // Set chart options
+  var options = {'title':'Service Distribution (Hours)',
+                 'width':600,
+                 'height':300};
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.BarChart(document.getElementById('chart2'));
+  chart.draw(data, options);
+}
+
+</script>
+
+<!--Table that will hold the pie charts-->
+<table>
+<tr><td id="chart1"></td></tr><tr><td id="chart2"></td></tr></table>
+
+<?php
 // output volunteer summary if requested
 	if ($volsummary == 'ON') {
 		echo '<h4>Volunteer Individual Summary&nbsp;&nbsp;
@@ -222,12 +297,8 @@ if ($rowcnt > 0) {
 		}
 	}
 
-
-echo '--- End of Report ---<br>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
-</body>
-</html>';
 ?>
+<br>--- End of Report ---<br>
+</body>
+</html>
+
