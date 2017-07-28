@@ -29,7 +29,13 @@ addlogentry('Page Load');
 // echo "Initial Connection Info: ".$mysqli->host_info . "<br>DB in use: $db<br>";
 echo "<script>
 var EmailAddr = \"$EmailFROM\";
-</script>";
+</script>
+<style>
+input[type=checkbox] {
+  transform: scale(1.5);
+</style> 
+
+";
 
 // ------------------ submit sql statement provided by calling script ----------
 // submit sql statement provided in call
