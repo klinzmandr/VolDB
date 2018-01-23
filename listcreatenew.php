@@ -27,7 +27,8 @@ if ($action == 'display') {
 		exit;
 		}
 	echo '<h4>Current list definitions</h4>
-	<p>Modify the current list to add or delete items.</p>';
+	<p>Modify the current list to add, change or delete items.</p>
+	<h3 style="color: red; ">CAUTION WHEN DELETING OR CHANGING A LIST NAME: Any name that does not appear in this will be deleted from all volunteers.</h3>';
 	$txt = readdblist('EmailLists');
 	echo '<form action="listcreatenew.php" method="post">	
 	<textarea name="CfgText" rows="20" cols="100">'.$txt.'</textarea>
@@ -69,6 +70,7 @@ print <<<pagePart1
 <h3>Create New Mailing List</h3>
 <p>This function is provided to allow the creation or deletion of volunteer mailing lists.  These lists are used to communicate with the volunteers that have subscribed to the mailing list.  Maintenance of the volunteer&apos;s individual mailing list is done by changing the checked lists on the members records.</p>
 <p>NOTE:  only volunteer records (those marked as a 'Member Status' of 2) will display the mailing lists.</p>
+<h3 style="color: red; ">CAUTION WHEN DELETING OR CHANGING A LIST NAME: Any name that does not appear in this will be deleted from all volunteers.</h3>
 <p>Lists currently defined:</p>
 
 pagePart1;
@@ -82,9 +84,9 @@ echo '<p>Please carefully note the format and layout of the text.  The following
 <li>Data lines are comprised of two parts,</li>
 <ul><li>An acronym code used in the database, and</li>
 <li>A description of the list</li></ul>
-<li>A colon seperates the two</li></ul>
+<li>A colon separates the two</li></ul>
 <p>This data line format must be maintained in order for the system to properly process the list name.</p>
-<p>NOTE: DO NOT MODIFY EXISTING NAMES!  It is recommended that name lists be completely deleted.  volunteers subscribed to a list that is deleted are not modified.  The deleted list name will simply not appear in the as a choice when creating an email to a specific list.</p>';
+<p>NOTE: DO NOT MODIFY EXISTING NAMES!  It is recommended that name lists be completely deleted.  Volunteers subscribed to a DELETED OR MODIFIED LIST NAME WILL BE UPDATED TO REMOVE THE LIST NAME from their record.  </p>';
 echo '<form action="listcreatenew.php" method="post"  name="passwdform">
 To modify this information click the button:
 <!-- <input type="password" name="pw" value="" autocomplete="off"> -->
