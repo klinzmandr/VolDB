@@ -17,14 +17,8 @@ include 'Incls/datautils.inc.php';
 
 $tokey = $_REQUEST['tokey'];
 
-// we need to have messages to volunteers come from one address and
-// messages sent to the home rehabber list 'Sat' come from another
-// this is to allow replys to be sent to the correct in-box at pacwilica.org 
-// set the default for the volunteer lists and change it if it is for the 'Sat' list by itself
 // $EmailFROM is defined as the default in the datautils include
 $sender = $EmailFROM;
-if ((count($tokey) == 1) AND ($tokey[0] == 'Sat'))
-	$sender = 'pwchomerehab@pacwilica.org';
 
 $sql = ''; $tostr = '(';
 foreach ($tokey as $t) {
