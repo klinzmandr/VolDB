@@ -254,7 +254,8 @@ function setflds(theForm) {
 	var ffld = theForm.FName.value;
 	var lfld = theForm.LName.value;
 	//alert("ffld: "+ffld+", lfld: "+lfld);
-	theForm.NameLabel1stline.value = ffld + " " + lfld;
+	var ll = ffld + " " + lfld;
+	theForm.NameLabel1stline.value = ll.substring(0,24);
 	theForm.CorrSal.value = ffld;
 	return;
 	}
@@ -370,7 +371,8 @@ return true;
 </div>
 
 <div class="row">
-<div class="col-sm-4">Label Line: <input placeholder="Label Line" name="NameLabel1stline" value="<?=$lab1line?>"></div>
+<div class="col-sm-4">Label Line: 
+<input maxlength="24" placeholder="Label Line" name="NameLabel1stline" value="<?=$lab1line?>"></div>
 <div class="col-sm-5">Correspondence Sal:<input placeholder="Correspondence Salutation" name="CorrSal" value="<?=$corrsal?>"></div>
 </div>
 <div class="row">

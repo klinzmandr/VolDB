@@ -114,7 +114,9 @@ echo "<table class=\"table-condensed\">";
 echo "<tr><th>Delete</th><th>User ID</th><th>Password</th><th>MCID</th><th>Role</th><th>Notes</th></tr>";
 while ($r = $res->fetch_assoc()) {
 	//echo "<pre>user: "; print_r($r); echo "</pre>";
-	echo "<tr><td align=\"center\"><a href=\"voladdnewuser.php?action=delete&recno=$r[SeqNo]\"><img src=\"config/b_drop.png\" alt=\"DELETE\" /></a></td><td>$r[UserID]</td><td>************</td><td>$r[MCID]</td><td>$r[Role]</td><td>$r[Notes]</td></tr>";
+	echo "<tr><td align=\"center\"><a href=\"voladdnewuser.php?action=delete&recno=$r[SeqNo]\">
+<span title=\"DELETE\" class=\"glyphicon glyphicon-trash\" style=\"color: blue; font-size: 15px\"></span>
+</a></td><td>$r[UserID]</td><td>************</td><td>$r[MCID]</td><td>$r[Role]</td><td>$r[Notes]</td></tr>";
 	}
 echo "</table></div>";
 
