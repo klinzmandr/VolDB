@@ -7,6 +7,9 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
 <?php
 session_start();
 
@@ -23,11 +26,7 @@ if ($action == 'view') {
   foreach ($file as $l) {
     echo $l . '<br>';
     }
-  echo '</div>
-  <script src="jquery.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  </body>
-  </html>';
+  echo '</div></body></html>';
 	exit;
   }
 
@@ -43,8 +42,7 @@ if ($action == 'delete') {
 echo '<div class="container">
 <h3>Mail Log Viewer
 &nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>
-<p>Select the completed mail entry from the dropdown list. The lastest is at the top.</p>';
-echo '
+<p>Select the completed mail entry from the dropdown list. The lastest is at the top.</p>
 <script> 
 function confdel() {
   if (confirm("Delete message from queue?\\n\\nAre you sure?")) return true;;
@@ -56,10 +54,11 @@ function confdel() {
 $sql = "SELECT * FROM `maillog` ORDER BY `LogID` DESC;";
 $res = doSQLsubmitted($sql);
 echo '
-<table border=0><tr><td>
+<table border=1><tr><td>
 <form action="rptmaillogviewer.php" method="post"  class="form">
 <select name="logentry" onchange="this.form.submit()">
-<option value=""></option>';
+<option value=""></option>
+<option value="old">30 days old or more</option>';
 while ($r = $res->fetch_assoc()) {
 	echo "<option value=\"$r[LogID]\">$r[LogID]: $r[DateTime]</option>";	
 	}
@@ -72,28 +71,39 @@ if ($action == 'del') {
 		echo '<h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to maintain these lists.</h4>
 		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded 			to &apos;voladmin&apos; in order to modify any lists.</p>
-		<script src="jquery.js"></script><script src="js/bootstrap.min.js"></script>
 		</body></html>';
 		exit;
 		}
 	$recno = $_REQUEST['recno'];
 	$sql = "DELETE FROM `maillog` WHERE `LogID` = '$recno';";
-	$rows =doSQLsubmitted($sql);
-	echo "Deleted record: $recno&nbsp;&nbsp;";
-	echo '<a class="btn btn-success" href="rptmaillogviewer.php">CONTINUE</a>'; 
-	echo '</td></tr></table></div>  <!-- container -->
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-</body>
-</html>';
+	if ($recno == 'old') {
+	  $deldate = date("Y-m-d", strtotime("now - 30 days"));
+	  // echo "deldate: $deldate<br>";
+	  $sql = "DELETE FROM `maillog` WHERE `DateTime` < '$deldate'";
+    }
+  // echo "sql: $sql<br>";
+	$rows = doSQLsubmitted($sql);
+	echo "Records Deleted: $rows&nbsp;&nbsp;";
+	echo '<a class="btn btn-success" href="rptmaillogviewer.php">CONTINUE</a></td></tr></table></div>  <!-- container -->
+</body></html>';
 	exit;
 	}
 
 if ($action == 'viewdb') {
 	$recno = $_REQUEST['logentry'];
 	$sql = "SELECT * FROM `maillog` WHERE `LogID` = '$recno';";
+	if ($recno == 'old') {
+	  $deldate = date("Y-m-d", strtotime("now - 30 days"));
+	  // echo "deldate: $deldate<br>";
+	  $sql = "Select * FROM `maillog` WHERE `DateTime` < '$deldate'";
+    }
 	$res = doSQLsubmitted($sql);
 	$r = $res->fetch_assoc();
+	$rc = $res->num_rows;
+	if ($recno == 'old') {
+	  echo "Delete $rc records?  <a class=\"btn btn-danger\" onclick=\"return confdel()\" href=\"rptmaillogviewer.php?action=del&recno=$recno\">DELETE</a>";
+	  exit;
+    }
 	// echo '<pre>'; print_r($r); echo '</pre>';
 	$recno = $r[LogID]; $datetime = $r[DateTime]; $user = $r[User]; 
 	$seclevel = $r[SecLevel]; $mailtext =  $r[MailText];
@@ -106,8 +116,6 @@ print <<<recOut
 	Mail Text:<br />
 	$mailtext
 	</div>  <!-- container -->
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
 
@@ -156,7 +164,5 @@ The following is a list of the subject line of messages either being sent or are
 ?>
 </td></tr></table>
 </div>  <!-- container -->
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

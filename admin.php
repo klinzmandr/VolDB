@@ -1,65 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Volunteer Home Page</title>
+<title>Volunteer System Home Page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="all">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 session_start();
-//include 'Incls/vardump.inc.php';
+// include 'Incls/vardump.inc.php'; 
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-unset($_SESSION['VolActiveMCID']);
-unset($_SESSION['VolDB_ERROR']);
-if ((($_REQUEST['action']) == 'logout')) {
-	include 'Incls//datautils.inc.php';
-	addlogentry("Logging Out");
-	unset($_SESSION['VolSessionTimer']);
-	unset($_SESSION['VolSessionUser']);
-	unset($_SESSION['VolSecLevel']);
-	include 'Incls/seccheck.inc.php';
-	}
-if ((($_REQUEST['action']) == 'login')) {
+if (!isset($_REQUEST['userid'])) {              // no user id
+  if (!isset($_SESSION['VolSessionUser'])) {       // and no session id
+  	include 'Incls/seccheck.inc.php';           // present login fields
+  	exit;
+  	}
+  }
+  
+include_once 'Incls/datautils.inc.php';
+if ((($action) == 'login')) {
 	//echo "login request received<br>";
 	$userid = $_REQUEST['userid'];
 	$password = $_REQUEST['password'];
 	if ($userid != "") {
-		include 'Incls/datautils.inc.php';	
+		include_once 'Incls/datautils.inc.php';	
 		$ok = checkcredentials($userid, $password);
 		if ($ok) {
 			//echo "check of user id and password passed<br>";
-			$loc = $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'];
-			addlogentry("Logged In@$loc");
+			addlogentry("Logged In");
 			}
 		else {
-			addlogentry("Failed login attempt with password: $password");
-			echo "Failed login attempt<br>";
+//			addlogentry("Failed login attempt with password: $password");
+//			echo '<h3 style="color: red; ">Failed login attempt</h3>';
 			}
 		}
 	}
 
-//include 'Incls/vardump.inc.php';
+include_once 'Incls/datautils.inc.php';
+echo "<div class=\"container\">";
 
 if (isset($_SESSION['VolSessionUser'])) {
-	include 'Incls/mainmenu.inc.php';
-	echo "<div class=\"container\">";
-	echo '<h4>Session user logged in: ' . $_SESSION['VolSessionUser'] . '</h4>';
-	echo '<h5>Security level: ' . $_SESSION['VolSecLevel'] . '</h5>';
-	echo "<form class=\"form-inline\" action=\"admin.php\" method=\"post\"  id=\"xform\">";
-	echo "<h3>Volunteer Home Page&nbsp  <button  class=\"btn btn-large btn-primary\" name=\"action\" value=\"logout\" type=\"submit\" form=\"xform\" class=\"btn\">Logout</button></h3></form>";
-	}
+  include 'Incls/seccheck.inc.php';         
+  include_once 'Incls/mainmenu.inc.php';
+	echo '<h4>Session user logged in: ' . $_SESSION['VolSessionUser'] . '</h4>
+	<h5>Security level: ' . $_SESSION['VolSecLevel'] . '</h5>
+	<form class="form-inline" action="indexsto.php?lo=lo" method="post"  id="xform">
+  <h3>Home Page&nbsp  
+  <button  class="btn btn-large btn-primary" name="action" value="logout" type="submit" form="xform" class="btn">Logout</button>
+  </h3></form>';
+ 	}
 else {
-	echo "<div class=\"container\">
-	<form class=\"form-inline\" action=\"volinfotabbed.php\" method=\"post\"  id=\"yform\">";
-	echo "<h2>Volunteer Database (VolDB)</h2>";
-  echo "<h3>Home Page&nbsp  
-  <button autofocus class=\"btn btn-large btn-primary\" name=\"action\" value=\"login\" type=\"submit\" form=\"yform\" class=\"btn\">Login</button></form></h3>";
+	echo '<form class="form-inline" action="admin.php" method="post"  id="yform">
+	<h2>Volunteer System</h2>
+	<h3>Home Page&nbsp  
+	<button class="btn btn-large btn-primary" name="action" value="login" type="submit" form="yform" class="btn">Login</button></form></h3>
+	</h3>';
 	}
-
 ?>
+
 <!-- START OF PAGE -->
 <p>Welcome to the Volunteer Database System (VolDB). This page will briefly describe the facilities available for
 administration of this system. Other information is available by clicking the main menu tabs at the top of this page.</p>
@@ -82,14 +86,11 @@ provided to authorized users.</p>
 in. Inactivity for longer than 15 minutes will automatically log the user out and require a new login session to be
 established.</p>
 
+
 <div class="well">
 <h4>GPL License</h4>
-<p>Volunteer Database (VolDB)  Copyright (C) 2013 by Pragmatic Computing, Morro Bay, CA</p>
-<p>This program comes with ABSOLUTELY NO WARRANTY.  This is free software.  It may be redistributed under certain conditions.  See &apos;Reports->About VolDB&apos; for more information.</p>
-</blockquote>
-<br />
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<p>Membership Database (MbrDB)  Copyright (C) 2013 by Pragmatic Computing, Morro Bay, CA</p>
+    <p>This program comes with ABSOLUTELY NO WARRANTY.  This is free software.  It may be redistributed under certain conditions.  See &apos;Reports->About MbrDB&apos; for more information.</p>
 </div>
 </body>
 </html>
