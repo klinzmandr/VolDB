@@ -1,30 +1,53 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-print <<<menupart1
+?>
+
 <script>
 <!-- Form change variable must be global -->
 var chgFlag = 0;
 
+$(document).ready(function() {
+  $('.updb').prop('disabled', true);
+  $("#X").fadeOut(2000);
+  $("#help").hide();
+  
+$("#helpbtn").click(function() {
+  $("#help").toggle();
+  });
+  
+$("form").change(function(){
+  var v = $("#filter").val();
+  if (v != "") return;  // ignore filter input
+  chgFlag += 1; 
+  $(".updb").css({"background-color": "red", "color":"black"});
+  $('.updb').prop('disabled', false);    
+  // setInterval(blink_text, 1000);
+  });
+  
+$(".dropdown").click(function(event) {
+	if (chgFlag <= 0) { return true; }
+	var r=confirm("All changes made will be lost.\n\nConfirm abandoning changes and leaving page by clicking OK.");	
+	if (r == true) { 
+    chgFlag = 0; 
+    return true; 
+	  }
+  event.preventDefault();
+  return false;
+  });
+
+});
+
+function blink_text() {     // blink field
+    $('.updb').fadeOut(500);
+    $('.updb').fadeIn(500);
+  }
+
 function chkchg() {
 	if (chgFlag <= 0) { return true; }
-	var r=confirm("All changes made (" + chgFlag + ") will be lost.\\n\\nConfirm by clicking OK.");	
+	var r=confirm("All changes made will be lost.\n\nConfirm leaving page by clicking OK.\nCANCEL to return.");	
 	if (r == true) { chgFlag = 0; return true; }
 		return false;
-	}
-
-// add '<body onchange="flagChange()"> to all pages needed
-function flagChange() {
-//	alert("change flagged");
-	chgFlag += 1;
-	return true;
-	}
-
-<!-- ignore any change to the filter input field -->
-function ignorefilter() {
-	chgFlag -= 1;
-	return true;
-	}
-
+  }
 </script>
 <style>
 body { padding-top: 50px; }      <!-- add padding to top of each page for fixed navbar -->
@@ -46,18 +69,15 @@ body { padding-top: 50px; }      <!-- add padding to top of each page for fixed 
     <ul class="nav navbar-nav">
       <li><a onclick="return chkchg()" href="admin.php"><b>Home</b></a></li>
       <li><a onclick="return chkchg()" href="volinfotabbed.php">Info</a></li>
-			<!-- <li><a onclick="return chkchg()" href="#">????</a></li> -->
+			<!-- <li><a onclick="return chkchg()">????</a></li> -->
 			
-menupart1;
-
-print <<<menuPart2
 <!-- ========= define Email menu item ========== -->
 <li><a onclick="return chkchg()" href="sendchooser.php">Send Email</a></li>
 
 <!-- ======== define List menu dropdown ======== -->
 <!-- <li class="dropdown open">  example: to have open on load -->
 <li class="dropdown">
-<a id="drop2" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">List Mgr<b class="caret"></b></a>
+<a id="drop2" class="dropdown-toggle" data-toggle="dropdown" role="button">List Mgr<b class="caret"></b></a>
 <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
 	<li><a onclick="return chkchg()" href="listalllists.php">Display Lists Info</a></li>
 	<li><a onclick="return chkchg()" href="listspecificlist.php">View Specific List</a></li>
@@ -74,7 +94,7 @@ print <<<menuPart2
 
 <!-- ========== define Courses menu dropdown ======== -->
 <li class="dropdown">
-<a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">Courses<b class="caret"></b></a>
+<a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button">Courses<b class="caret"></b></a>
 <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
 	<li><a onclick="return chkchg()" href="edentry.php">Enter Course Data</a></li>
 	<li><a onclick="return chkchg()" href="edcourses.php">List/Add/Update/Display Course Info</a></li>
@@ -85,7 +105,7 @@ print <<<menuPart2
 <!-- ========== define reports dropdown ======= -->
 <!-- <li class="dropdown open">  example: to have open on load -->
 <li class="dropdown">
-<a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">Reports<b class="caret"></b></a>
+<a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button">Reports<b class="caret"></b></a>
 <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
 	<!-- <li><a href="rptperiodsummary.php" target="_blank">Period Service Summary</a></li> -->	
 	<!-- <li><a href="rptperiodanalysis.php" target="_blank">Period Service Analysis</a></li> -->	
@@ -108,7 +128,7 @@ print <<<menuPart2
 	<li><a href="http://www.pacificwildlifecare.org/BOD/PWCCaseDataCharts.pdf" target="_blank">Case Data Charts</a></li>
 	<li class="divider"></li>
 	<li><a href="rptVolUtility.html" target="_blank">Vol Utility User Info</a></li>
-	<li><a href="#">Other report(s) added as needed</a></li>
+	<li>Other report(s) added as needed</li>
 	<li class="divider"></li>
 	<li><a href="#myModal" data-toggle="modal" data-keyboard="true">About Volunteer DB</a></li>
 </ul>
@@ -129,21 +149,15 @@ function setupmcid(theForm)  {
 	}
 </script>
 <form name="filter" action="volfilterlist.php" method="post" class="navbar-form pull-left" onsubmit="return setupmcid(this)">&nbsp;&nbsp;&nbsp;
-  <input autofocus autocomplete="off" type="text" class="form-control" style="width: 100px;" value="$filter" name="filter" onChange="ignorefilter()" placeholder="MCID">
+  <input autofocus autocomplete="off" type="text" class="form-control" style="width: 100px;" value="<?=$filter?>" id="filter" name="filter" placeholder="MCID">
   <input type="submit" name="submit" value="Lookup" class="btn btn-default" onClick="return chkchg()">
 </form>
 
-menuPart2;
-
-print <<<theRest
 </ul>		<!-- nav navbar-nav  *the menu bar* -->
 </div>  <!--/.nav-collapse -->
 </nav>  <!-- class = "navbar" -->
 <!-- End mainmenu.inc -->
 
-theRest;
-
-print <<<theModal
 <!-- ============== ABOUT Modal  ============== -->  
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -165,5 +179,3 @@ print <<<theModal
 </div><!-- /.modal -->
 <!-- end of modal -->
 
-theModal;
-?>

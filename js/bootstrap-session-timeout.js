@@ -30,7 +30,7 @@ var defaults = {
     onRedir: false,
     countdownMessage: false,
     countdownBar: false,
-    countdownSmart: false,
+    countdownSmart: true,
     showButtons: true
 };
 
@@ -51,7 +51,7 @@ if (opt.warnAfter >= opt.redirAfter) {
 
 var showButtonsHtml = opt.showButtons ? 
   '<button id="session-timeout-dialog-logout" type="button" class="btn btn-default">' + opt.logoutButton + '</button>'+  
-   '<button id="session-timeout-dialog-keepalive" type="button" class="btn btn-primary" data-dismiss="modal">' + opt.keepAliveButton + '</button>' : '';
+   '<button id="session-timeout-dialog-keepalive" type="button" class="btn btn-primary" data-dismiss="modal">' + opt.keepAliveButton + '</button>' : '<center><b>Use any key or mouse action to cancel</b></center>';
 
 // Unless user set his own callback function, prepare bootstrap 
 // modal elements and events
@@ -61,7 +61,7 @@ var countdownMessage = opt.countdownMessage ? '<p>' + opt.countdownMessage.repla
 var coundownBarHtml = opt.countdownBar ? '<div class="progress"><div class="progress-bar progress-bar-striped countdown-bar active" role="progressbar" style="min-width: 15px; width: 100%;"><span class="countdown-holder"></span></div></div>' : '';
 
 // Create timeout warning dialog
-$('body').append('<div class="modal fade" id="session-timeout-dialog"> \
+$('body').append('<div class="hidden-print modal fade" id="session-timeout-dialog"> \
     <div class="modal-dialog"> \
       <div class="modal-content"> \
         <div class="modal-header"> \

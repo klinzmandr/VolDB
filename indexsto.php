@@ -4,8 +4,8 @@ $lotype = isset($_REQUEST['lo']) ? $_REQUEST['lo'] : 'to';
 
 // include 'Incls/vardump.inc.php'; 
 include_once 'Incls/datautils.inc.php';
-unset($_SESSION['VolSessionUser']);
-unset($_SESSION['VolSecLevel']);
+session_unset();
+session_destroy();
 
 // logout or timeout reset requested
 if ($lotype == 'lo') { 
@@ -14,9 +14,6 @@ if ($lotype == 'lo') {
 else { 
   $title = "Session Timed Out";
   addlogentry("Timed out"); }
-
-session_unset();
-session_destroy();
 
 ?>
 <!DOCTYPE html>

@@ -340,7 +340,7 @@ return true;
 </script>
 
 <form name="mcform" id="mcform" class="form-horizontal" role="form" onsubmit="return validateForm(this)">
-<div style="text-align: center"><button type="submit" form='mcform' class="btn btn-primary">Update Member</button></div>
+<div style="text-align: center"><button type="submit" form='mcform' class="updb btn btn-primary">Apply Update(s)</button></div>
 
 <!-- Tab definition header  -->
 <ul id="myTab" class="nav nav-tabs">

@@ -11,6 +11,7 @@ $(document).ready(function() {
       redirAfter: 20*60*1000,
       countdownMessage: 'Time remaining:',
       countdownBar: true,
+      countdownSmart: true,
       showButtons: false
   });
 });
@@ -18,8 +19,13 @@ $(document).ready(function() {
 
 <?php
 // check if there is an active session
-if (isset($_SESSION['VolSessionUser'])) {
+if (isset($_SESSION['SessionActive'])) {
   return;
+  }
+// if url is a report exit
+if (preg_match("/.*\/rpt.*\.(php|html|htm)$/i",$_SERVER['SCRIPT_NAME'])) {
+  echo '<h3>SESSION NO LONGER ACTIVE</h3>';
+  exit;
   }
 
 // if not display login form
@@ -82,7 +88,7 @@ function trim(s)
 </script>
 
 <div class="container">
-	<h1>Membership System</h1>
+	<h1>Volunteer System</h1>
 	<form action="admin.php" method='POST' name="form" class="form-signin" onsubmit="return checkform(this)">
 	<h2 class="form-signin-heading">Please sign in</h2>
 	<input type="text" class="input-block-level" placeholder="User ID" autofocus name="userid" value="" autocomplete="off">
