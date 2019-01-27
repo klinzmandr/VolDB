@@ -30,7 +30,6 @@ $tostr = rtrim($tostr," OR ") . ')';
 $sql = "SELECT `MCID`,`FName`,`LName`,`EmailAddress` 
 FROM `members` 
 WHERE `MemStatus` = 2 
-	AND `E_Mail` = 'TRUE'
 	AND $tostr 
 	ORDER BY 'LName' ASC";
 // echo "SQL: $sql<br />";

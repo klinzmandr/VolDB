@@ -17,7 +17,7 @@ $("#helpbtn").click(function() {
   
 $("form").change(function(){
   var v = $("#filter").val();
-  if (v != "") return;  // ignore filter input
+  if (v != "") { return; }  // ignore filter input
   chgFlag += 1; 
   $(".updb").css({"background-color": "red", "color":"black"});
   $('.updb').prop('disabled', false);    
@@ -53,7 +53,7 @@ function chkchg() {
 body { padding-top: 50px; }      <!-- add padding to top of each page for fixed navbar -->
 </style>
 <!-- ========= define main menu bar and choices ====== -->
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style='cursor: pointer;'>
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -68,7 +68,7 @@ body { padding-top: 50px; }      <!-- add padding to top of each page for fixed 
   <div class="collapse navbar-collapse" id="navbar-collapse-1">
     <ul class="nav navbar-nav">
       <li><a onclick="return chkchg()" href="admin.php"><b>Home</b></a></li>
-      <li><a onclick="return chkchg()" href="volinfotabbed.php">Info</a></li>
+      <li><a onclick="return chkchg()" href="volinfotabbed.php">VolInfo</a></li>
 			<!-- <li><a onclick="return chkchg()">????</a></li> -->
 			
 <!-- ========= define Email menu item ========== -->

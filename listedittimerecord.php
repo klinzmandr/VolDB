@@ -74,7 +74,7 @@ VolCategory: <select name=vcat>
 pagePart1a;
 loaddbselect('VolCategorys');
 print <<<pagePart1b
-<option value='Education'>Education</option>
+<option value='VolEduc'>Education</option>
 </select>
 <input type="hidden" name="action" value="updform">
 <input type="submit" name="submit" Value="Submit">
@@ -162,7 +162,7 @@ Category: <select name="VolCategory" >
 inForm1;
 loaddbselect('VolCategorys');
 print<<<inForm2
-<option value='Education'>Education</option>  
+<option value='VolEduc'>Education</option>  
 </select></td>
 Notes: <input type="text" name="VolNotes" value="$r[VolNotes]"><br /><br />
 <input type="hidden" name="action" value="update">

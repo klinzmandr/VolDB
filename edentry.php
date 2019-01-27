@@ -90,7 +90,7 @@ if ($action == 'upd') {
 		$flds[MCID] = $mcid;
 		$flds[VolDate] = $date[$i];
 		$flds[VolTime] = $hrs[$i];
-		$flds[VolCategory] = 'Education';
+		$flds[VolCategory] = 'VolEduc';
 		$flds[VolNotes] = $ed[$i] . '/' . $note[$i];	// course + notes
 //		echo "<pre>updcount $i: "; print_r($flds); echo '</pre>';
 		$rows = sqlinsert('voltime',$flds);			// returns the number of rows inserted

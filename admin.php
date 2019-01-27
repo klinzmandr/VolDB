@@ -29,7 +29,7 @@ if (!isset($_REQUEST['userid'])) {                // no user id
 
 if (!empty($userid)) {
 //  echo "check uid/pw"; include 'Incls/vardump.inc.php';  
-  $_SESSION['SessionActive'] = date("Y-m-d H:i:s");
+  $_SESSION['VolSessionActive'] = date("Y-m-d H:i:s");
 	include_once 'Incls/datautils.inc.php';
 	$password = $_REQUEST['password'];
 	$ok = checkcredentials($userid, $password);
@@ -38,7 +38,7 @@ if (!empty($userid)) {
 		addlogentry("Logged In");
 		}
 	else {
-	  unset($_SESSION['SessionActive']);
+	  unset($_SESSION['VolSessionActive']);
     // addlogentry("Failed login attempt with password: $password");
     // echo '<h3 style="color: red; ">Failed login attempt</h3>';
 		}
@@ -55,7 +55,7 @@ if (!empty($_SESSION['VolSessionUser'])) {
 	<form class="form-inline" action="indexsto.php?lo=lo" method="post"  id="xform">
   <h3>Volunteer System Home Page&nbsp  
   <button  class="btn btn-large btn-primary" name="action" value="logout" type="submit" form="xform" class="btn">Logout</button>
-  </h3></form>
+</h3></form>
   </table></ul>';
 	}
 else {

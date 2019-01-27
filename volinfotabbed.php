@@ -6,7 +6,7 @@
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
-<body onLoad="initForm(this)" onChange="flagChange()">
+<body>
 
 <script src="jquery.js"></script>
 <script src="Incls/datevalidation.js"></script>
@@ -64,10 +64,8 @@ if ($action == "update") {
 	  $log = 'SESSION ' . var_export($_SESSION, TRUE);
 	  addlogentry($log);
 	  $log = 'REQUEST ' . var_export($_REQUEST, TRUE);
-	  addlogentry($log);	                         // log the sesssion variables
+	  addlogentry($log);	                     // log the sesssion variables
 	  unset($_SESSION['VolActiveMCID']);       // force new lookup for MCID
-	  echo '<script src="jquery.js"></script>';
-	  echo '<script src="js/bootstrap.min.js"></script>';
 	  exit;
     }
 	if (array_key_exists('mlist',$vararray)) {
@@ -110,8 +108,6 @@ if ($res->num_rows == 0) {
 	echo "<h3>No MCID record found.  Please retry.</h3><br /><br />";
 	echo "<p>Enter part or all of new MCID in the &apos;LOOKUP&apos; box and try again.</p>";
 	//echo "<a class=\"btn btn-large btn-primary\" href=\"index.php\">CANCEL AND RETURN</a><br /><br />";
-	echo '<script src="jquery.js"></script>';
-	echo '<script src="js/bootstrap.min.js"></script>';
 	exit;
 	} 
 // get row data from result
@@ -148,7 +144,7 @@ function validateForm(theForm) {
 	//reason += validateEmpty(theForm.ZipCode);
 	//reason += validateEmpty(theForm.MemStatus);
 	reason += validateEmpty(theForm.MCType);
-	reason += validateEmpty(theForm.MemDate);
+	//reason += validateEmpty(theForm.MemDate);
 	//reason += validatePassword(theForm.pwd);
 	reason += validateEmpty(theForm.EmailAddress);
 	reason += validateEmpty(theForm.PrimaryPhone);    
@@ -203,51 +199,12 @@ function stopRKey(evt) {
 <!-- Does not allow use of Enter key when filling out a form -->
 <!-- document.onkeypress = stopRKey; -->
 
-function initForm(theDoc) {
-	clearFilter(theDoc.filter);
-	initAllFields(theDoc.mcform);
-	return true;
-	}
-
-function clearFilter(theForm) {
-	theForm.filter.value = "";
-	return true;
-	}
-	
-function initAllFields(form) {
-// Initialize all form controls
-  with (form) {
-//		initRadio(ttaken,"$ttaken");
-		initRadio(MemStatus,"<?=$memstatus?>");
-		initSelect(MCType,"<?=$mctype?>");
-		initRadio(E_mail,"<?=$e_mail?>");
-		initRadio(Mail,"<?=$mail?>");
-		initRadio(Inactive,"<?=$inact?>");
-  	}
-	}
-	
-function initSelect(control,value) {
-// Initialize a selection list (single valued)
-// alert("initSelect: control: " + control.length + ", value: " + value);
-	if (value == "") return;
-	for (var i = 0; i < control.length; i++) {
-		if (control.options[i].value == value) {
-			control.options[i].selected = true;
-			break;
-			}
-		}
-	}
-
-function initRadio(control,value) {
-//alert("initRadio");
-// Initialize a radio button
-	for (var i = 0; i < control.length; i++) { 
-		if (control[i].value == value) {
-			control[i].checked = true;
-			break;
-		}
-	}
-}
+$(document).ready(function() {
+  $("[name=MCType]").val("<?=$mctype?>");      // init drop down
+  $("[name=MemStatus]").val(["<?=$memstatus?>"]); // init all radios
+	$("[name=E_mail]").val(["<?=$e_mail?>"]);
+	$("[name=Mail]").val(["<?=$mail?>"]);
+});
 
 function setflds(theForm) {
 	//alert("entered");

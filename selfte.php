@@ -38,13 +38,13 @@ print <<<pagePart1
 function chkform(form) {
 	var val=form.MCID.value.toUpperCase();
 	var errcnt = 0;
-	if (val.length > 5) errcnt += 1;
-	if (!val.match(/^[A-Z]{3,3}[0-9]{2,2}/)) errcnt += 1;
+	if (val.length > 6) errcnt += 1;
+	if (!val.match(/^[A-Z]{3,3}[0-9]{2,2}[ABCDE]{0,1}$/)) errcnt += 1;
 	if (errcnt == 0) {
 		form.MCID.value = val;		
 		return true;
 		}
-	alert("The PWC Id is not a valid format.\\n\\nValid id is 3 letters and 2 digits.");
+	alert("The PWC Id entered is not a valid.");
 	return false
 	}
 </script>

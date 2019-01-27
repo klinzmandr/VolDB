@@ -19,7 +19,7 @@ $(document).ready(function() {
 
 <?php
 // check if there is an active session
-if (isset($_SESSION['SessionActive'])) {
+if (isset($_SESSION['VolSessionActive'])) {
   return;
   }
 // if url is a report exit

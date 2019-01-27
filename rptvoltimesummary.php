@@ -104,7 +104,7 @@ while ($r = $res -> fetch_assoc()) {
 	$yr = date('Y', strtotime($r[VolDate]));
 	$yrarray[$yr] += 1; 
 }
-// echo '<pre> yrarray '; print_r($yrarray); echo('</pre>');
+echo '<pre> yrarray '; print_r($yrarray); echo('</pre>');
 $yrcount = count($yrarray);
 $accum = prepaccum($yrcount);
 
@@ -165,7 +165,7 @@ elseif ($type == 3) {
 	
 ksort($mcidcatcher);
 // echo '<pre> mcidcatcher '; print_r($mcidcatcher); echo '</pre>';
-// echo '<pre> Mo Totals '; print_r($motot); echo '</pre>';
+echo '<pre> Mo Totals '; print_r($motot); echo '</pre>';
 
 // now unravel the accumulator array
 krsort($accum);

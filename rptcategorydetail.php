@@ -1,16 +1,20 @@
 <?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 session_start();
 // include 'Incls/vardump.inc.php';
-include 'Incls/seccheck.inc.php';
+// include 'Incls/seccheck.inc.php';
 include 'Incls/datautils.inc.php';
 
-$sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime("previous month"));
-$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
+$sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-01', strtotime('now'));
+$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-t', strtotime('now'));
 $cats = isset($_REQUEST['cats']) ? $_REQUEST['cats'] : '';
 $details = isset($_REQUEST['details']) ? 'ON' : 'OFF';
 $catsummary = isset($_REQUEST['catsummary']) ? 'ON' : 'OFF';
 $volsummary = isset($_REQUEST['volsummary']) ? 'ON' : 'OFF';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+$closebtn = '';
+if (isset($_SESSION['VolSessionUser'])) $closebtn = '&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="javascript:self.close();">CLOSE</a>';
 ?>
 
 <!DOCTYPE html>
@@ -34,48 +38,41 @@ $("document").ready( function() {
 $("#helpbtn").click(function() {
   $("#help").toggle();
   });
-
 });
 </script>
 
 <div class="container">
-<h3>Category Service Detail&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="javascript:self.close();">CLOSE</a>&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="rptcategorydetail.php?sd=<?=$sd?>&ed=<?=$ed?>">RE-DO</a>&nbsp;&nbsp;
-<button id="helpbtn" class="hidden-print btn btn-default btn-xs">HELP</button></h3>
+<h3>Category Service Detail
+<span id="helpbtn" title="Help" class="glyphicon glyphicon-question-sign" style="color: blue; font-size: 20px"></span>
+<?=$closebtn?>
+&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="rptcategorydetail.php?sd=<?=$sd?>&ed=<?=$ed?>">RE-DO</a>&nbsp;&nbsp;
+</h3>
 <div id="help">
-	<p>This report produces a summary of all service records for one or more categories selected from the date range specified.</p>
+	<p>This report produces a summary of all service records for one or more categories selected from the date range specified.  The default date range is the current month.</p>
+	<p>All totals and counts are for the date range entered.</p>
 	<p>The following additional summary and/or detail reports can optionally be selected as well. All listed may be downloaded to spreadsheet software by clicking the assoicated link.
 	<ul><li>Volunteer Summary - lists each individual volunteer serving within the date range specified summarizing the number of time served, count of the different service categories served as well as the total number of hours served and total miles driven in all categories.</li>
 	<li>Category Summary - Groups each individual volunteer with service time within the date range specified by category. Individual volunteer along with their total hours served and total miles driven is provided.</li>
 	<li>Service Detail Records - all service records for all volunteers within the date range specified are listed.</li> 
 	</ul></p>
+	<p>Hover mouse over table headings for definitions of column contents.</p>
 </div>
 
 <?php if ($action == '') { ?>
 
 <script>
 function chkcats() {
-	var elems = document.getElementsByName("cats[]");
-	for (i = 0; i < elems.length; i++) {
-		if (elems[i].checked) return true;
-		}
-	alert ("There were NO categorys selected");
-	return false;
+  var chks = $(".cats:checked").length;
+  if (chks == 0) {
+    alert ("There were NO categorys selected");
+    return false;
+    }
 	}
-</script>
-<script>
+
 function chgcb() {
-	var cb = document.getElementsByName("ctrlcb");
-	var elems = document.getElementsByName("cats[]"); 
-	if (cb[0].checked) {
-		for (i = 0; i < elems.length; i++) {
-			elems[i].checked = true;
-		}
-	}
-	else {
-		for (i = 0; i < elems.length; i++) {
-			elems[i].checked = false;
-		}
-	}
+  var cbx = $("#ctrlcb:checked").length;
+  $(".cats").prop("checked", false);
+  if (cbx == 1) $(".cats").prop("checked", true);
 	return;
 }
 </script>
@@ -95,13 +92,13 @@ echo '<br>
 <input type="checkbox" name="catsummary" id="catsummary"> Create Category Summary&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="checkbox" name="details" id="details"> List detail records<br>
 <ul>
-<h4>Categories:&nbsp;&nbsp;(&nbsp;<input type="checkbox" name="ctrlcb" checked onchange="chgcb()">&nbsp;Check All/None)</h4><ul>
+<h4>Categories:&nbsp;&nbsp;(&nbsp;<input type="checkbox" id=ctrlcb name="ctrlcb" checked onchange="chgcb()">&nbsp;Check All/None)</h4><ul>
 ';
 
 foreach ($catsarray as $k => $c) {
 	if ($c == '') continue;
 	$c = rtrim($c);
-	echo "<input type=\"checkbox\" name=\"cats[]\" id=\"cats\" value=\"$k\" checked> $c<br>";
+	echo "<input type=\"checkbox\" name=\"cats[]\" class=cats id=\"cats\" value=\"$k\" checked> $c<br>";
   }
 echo '</ul></ul><br>
 <input type="hidden" name="action" value="generate">
@@ -109,14 +106,14 @@ echo '</ul></ul><br>
 </body>
 </html>
 ';
-
+exit;
 }  // closing bracket for if ($action == '')
 
 
 // SUMMARY REPORTING STARTS HERE when action <> ''
 //echo '<h3>Volunteer Service Analysis&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
-//	echo "details flag: " . $details . "<br>";
-//	echo '<pre> cats '; print_r($cats); echo '</pre>';
+// echo "details flag: " . $details . "<br>";
+// echo '<pre> cats '; print_r($cats); echo '</pre>';
 
 $wherelist = '("' . implode('", "', $cats) .'")';
 // echo '<pre>'; print_r($wherelist); echo '</pre>';
@@ -143,6 +140,7 @@ if ($rowcnt > 0) {
 			$totmiles += $r[VolMileage];
 			$counts[$r[VolCategory]][count] += 1;
 			$counts[$r[VolCategory]][hours] += $r[VolTime];
+			$counts[$r[VolCategory]][mcid][$r[MCID]] += 1;
 			$mcidcounts[$r[MCID]][count] += 1;
 			$mcidcounts[$r[MCID]][hours] += $r[VolTime];
 			$categories[$r[VolCategory]][$r[MCID]][VolTime] += $r[VolTime];
@@ -165,10 +163,11 @@ if ($rowcnt > 0) {
 //	echo '<b>Period Category service count and total hours</b><br>';
 	echo '<ul><table class="table-condnesed" border=0>';
 	
-	echo '<tr><td align="center" width="20%"><b>Category</b></td><td width="20%" align="center"><b>SvcCount</b></td><td width="20%" align="center"><b>TotHrs</b></td></tr>';
+	echo '<tr><td align="center" width="20%" title="Volunteer category serviced within the date range"><b>Category</b></td><td width="20%" align="center" title="Count of different volunteers serving"><b>VolCount</b></td><td width="20%" align="center" title="Count of service entries reported"><b>SvcCount</b></td><td width="20%" align="center" title="Total hours served"><b>TotHrs</b></td></tr>';
 	ksort($counts);
 	foreach ($counts as $k => $v) {
-		echo "<tr><td>$k</td><td align=\"right\">$v[count]</td><td align=\"right\">$v[hours]</td></tr>";
+	  $volcnt = count($v[mcid]);
+		echo "<tr><td>$k</td><td align=\"center\">$volcnt</td><td align=\"center\">$v[count]</td><td align=\"center\">$v[hours]</td></tr>";
 		}
 	echo '</table></ul>';
   ksort($counts);
@@ -181,9 +180,20 @@ if ($rowcnt > 0) {
   $piechartdata1 = rtrim($str1, ','); 
   $piechartdata2 = rtrim($str2, ','); 
   }
-//echo "piechartdata: $piechartdata1<br>";
-// chart1 output here
+
 ?>
+<script>
+$(function() {
+  $("#b1").click(function() {
+    $("#c1").toggle();
+  });
+  $("#b2").click(function() {
+    $("#c2").toggle();
+  });
+});
+</script>
+<button id=b1 class=hidden-print>Show/Hide Pie Chart</button>&nbsp;&nbsp;&nbsp;
+<button id=b2 class=hidden-print>Show/Hide Bar Chart</button>
 
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -249,18 +259,20 @@ function drawChart2() {
 
 <!--Table that will hold the pie charts-->
 <table>
-<tr><td id="chart1"></td></tr><tr><td id="chart2"></td></tr></table>
+<tr id=c1><td id="chart1"></td></tr>
+<tr id=c2><td id="chart2"></td></tr>
+</table>
 
 <?php
 // output volunteer summary if requested
 	if ($volsummary == 'ON') {
-		echo '<h4>Volunteer Individual Summary&nbsp;&nbsp;
-		<a class="btn btn-success btn-xs" href="rptcategorydetail.php?sd=<?=$sd?>&ed=<?=$ed?>">Start Over</a></h4>';
+		echo "<h4>Volunteer Individual Summary&nbsp;&nbsp;
+		<a class='btn btn-success btn-xs' href='rptcategorydetail.php?sd=$sd&ed=$ed'>Start Over</a></h4>";
 //		echo '<pre> ind '; print_r($ind); echo '</pre>';
 		echo "<a href=\"downloads/VolSummary.csv\" download=\"VolSummary.csv\">DOWNLOAD CSV FILE</a>";
 		echo "<button type=\"button\" class=\"btn btn-xs btn-default\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Fields separated by semicolon(;)\nText fields are quoted.\"><span class=\"glyphicon glyphicon-info-sign\" style=\"color: blue; font-size: 20px\"></span></button>";
 		echo '<table border=0 class="table-condensed">
-		<tr><th>MCID</th><th>Name</th><th>SvcCnt</th><th>CatCnt</th><th>TotHrs</th><th>TotMiles</th></tr>';
+		<tr><th title="MCID of volunteer">MCID</th><th title="Volunteer Name">Name</th><th title="Number of times served">SvcCnt</th><th title="Number of different service categories served">CatCnt</th><th title="Total hourse served">TotHrs</th><th title="Total miles driven">TotMiles</th></tr>';
 		$vscsv[] = "MCID;Name;SvcCnt;CatCnt;TotHrs;TotMiles\n";
 		ksort($ind);
 		foreach ($ind as $k => $v) {
@@ -278,12 +290,12 @@ function drawChart2() {
 // output category summary if requested
 	if ($catsummary == 'ON') {
 //		echo '<pre> catsarray '; print_r($cats); echo '</pre>';
-		echo '<h4>Volunteer Category Summary&nbsp;&nbsp;
-		<a class="btn btn-success btn-xs" href="rptcategorydetail.php?sd=<?=$sd?>&ed=<?=$ed?>">Start Over</a></h4>';
+		echo "<h4>Volunteer Category Summary&nbsp;&nbsp;
+		<a class=\"btn btn-success btn-xs\" href=\"rptcategorydetail.php?sd=$sd&ed=$ed\">Start Over</a></h4>";
 		echo "<a href=\"downloads/VolCategorySummary.csv\" download=\"VolCategorySummary.csv\">DOWNLOAD CSV FILE</a>";
 		echo "<button type=\"button\" class=\"btn btn-xs btn-default\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Fields separated by semicolon(;)\nText fields are quoted.\"><span class=\"glyphicon glyphicon-info-sign\" style=\"color: blue; font-size: 20px\"></span></button>";
 		echo '<table border=0 class="table-condensed">
-		<tr><th>Category</th><th>MCID</th><th>Name</th><th>TotalHrs</th><th>TotMiles</th></tr>';
+		<tr><th title="Volunteer service category">Category</th><th title="Volunteer MCID">MCID</th><th title="Volunteer name">Name</th><th title="Total hours served">TotalHrs</th><th title="Total miles driven">TotMiles</th></tr>';
 		$cscsv[] = "Category;MCID;Name;TotalHrs;TotMiles\n";
 // $k = cat, $kk = mcid, $vv[VolTime] = total hrs, $vv[VolMileage] = total miles
 		foreach ($categories as $k => $v) { 
@@ -301,12 +313,12 @@ function drawChart2() {
 // output service details if requested
 	if ($details == 'ON') {
 		file_put_contents('downloads/VolServiceDetail.csv',$csv);
-		echo '<h4>Volunteer Service Detail Records&nbsp;&nbsp;
-		<a class="btn btn-success btn-xs" href="rptcategorydetail.php?sd=<?=$sd?>&ed=<?=$ed?>">Start Over</a></h4>';
+		echo "<h4>Volunteer Service Detail Records&nbsp;&nbsp;
+		<a class=\"btn btn-success btn-xs\" href=\"rptcategorydetail.php?sd=$sd&ed=$ed\">Start Over</a></h4>";
 		echo "<a href=\"downloads/VolServiceDetail.csv\" download=\"VolServiceDetail.csv\">DOWNLOAD CSV FILE</a>";
 		echo "<button type=\"button\" class=\"btn btn-xs btn-default\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Fields separated by semicolon(;)\nText fields are quoted.\"><span class=\"glyphicon glyphicon-info-sign\" style=\"color: blue; font-size: 20px\"></span></button>";
 		echo '<table class="table-condensed" border="0">
-		<tr><th>MCID</th><th>FName</th><th>LName</th><th>Date</th><th>Time</th><th>Mileage</th><th>Category</th><th>Notes</th></tr>';
+		<tr><th title="Volunteer MCID">MCID</th><th title="Volunteer first name">FName</th><th title="Volunteer last name">LName</th><th title="Date served">Date</th><th title="Time Served">Time</th><th title="Mileage driven">Mileage</th><th title="Category served">Category</th><th title="Service entry note(s)">Notes</th></tr>';
 		foreach ($voldet as $k => $v) { 
 			echo "$v";
 			}
