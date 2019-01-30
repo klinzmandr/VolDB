@@ -1,3 +1,7 @@
+<?php 
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,9 +11,8 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<?php 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
-session_start();
+
+<?php
 // include 'Incls/vardump.inc.php';
 include 'Incls/datautils.inc.php';
 

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,9 +11,8 @@
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
-<?php
-session_start();
 
+<?php
 //include 'Incls/vardump.inc.php';
 include 'Incls/datautils.inc.php';
 

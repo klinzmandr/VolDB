@@ -1,3 +1,7 @@
+<?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,8 +15,6 @@
 <script src="js/bootstrap.min.js"></script>
 
 <?php
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
-session_start();
 $userid = isset($_REQUEST['userid']) ? $_REQUEST['userid'] : '';
 
 // NOTE: (isset($var) && !empty($var)) will be equals to !empty($var)

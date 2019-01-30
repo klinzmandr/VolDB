@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +12,6 @@
 <body>
 
 <?php
-session_start();
 //include 'Incls/seccheck.inc.php';
 unset($_SESSION['VolActiveMCID']);
 //include 'Incls/vardump.inc.php';

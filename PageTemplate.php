@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,9 +27,8 @@ $(document).ready(function () {
   });  // end ready function
 </script>
 
-<?php
-session_start();
-//include 'Incls/vardump.inc.php';
+
+<?php//include 'Incls/vardump.inc.php';
 //include 'Incls/seccheck.inc.php';
 //include 'Incls/mainmenu.inc.php';
 include 'Incls/datautils.inc.php';

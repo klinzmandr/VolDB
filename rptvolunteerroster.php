@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,8 +12,8 @@
 <body>
 <script src="jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
+
 <?php
-session_start();
 //include 'Incls/vardump.inc.php';
 include 'Incls/seccheck.inc.php';
 include 'Incls/datautils.inc.php';

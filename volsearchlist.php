@@ -1,3 +1,7 @@
+<?php
+session_start();
+unset($_SESSION['VolActiveMCID']);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,10 +11,8 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<?php
-session_start();
-unset($_SESSION['VolActiveMCID']);
 
+<?php
 include 'Incls/seccheck.inc.php';
 include "Incls/datautils.inc.php";
 //include "Incls/vardump.inc.php";

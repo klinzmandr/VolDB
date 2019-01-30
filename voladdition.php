@@ -1,3 +1,7 @@
+<?php
+session_start();
+unset($_SESSION['VolActiveMCID']);
+?>
 <html>
 <head>
 <title>MCID Addition</title>
@@ -8,9 +12,6 @@
 <body>
 
 <?php
-session_start();
-unset($_SESSION['VolActiveMCID']);
-
 //include 'Incls/vardump.inc.php';
 //include 'Incls/mainmenu.inc.php';
 include 'Incls/seccheck.inc.php';
