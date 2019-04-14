@@ -10,17 +10,24 @@ $(document).ready(function() {
   $('.updb').prop('disabled', true);
   $("#X").fadeOut(2000);
   $("#help").hide();
-  
+  var $form = $('form');
+  var origForm = $form.serialize();   // to save field values on initial load
+
 $("#helpbtn").click(function() {
   $("#help").toggle();
   });
   
-$("form").change(function(){
+// $("form").change(function(){
+$('form :input').on('change input', function() {
   var v = $("#filter").val();
   if (v != "") { return; }  // ignore filter input
   chgFlag += 1; 
-  $(".updb").css({"background-color": "red", "color":"black"});
-  $('.updb').prop('disabled', false);    
+  if ($form.serialize() !== origForm) {   // check for any changes
+    chgFlag += 1; 
+    $(".updb").css({"background-color": "red", "color":"black"});
+    $('.updb').prop('disabled', false);
+    return;  
+    }  
   // setInterval(blink_text, 1000);
   });
   

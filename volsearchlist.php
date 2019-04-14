@@ -99,7 +99,7 @@ echo '<tr><th>MCID</th><th>Last Name</th><th>First Name</th><th>Address</th><th>
 while ($row = $results->fetch_assoc()) {
 	$mcid=$row['MCID'];  $fname=$row['FName']; $lname=$row['LName'];
 	$org=$row['Organization']; $addr=$row['AddressLine']; $lab1line=$row['NameLabel1stline']; 
-	$city = $row[City]; $eaddr=$row['EmailAddress'];  
+	$city = $row['City']; $eaddr=$row['EmailAddress'];  
 print <<<bulletForm
 <tr><td><a href="volinfotabbed.php?filter=$mcid">$mcid</a></td><td>$lname</td><td>$fname</td><td>$addr</td><td>$city</td><td>$eaddr</td></tr>
 

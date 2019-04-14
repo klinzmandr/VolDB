@@ -106,8 +106,8 @@ if ($action == 'viewdb') {
 	  exit;
     }
 	// echo '<pre>'; print_r($r); echo '</pre>';
-	$recno = $r[LogID]; $datetime = $r[DateTime]; $user = $r[User]; 
-	$seclevel = $r[SecLevel]; $mailtext =  $r[MailText];
+	$recno = $r['LogID']; $datetime = $r['DateTime']; $user = $r['User']; 
+	$seclevel = $r['SecLevel']; $mailtext =  $r['MailText'];
 print <<<recOut
 	<a class="btn btn-danger" onclick="return confdel()" href="rptmaillogviewer.php?action=del&recno=$recno">DELETE</a></td></tr></table>
 	Record Number: $recno<br />

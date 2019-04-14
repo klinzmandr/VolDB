@@ -50,20 +50,24 @@ exit;
 if ($action == 'list') {
 echo "Start Date: $sd, End Date: $ed<br>";
 $sql = "SELECT * from `voltime` 
-WHERE `VolCategory` = 'Education' 
+WHERE `VolCategory` = 'VolEduc' 
 	AND `VolDate` BETWEEN '$sd' AND '$ed' 
 ORDER BY `VTID` ASC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
+if ($rowcnt <= 0) {
+  echo "No courses in date range specified<br>";
+  exit;
+}
 if ($rowcnt > 0) {
 // table volcourses: 
 	$edarray = array(); 
 	while ($r = $res->fetch_assoc()) {
 //		echo '<pre>'; print_r($r); echo '</pre>';
-		list($courseid,$notes) = explode('/',$r[VolNotes]);
+		list($courseid,$notes) = explode('/',$r['VolNotes']);
 		list($agency, $cid) = explode(':', $courseid);
-		$edarray[$agency][$cid][$r[VolDate]][count] += 1;
-				$edarray[$agency][$cid][$r[VolDate]][hours] += $r[VolTime];
+		$edarray[$agency][$cid][$r['VolDate']]['count'] += 1;
+				$edarray[$agency][$cid][$r['VolDate']]['hours'] += $r['VolTime'];
 		}
 //	echo '<pre> edarray '; print_r($edarray); echo '</pre>';
 	foreach ($edarray as $k => $v) { 
@@ -90,7 +94,7 @@ if ($action == 'attendees') {
 		AND `VolNotes` LIKE '%$courseid%' 
 		AND `VolDate` = '$coursedate'";
 	$res = doSQLsubmitted($sql);
-	echo "<div class=\"container\"><h3>Attendee List&nbsp;&nbsp;<a class=\"btn btn-primary\" href=\"javascript:self.close();\">CLOSE</a></h3>";
+	echo "<div class=\"container\"><h3>Attendee List&nbsp;&nbsp;<a class=\"btn btn-primary\" href=\"rptcoursesinrange.php\">REDO</a></h3>";
 	echo "<h4>Agency: $agency<br>Course: $courseid<br>Date: $coursedate</h4><ul>";
 	while ($r = $res->fetch_assoc()) {
 //		echo '<pre>'; print_r($r); echo '</pre>';
@@ -98,7 +102,7 @@ if ($action == 'attendees') {
 		$alsql = "SELECT `LName`,`FName` FROM `members` WHERE `MCID` = '$r[MCID]';";
 		$alres = doSQLsubmitted($alsql);
 		$memrec = $alres->fetch_assoc();
-		echo $r[MCID] . '&nbsp;-&nbsp;' . $memrec[FName] . '&nbsp;' . $memrec[LName] . '<br>';
+		echo $r['MCID'] . '&nbsp;-&nbsp;' . $memrec['FName'] . '&nbsp;' . $memrec['LName'] . '<br>';
 		}	
 	echo '</ul>===== END OF LIST =====</div><br><br>';
 	}

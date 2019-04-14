@@ -15,7 +15,7 @@ session_start();
 //include 'Incls/vardump.inc.php';
 include 'Incls/datautils.inc.php';
 
-$mcid = $_REQUEST[mcid];
+$mcid = $_REQUEST['mcid'];
 
 $sql = "SELECT * FROM `voltime` WHERE `MCID`= '$mcid' ORDER BY `VolDate` DESC LIMIT 20;";
 $res = doSQLsubmitted($sql);

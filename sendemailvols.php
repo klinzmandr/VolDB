@@ -123,8 +123,8 @@ echo "<tr><td><input type=\"checkbox\" name=\"chkr\"
 onchange='checkAll(document.sndform.chkr, document.sndform[\"tokey[]\"])' checked></td><td>&nbsp;<b>Check/Uncheck All</b><br></td></tr>"; 
 
 while ($r = $res->fetch_assoc()) {
-	if (strlen($r[EmailAddress]) == 0) {
-		$mciderrs[] = $r[MCID];
+	if (strlen($r['EmailAddress']) == 0) {
+		$mciderrs[] = $r['MCID'];
 		continue;
 		}
 	//echo '<pre>'; print_r($r); echo '</pre>';

@@ -96,28 +96,28 @@ $notavol = array(); $results = array(); $nolistarray = array();
 $volinactarray = array(); $noemarray = array();
 while ($r = $res->fetch_assoc()) {
 	// service date AFTER the expriation date AND mbr record IS a volunteer
-	$lastvoldate = strtotime($r[LastVolDate]);
+	$lastvoldate = strtotime($r['LastVolDate']);
 	// echo "lastvoldate: $lastvoldate, expdatesecs: $expdatesecs<br>";
 	// echo '<pre>row '; print_r($r); echo '</pre>';
-	if ((strtotime($r[LastVolDate]) < $expdatesecs) AND ($r[MemStatus] == 2)) {
+	if ((strtotime($r['LastVolDate']) < $expdatesecs) AND ($r['MemStatus'] == 2)) {
 		$results[] = $r;
 		}
   // service date AFTER to the expriation date AND mbr record is NOT a volunteer
-	if ((strtotime($r[LastVolDate]) > $expdatesecs) AND ($r[MemStatus] != 2)) {
+	if ((strtotime($r['LastVolDate']) > $expdatesecs) AND ($r['MemStatus'] != 2)) {
 		$notavol[] = $r;
 		}
 	// vol has no registered lists						
-  if ((strlen($r[Lists]) == 0) AND ($r[MemStatus] == 2)) {
-    $nolistarray[$r[MCID]] = $r;
+  if ((strlen($r['Lists']) == 0) AND ($r['MemStatus'] == 2)) {
+    $nolistarray[$r['MCID']] = $r;
     }
   // vol has been marked as inactive
-  if (preg_match("/inactive/i", $r[Lists])) {
-    $volinactarray[$r[MCID]] = $r;
+  if (preg_match("/inactive/i", $r['Lists'])) {
+    $volinactarray[$r['MCID']] = $r;
     continue;
     }
   // volunteers with NO email address on record
-  if ((strlen($r[EmailAddress]) == 0) AND ($r[MemStatus] == 2)){
-    $noemarray[$r[MCID]] = $r;
+  if ((strlen($r['EmailAddress']) == 0) AND ($r['MemStatus'] == 2)){
+    $noemarray[$r['MCID']] = $r;
     }
 // echo '<pre>'; print_r($r); echo '</pre>';
 	}

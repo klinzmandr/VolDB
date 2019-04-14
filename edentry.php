@@ -39,9 +39,9 @@ if ($res->num_rows == 0) {
 // now create the string for the javascript arrays to download
 $vols = '[';		// create string for form typeahead
 while ($r = $res->fetch_assoc()) {
-	$mcid = preg_replace("/[\(\)\.\-\ \/\&]/i", "", $r[MCID]);
-	$lname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r[LName]);
-	$fname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r[FName]);
+	$mcid = preg_replace("/[\(\)\.\-\ \/\&]/i", "", $r['MCID']);
+	$lname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r['LName']);
+	$fname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r['FName']);
 	$vols .= "'$mcid,$lname,$fname',";
 	}
 $vols = rtrim($vols,',') . ']';
@@ -52,8 +52,8 @@ $sql = "SELECT * FROM `courses` WHERE 1 ORDER BY `Agency` ASC, `CourseId` ASC";
 $res = doSQLsubmitted($sql);
 $edlistdd = '<option></option>';
 while ($r = $res->fetch_assoc()) {
-	if ($r[Agency] == '') continue;
-	$c = '<option>' . rtrim($r[Agency]) . ':' . rtrim($r[CourseId]) . '</option>';
+	if ($r['Agency'] == '') continue;
+	$c = '<option>' . rtrim($r['Agency']) . ':' . rtrim($r['CourseId']) . '</option>';
 	$edlistdd .= "$c";
 	}
 
@@ -90,11 +90,11 @@ if ($action == 'upd') {
 			}
 		$flds = array();
 		list($agency, $courseid) = explode(':', $ed[$i]);
-		$flds[MCID] = $mcid;
-		$flds[VolDate] = $date[$i];
-		$flds[VolTime] = $hrs[$i];
-		$flds[VolCategory] = 'VolEduc';
-		$flds[VolNotes] = $ed[$i] . '/' . $note[$i];	// course + notes
+		$flds['MCID'] = $mcid;
+		$flds['VolDate'] = $date[$i];
+		$flds['VolTime'] = $hrs[$i];
+		$flds['VolCategory'] = 'VolEduc';
+		$flds['VolNotes'] = $ed[$i] . '/' . $note[$i];	// course + notes
 //		echo "<pre>updcount $i: "; print_r($flds); echo '</pre>';
 		$rows = sqlinsert('voltime',$flds);			// returns the number of rows inserted
 		$rowcnt += 1;

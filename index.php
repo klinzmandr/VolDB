@@ -49,8 +49,8 @@ if ($rowcnt == 0) {
 	}
 $r = $res->fetch_assoc();
 
-$fname = $r[FName]; $lname  = $r[LName]; $lists = $r[Lists]; $city = $r[City]; $phone = $r[PrimaryPhone];
-$email = $r[EmailAddress];
+$fname = $r['FName']; $lname  = $r['LName']; $lists = $r['Lists']; $city = $r['City']; $phone = $r['PrimaryPhone'];
+$email = $r['EmailAddress'];
 print<<<outForm1
 <h2>Volunteer information for $fname $lname ($r[MCID])</h2>
 <h4>Not $fname $lname? <a class="btn btn-danger" href="https://pacwilica.org">EXIT NOW</a></h4>
@@ -156,11 +156,11 @@ $notes = $_REQUEST['Notes'];
 $listarray = $_REQUEST['Lists'];
 $Lists = implode(",",$listarray);
 $updarray = array();
-$updarray[EmailAddress] = $email;
-$updarray[PrimaryPhone] = $phone;
-$updarray[Lists] = $Lists;
-$updarray[City] = $city;
-$updarray[Notes] = $notes;
+$updarray['EmailAddress'] = $email;
+$updarray['PrimaryPhone'] = $phone;
+$updarray['Lists'] = $Lists;
+$updarray['City'] = $city;
+$updarray['Notes'] = $notes;
 // echo '<pre> update array '; print_r($updarray); echo '</pre>';
 sqlupdate('members', $updarray, "`MCID` = '$mcid'");
 

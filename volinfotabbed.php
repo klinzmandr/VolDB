@@ -16,7 +16,7 @@ session_start();
 <script src="js/bootstrap.min.js"></script>
 
 <?php
-//include "Incls/vardump.inc.php";
+// include "Incls/vardump.inc.php";
 include 'Incls/seccheck.inc.php';
 include 'Incls/datautils.inc.php';
 include 'Incls/createcitydd.inc.php';
@@ -38,21 +38,11 @@ echo "<div class=container>";
 $mcid = $_SESSION['VolActiveMCID'];
 $action = $_REQUEST['action'];
 
-//if (($action == "") AND ($mcid == "")) {
-if ($mcid == "") {
-	$mcinfo = "<h3>Volunteer/Contact Informaton</h3>"; 
-	$mcinfo .= "<p>This page will display all information of the volunteer's Member Id (MCID) selected by using the MCID selected via the &apos;Lookup&apos; function.  It will remain &apos;active&apos; until another is selected by either returning to the Home page or by using the &apos;Lookup&apos; to select a new one.</p>";
-	echo $mcinfo;
-//	$log = "XUpdate: Info page requested with no VolActiveMCID value set.";
-//	addlogentry($log);
-	exit;
-	}
-
 // if action is to update, get all fields supplied and write them to the database before reading
 if ($action == "update") {
-	$uri = $_SERVER['QUERY_STRING'];
-	parse_str($uri, $vararray);
-//	echo '<pre> input uri '; print_r($vararray); echo '</pre>';
+	$vararray = $_REQUEST['inf'];
+//	echo '<pre> input inf '; print_r($vararray); echo '</pre>';
+
 // adding saftey check to make sure MCID from input page is same as ActiveMCID
 // MCIDx is from the input form of the update page.
 	if ($_REQUEST['MCIDx'] != $_SESSION['VolActiveMCID']) {
@@ -70,30 +60,29 @@ if ($action == "update") {
 	  unset($_SESSION['VolActiveMCID']);       // force new lookup for MCID
 	  exit;
     }
-	if (array_key_exists('mlist',$vararray)) {
-		$listarray = $vararray[mlist];						// get list array
-		$liststring = implode(",",$listarray);		// create list string
-		unset($vararray[mlist]);									// delete array
-		$vararray[Lists] = $liststring;						// add back the string
+
+	$ml = isset($_REQUEST['mlist']) ? $_REQUEST['mlist'] : '';
+	if ($ml != '') {
+		$liststring = implode(",",$ml);		           // create list string
+		$vararray['Lists'] = $liststring;						 // add the string to db record
 		}
-	else $vararray[Lists] = '';									// if none are checked -----
-	unset($vararray[action]);										// unset page action indicator
-	unset($vararray[addflg]);                   // unset new record flag 
-	unset($vararray[MCIDx]);                     // unset MCID field 
-//	echo '<pre> input after uri '; echo "mcid: $mcid, "; print_r($vararray); echo '</pre>';
+	else $vararray['Lists'] = '';									// if none are checked -----
+	
+	// echo '<pre> input after list upd '; echo "mcid: $mcid, "; print_r($vararray); echo '</pre>';
+
 	$where = "`MCID`='".$mcid."'";
 	sqlupdate('members',$vararray, $where);	
 // add corr rec if supporter rec is new and is a voo attendee  	
 	$cflds = array();
 //	echo "MCType: ".$vararray[MCType].", addflg: $addflg<br>";
-	if ((stripos($vararray[MCType],'VOO') != FALSE) && ($addflg == 'newrec')) {   
+	if ((stripos($vararray['MCType'],'VOO') != FALSE) && ($addflg == 'newrec')) {   
 //    echo '<pre> vararray '; print_r($vararray); echo '</pre>';
-    $cflds[CorrespondenceType] = 'VOORegistration';
-		$cflds[DateSent] = date('Y-m-d');
-		$cflds[MCID] = $mcid;
-		$cflds[SourceofInquiry] = 'VOO';
-		$cflds[Reminders] = '';
-		$cflds[Notes] = "auto-added on VOO registration\n" . $fields[Notes];
+    $cflds['CorrespondenceType'] = 'VOORegistration';
+		$cflds['DateSent'] = date('Y-m-d');
+		$cflds['MCID'] = $mcid;
+		$cflds['SourceofInquiry'] = 'VOO';
+		$cflds['Reminders'] = '';
+		$cflds['Notes'] = "auto-added on VOO registration\n" . $fields['Notes'];
 		//echo "<pre>donations array"; print_r($vararray); echo "</pre>";
 		//echo "<pre>correspondence array"; print_r($fields); echo "</pre>";
 		sqlinsert('correspondence', $cflds);
@@ -123,7 +112,7 @@ $eaddr=$row['EmailAddress']; $city=$row['City']; $state=$row['State'];
 $zip=$row['ZipCode']; $priphone=$row['PrimaryPhone'];
 $memstatus=$row['MemStatus'];$memdate=$row['MemDate'];
 $mctype=$row['MCtype'];$inact=$row['Inactive'];$inactdate=$row['Inactivedate'];
-$e_mail=$row['E_Mail'];$mail=$row['Mail']; $notes=$row['Notes'];$lists=$row[Lists];
+$e_mail=$row['E_Mail'];$mail=$row['Mail']; $notes=$row['Notes'];$lists=$row['Lists'];
 $citieslist = createddown();
 ?>
 
@@ -131,25 +120,26 @@ $citieslist = createddown();
 
 <script>
 var reason = "";
-var secLevel = "$_SESSION[VolSecLevel]";
+var secLevel = "<?=$_SESSION['VolSecLevel']?>";
 // validate form to ensure required fields are entered
 function validateForm(theForm) {
 	if (!validateLists()) return false;
 	reason = "";
-	reason += validateEmpty(theForm.FName);
-	reason += validateEmpty(theForm.LName);
-	reason += validateEmpty(theForm.NameLabel1stline);
-	reason += validateCorrSal(theForm.CorrSal);
+	// reason += validateEmpty(document.getElementById('fname'));
+	reason += validateEmpty($("#fname")[0]);
+	reason += validateEmpty($("#lname")[0]);
+	reason += validateEmpty($('#lab1line')[0]);
+	reason += validateCorrSal($('#corrsal')[0]);
 	//reason += validateEmpty(theForm.AddressLine);
-	reason += validateEmpty(theForm.City);
+	reason += validateEmpty($("#CI")[0]);
 	//reason += validateEmpty(theForm.State);
 	//reason += validateEmpty(theForm.ZipCode);
 	//reason += validateEmpty(theForm.MemStatus);
-	reason += validateEmpty(theForm.MCType);
+	reason += validateEmpty($("#mbrsel")[0]);    // member type select list
 	//reason += validateEmpty(theForm.MemDate);
 	//reason += validatePassword(theForm.pwd);
-	reason += validateEmpty(theForm.EmailAddress);
-	reason += validateEmpty(theForm.PrimaryPhone);    
+	reason += validateEmpty($("#EMA")[0]);       // emailaddress
+	reason += validateEmpty($("#priphone")[0]);  // primary phone number  
 	if (reason != "") {
   	alert("Some fields need attention:\n\n" + reason);
   	return false;
@@ -158,22 +148,24 @@ function validateForm(theForm) {
 	}
 
 function validateLists() {
+  return true;
 	var cnt = 0; var error = ""; 
-	var memstatus = document.getElementsByName("MemStatus"); 
-	var fld = document.getElementsByName("mlist[]");
-	for(var i=0; i < fld.length; i++) {
-		if(fld[i].checked) cnt += 1; }
-	if ((memstatus[2].checked) && (cnt == 0)) {				
+	var memstatus = document.getElementsByName("inf[MCType]");
+	var fld = $(".mlist:checkbox:checked").length();
+	// console.log(fld);
+	var fld = $(".mlist:checkbox:checked").length();
+	if (fld == 0) {				
 		alert("A volunteer must be registered on at least one mailing list.\n");
 		return false;
 		}
 	return true;
   }
-	
+
 function validateCorrSal(fld) {
   var error = "";
   if (fld.value.length == 0) {
-  	fld.value = document.mcform.FName.value;
+  	// fld.value = document.mcform.FName.value;
+  	fld.value = $("#fname").val();
   	return error;
     	}
     return error;  
@@ -202,33 +194,29 @@ function stopRKey(evt) {
 <!-- document.onkeypress = stopRKey; -->
 
 $(document).ready(function() {
-  $("[name=MCType]").val("<?=$mctype?>");      // init drop down
-  $("[name=MemStatus]").val(["<?=$memstatus?>"]); // init all radios
-	$("[name=E_mail]").val(["<?=$e_mail?>"]);
-	$("[name=Mail]").val(["<?=$mail?>"]);
+  $("#mbrsel").val("<?=$mctype?>");                     // init drop down
+  $('.rbs:input:radio[value="<?=$memstatus?>"]').prop("checked", true);
+	$('.EMR:input:radio[value="<?=$e_mail?>"]').prop("checked", true);
+	$('.MAIL:input[value="<?=$mail?>"]').prop("checked", true);
 });
 
 function setflds(theForm) {
 	//alert("entered");
-	var ffld = theForm.FName.value;
-	var lfld = theForm.LName.value;
+	var ffld = $("#fname").val();
+	var lfld = $("#lname").val();
 	//alert("ffld: "+ffld+", lfld: "+lfld);
 	var ll = ffld + " " + lfld;
-	theForm.NameLabel1stline.value = ll.substring(0,24);
-	theForm.CorrSal.value = ffld;
+	ll = ll.substring(0,24);
+	$("#lab1line").val(ll);
+	$("#corrsal").val(ffld);
 	return;
 	}
 
 function checkmbr(fld) {
 	var mctype = fld.value;
 	var mcval = mctype.substring(0,1);
-	//var memstatus = document.mcform.MemStatus;
-	for (var i = 0; i < document.mcform.MemStatus.length; i++) {
-     if (document.mcform.MemStatus[i].checked) {
-    	memstatus = i;
-    	break;
-    	}
-   	}
+  var memstatus = $('.rbs:checked', '#mcform').val();
+  
 	if (mcval != memstatus) {
 		fld.value = "";
 		alert("Please select a Mbr Type that corresponds with the selected Mbr Status");
@@ -239,7 +227,7 @@ function checkmbr(fld) {
 
 function chgmemstatus() {
 	//alert("chg memstat entered");
-	document.mcform.MCType.value = "";
+	$("#mbrsel").val("");
 	return true;
 	}
 function setInactiveDate(fld) {
@@ -305,17 +293,8 @@ return true;
 <ul id="myTab" class="nav nav-tabs">
   <li class=""><a href="#home" data-toggle="tab">Home</a></li>
   <li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
-	<li class=""><a href="#time" data-toggle="tab">Time</a></li>
-	<li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
-	
-<!-- <?php 
-	if ($memstatus == 2) 
-		echo '
-			<li class=""><a href="#lists" data-toggle="tab">Lists</a></li>
-			<li class=""><a href="#time" data-toggle="tab">Time</a></li>
-			<li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
-			';
-?> -->
+  <li class=""><a href="#time" data-toggle="tab">Time</a></li>
+  <li class=""><a href="#courses" data-toggle="tab">Courses</a></li>
 </ul>
 
 <!-- Tab 1 Demographic information -->
@@ -325,23 +304,24 @@ return true;
 <h4>Contact Information</h4>
 <div class="row">
 <input type="hidden" name="MCIDx" value="<?=$mcid?>">
-<div class="col-sm-4">First: <input placeholder="First Name" autofocus type="text" name="FName" value="<?=$fname?>" onchange="setflds(document.mcform)"></div>
-<div class="col-sm-4">Last: <input placeholder="Last Name" type="text" name="LName" value="<?=$lname?>" onchange="setflds(document.mcform)"></div>
+<div class="col-sm-4">First: <input placeholder="First Name" autofocus type="text" name="inf[FName]" value="<?=$fname?>" id=fname onchange="setflds(document.mcform)"></div>
+<div class="col-sm-4">Last: <input placeholder="Last Name" type="text" name="inf[LName]" value="<?=$lname?>" id=lname onchange="setflds(document.mcform)"></div>
 </div>
 
 <div class="row">
 <div class="col-sm-4">Label Line: 
-<input maxlength="24" placeholder="Label Line" name="NameLabel1stline" value="<?=$lab1line?>"></div>
-<div class="col-sm-5">Correspondence Sal:<input placeholder="Correspondence Salutation" name="CorrSal" value="<?=$corrsal?>"></div>
+<input maxlength="24" placeholder="Label Line" name="inf[NameLabel1stline]" id=lab1line value="<?=$lab1line?>"></div>
+<div class="col-sm-5">Correspondence Sal:<input placeholder="Correspondence Salutation" name="inf[CorrSal]" id=corrsal value="<?=$corrsal?>"></div>
 </div>
 <div class="row">
-<div class="col-sm-4">Org: <input placeholder="Organization" name="Organization" value="<?=$org?>"></div>
-<div class="col-sm-4">Addr Line: <input placeholder="Address Line" name="AddressLine" value="<?=$addr?>"></div>
+<div class="col-sm-4">Org: <input placeholder="Organization" name="inf[Organization]" value="<?=$org?>"></div>
+<div class="col-sm-4">Addr Line: <input placeholder="Address Line" name="inf[AddressLine]" value="<?=$addr?>"></div>
 </div>
 <div class="row">
-<div class="col-sm-4">City: <input id="CI" placeholder="City" name="City" value="<?=$city?>" autocomplete="off" onblur="loadcity()"></div>
-<div class="col-sm-2">State: <input id="ST" placeholder="State	" type="text" name="State" value="<?=$state?>" style="width: 50px; " /></div>
-<div class="col-sm-3">Zip: <input id="ZI" type="text" name="ZipCode" value="<?=$zip?>" size="5" maxlength="5" style="width: 100px;"  placeholder="Zip" /></div>
+<div class="col-sm-4">City: <input id="CI" placeholder="City" name="inpCity" value="<?=$city?>" autocomplete="off" onblur="loadcity()"></div>
+<input type=hidden name=inf[City] id=city value=''>
+<div class="col-sm-2">State: <input id="ST" placeholder="State	" type="text" name="inf[State]" value="<?=$state?>" style="width: 50px; " /></div>
+<div class="col-sm-3">Zip: <input id="ZI" type="text" name="inf[ZipCode]" value="<?=$zip?>" size="5" maxlength="5" style="width: 100px;"  placeholder="Zip" /></div>
 </div>
 <script src="js/bootstrap3-typeahead.js"></script>
 <script>
@@ -350,6 +330,7 @@ function loadcity() {
 	var cv = $("#CI").val();
 	var cva = cv.split(",");
 	$("#CI").val(cva[0]);
+	$("#city").val(cva[0]);
 	$("#ST").val(cva[1]);
 	$("#ZI").val(cva[2]);
 	}
@@ -361,8 +342,8 @@ $('#CI').typeahead({source: citylist})
 </script>
 
 <div class="row">
-<div class="col-sm-4">Phone: <input type="text" name="PrimaryPhone" value="<?=$priphone?>" size="12" maxlength="12" style="width: 125px;" onchange="return ValidatePhone(this)"  placeholder="Primary Phone" /></div>
-<div class="col-sm-4">Email: <input id="EMA" placeholder="Email" onchange="ValidateEmail(this)" style="width: 200px;" name="EmailAddress" value="<?=$eaddr?>"></td></tr></div>
+<div class="col-sm-4">Phone: <input type="text" name="inf[PrimaryPhone]" value="<?=$priphone?>" size="12" maxlength="12" style="width: 125px;" onchange="return ValidatePhone(this)"  placeholder="Primary Phone" id=priphone /></div>
+<div class="col-sm-4">Email: <input id="EMA" placeholder="Email" onchange="ValidateEmail(this)" style="width: 200px;" name="inf[EmailAddress]" value="<?=$eaddr?>"></td></tr></div>
 </div>
 <!-- </div>  well -->
 <!-- </div>  tab pane -->
@@ -374,15 +355,15 @@ $('#CI').typeahead({source: citylist})
 <div class="row">
 <div class="col-sm-7">
 Mbr Status:&nbsp;
-<input onchange="chgmemstatus()" type="radio" name="MemStatus" value="0" checked/>0-Contact
-<input onchange="chgmemstatus()" type="radio" name="MemStatus" value="1" />1-Member
-<input onchange="chgmemstatus()" type="radio" name="MemStatus" value="2" />2-Vol.
-<input onchange="chgmemstatus()" type="radio" name="MemStatus" value="3" />3-Donor
+<input onchange="chgmemstatus()" class=rbs type="radio" name="inf[MemStatus]" value="0" checked/>0-Contact
+<input onchange="chgmemstatus()" class=rbs type="radio" name="inf[MemStatus]" value="1" />1-Member
+<input onchange="chgmemstatus()" class=rbs type="radio" name="inf[MemStatus]" value="2" />2-Vol.
+<input onchange="chgmemstatus()" class=rbs type="radio" name="inf[MemStatus]" value="3" />3-Donor
 </div>  <!-- col-sm-7 -->
 </div>	<!-- row -->
 <div class="row">
 <div class="col-sm-5 col-sm-offset-1">
-Mbr Type:<select name="MCType" size="1" onChange="checkmbr(this)">
+Mbr Type:<select id=mbrsel name="inf[MCType]" size="1" onChange="checkmbr(this)">
 <option value=""></option>
 <?php
 loaddbselect('MCTypes');
@@ -391,7 +372,7 @@ loaddbselect('MCTypes');
 </div>  <!-- col-sm-5 -->
 </div>  <!-- row -->
 <div class="row">
-<div class="col-sm-3">
+<div class="col-sm-4">
 Date Joined: <?=$memdate?>
 </div>  <!-- col-sm-4 -->
 <script>
@@ -420,52 +401,41 @@ function confirmNO(fld) {
 </script>
 
 <div class="col-sm-3">Email OK?: 
-<input id="EMR1" type="radio" name="E_mail" value="TRUE" onclick="return chkvalidemail(this)" />Yes
-<input id="EMR2" type="radio" name="E_mail" value="FALSE" onclick="return confirmNO(this)" />No
+<input id="EMR1" class=EMR type="radio" name="inf[E_mail]" value="TRUE" onclick="return chkvalidemail(this)" />Yes
+<input id="EMR2" class=EMR type="radio" name="inf[E_mail]" value="FALSE" onclick="return confirmNO(this)" />No
 </div>
 <div class="col-sm-3">Mail OK?: 
-<input type="radio" name="Mail" value="TRUE" />Yes
-<input type="radio" name="Mail" value="FALSE" />No
+<input class=MAIL type="radio" name="inf[Mail]" value="TRUE" />Yes
+<input class=MAIL type="radio" name="inf[Mail]" value="FALSE" />No
 </div>
 </div>  <!-- row -->
 
 <h4>Notes</h4>
-<div class="col-sm-6"><textarea name="Notes" rows="3" cols="60"><?=$notes?></textarea></div>
+<div class="col-sm-6"><textarea name="inf[Notes]" rows="3" cols="60"><?=$notes?></textarea></div>
 </div>  <!-- well -->
 </div>  <!-- tab pane -->
 
-<!-- Tab 2 member notes -->
-<!-- <div class="tab-pane fade" id="notes"> -->
-<!-- <div class="well"> -->
-<!-- <h4>Notes</h4> -->
-<!-- <div class="row"> -->
-<!-- <div class="col-sm-6"><textarea name="Notes" rows="3" cols="80"><?=$notes?></textarea></div> -->
-<!-- </div>  row -->
-<!-- </div>  well -->
-<!-- </div>	tab pane --> 
-
-<!-- Tab 3 email lists  -->
-
+<!-- lists tab -->
 <div class="tab-pane fade" id="lists">
 <div class="well">
 <h4>Email Lists</h4>
 
 <?php
 $text = readdblist('EmailLists');
-$listkeys[AUL] = 'Active/Unlisted';
+$listkeys['AUL'] = 'Active/Unlisted';
 $listkeys += formatdbrec($text);
-if ($_SESSION['VolSecLevel'] == 'voladmin') $listkeys[VolInactive] = 'Vol Inactive';
+if ($_SESSION['VolSecLevel'] == 'voladmin') $listkeys['VolInactive'] = 'Vol Inactive';
 //echo '<pre> keys '; print_r($listkeys); echo '</pre>';
 foreach ($listkeys as $k => $v) {
 	if (strlen($k) <= 1) continue;
 //	echo "key: $k, value: $v<br />";
 	if (stripos($lists, $k) !== FALSE) {
 		echo "
-		<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\" checked>$v<br>";
+		<input class=mlist type=checkbox name='mlist[]' value='$k' checked>$v<br>";
 		}
 	else {
 		echo "
-		<input type=\"checkbox\" name=\"mlist[]\" value=\"$k\">$v<br>";
+		<input class=mlist type=checkbox name='mlist[]' value='$k'>$v<br>";
 		}
 	//echo "key: $k, value: $v<br>";
 	}
@@ -473,7 +443,8 @@ foreach ($listkeys as $k => $v) {
 ?>
 </div>  <!-- well -->
 </div>  <!-- tab pane -->
-<!-- tab 4 time -->
+
+<!-- time tab -->
 <div class="tab-pane fade" id="time">
 <div class="well">
 <h4>Volunteer Time Served</h4>
@@ -491,10 +462,10 @@ echo "<b>Period Entry Count:</b> $rowcnt<br />";
 while ($r = $res->fetch_assoc()) {
 $trows[] = "<tr><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
 $vc = 'Uncategorized';
-if (strlen($r[VolCategory]) > 0) $vc = $r[VolCategory];
-$totalvolhrs += $r[VolTime];
-$tothrs[$vc] += $r[VolTime];
-$totmiles += $r[VolMileage];
+if (strlen($r['VolCategory']) > 0) $vc = $r['VolCategory'];
+$totalvolhrs += $r['VolTime'];
+$tothrs[$vc] += $r['VolTime'];
+$totmiles += $r['VolMileage'];
 	}
 echo "<b>Total Miles Driven:</b> $totmiles,&nbsp;";
 echo "<b>Total Volunteer Hours:</b> $totalvolhrs<br />";
@@ -516,8 +487,7 @@ else {
 </div>  <!-- well -->
 </div>  <!-- tab pane -->
 
-
-<!-- tab 5 courses -->
+<!-- courses tab 5 -->
 <div class="tab-pane fade" id="courses">
 <div class="well">
 <h4>Courses Attended</h4>
@@ -536,10 +506,10 @@ echo "<b>Entry Count:</b> $rowcnt<br />";
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> ed rec '; print_r($r); echo '</pre>';
 //	list($agency, $courseid) = explode(':',$r[CourseId]);
-	list($courseid,$notes) = explode('/',$r[VolNotes]);
+	list($courseid,$notes) = explode('/',$r['VolNotes']);
 	list($agency, $cid) = explode(':', $courseid);
 	$erows[] = "<tr><td>$agency<td>$cid</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$notes</td></tr>";
-$totaledhrs += $r[VolTime];
+$totaledhrs += $r['VolTime'];
 	}
 echo "<b>Total Educ. Hours:</b> $totaledhrs<br />";
 echo "<b>Detail Records</b><br />";
@@ -555,8 +525,9 @@ else {
 
 </div>  <!-- well -->
 </div>  <!-- tab pane -->
-<!-- end all tab definitions -->
 </div>  <!-- tab content -->
+<!-- end all tab definitions -->
+
 <input type="hidden" name="action" value="update">
 <input type="hidden" name="addflg" value="<?=$addflg?>">
 </form>

@@ -11,6 +11,11 @@ session_start();
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
+
 <?php
 //include 'Incls/vardump.inc.php';
 include 'Incls/seccheck.inc.php';
@@ -18,7 +23,7 @@ include 'Incls/datautils.inc.php';
 
 $mcid = isset($_SESSION['VolActiveMCID']) ? $_SESSION['VolActiveMCID'] : '';
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-01-01', strtotime("previous month"));
-$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime(now));
+$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 echo '<div class="container"><h3>Volunteer Education Report for '.$mcid.'&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
@@ -66,11 +71,11 @@ echo "<b>Period Entry Count:</b> $rowcnt<br />";
 
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> ed rec '; print_r($r); echo '</pre>';
-//	list($agency, $courseid) = explode(':',$r[CourseId]);
-	list($courseid,$notes) = explode('/',$r[VolNotes]);
+//	list($agency, $courseid) = explode(':',$r['CourseId']);
+	list($courseid,$notes) = explode('/',$r['VolNotes']);
 	list($agency, $cid) = explode(':', $courseid);
 	$trows[] = "<tr><td>$agency<td>$cid</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$notes</td></tr>";
-$totaledhrs += $r[CourseDuration];
+$totaledhrs += $r['CourseDuration'];
 	}
 echo "<b>Total Educ. Hours:</b> $totaledhrs<br />";
 echo "<b>Detail Records</b><br />";
@@ -82,9 +87,5 @@ echo '</table>';
 
 echo '<br>==== END OF REPORT ====<br>';
 ?>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="Incls/bootstrap-datepicker-range.inc.php"></script>
 </body>
 </html>

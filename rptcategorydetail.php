@@ -135,21 +135,21 @@ if ($rowcnt > 0) {
 	$csv[] = "MCID;FName,LName,SvcDate;SvcTime;Mileage;Category;Notes\n";
 	while ($r = $res->fetch_assoc()) {
 //		echo '<pre>'; print_r($r); echo '</pre>';
-			if (rtrim($r[VolCategory]) == '') continue;
-			$tothrs += $r[VolTime];
-			$totmiles += $r[VolMileage];
-			$counts[$r[VolCategory]][count] += 1;
-			$counts[$r[VolCategory]][hours] += $r[VolTime];
-			$counts[$r[VolCategory]][mcid][$r[MCID]] += 1;
-			$mcidcounts[$r[MCID]][count] += 1;
-			$mcidcounts[$r[MCID]][hours] += $r[VolTime];
-			$categories[$r[VolCategory]][$r[MCID]][VolTime] += $r[VolTime];
-			$categories[$r[VolCategory]][$r[MCID]]['VolMileage'] += $r[VolMileage];
-			$names[$r[MCID]] = "$r[FName];$r[LName]";
-			$ind[$r[MCID]][Count] += 1;
-			$ind[$r[MCID]][Cats][$r[VolCategory]] += 1;
-			$ind[$r[MCID]][Hours] += $r[VolTime];
-			$ind[$r[MCID]][Mileage] += $r[VolMileage];
+			if (rtrim($r['VolCategory']) == '') continue;
+			$tothrs += $r['VolTime'];
+			$totmiles += $r['VolMileage'];
+			$counts[$r['VolCategory']]['count'] += 1;
+			$counts[$r['VolCategory']]['hours'] += $r['VolTime'];
+			$counts[$r['VolCategory']]['mcid'][$r['MCID']] += 1;
+			$mcidcounts[$r['MCID']]['count'] += 1;
+			$mcidcounts[$r['MCID']]['hours'] += $r['VolTime'];
+			$categories[$r['VolCategory']][$r['MCID']]['VolTime'] += $r['VolTime'];
+			$categories[$r['VolCategory']][$r['MCID']]['VolMileage'] += $r['VolMileage'];
+			$names[$r['MCID']] = "$r[FName];$r[LName]";
+			$ind[$r['MCID']]['Count'] += 1;
+			$ind[$r['MCID']]['Cats'][$r['VolCategory']] += 1;
+			$ind[$r['MCID']]['Hours'] += $r['VolTime'];
+			$ind[$r['MCID']]['Mileage'] += $r['VolMileage'];
 			
 			$voldet[] = "<tr><td>$r[MCID]</td><td>$r[FName]</td><td>$r[LName]</td><td width=\"100\">$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
 			$csv[] = "\"$r[MCID]\";\"$r[FName]|\";\"$r[LName]\";$r[VolDate];$r[VolTime];$r[VolMileage];$r[VolCategory];\"$r[VolNotes]\"\n";
@@ -166,7 +166,7 @@ if ($rowcnt > 0) {
 	echo '<tr><td align="center" width="20%" title="Volunteer category serviced within the date range"><b>Category</b></td><td width="20%" align="center" title="Count of different volunteers serving"><b>VolCount</b></td><td width="20%" align="center" title="Count of service entries reported"><b>SvcCount</b></td><td width="20%" align="center" title="Total hours served"><b>TotHrs</b></td></tr>';
 	ksort($counts);
 	foreach ($counts as $k => $v) {
-	  $volcnt = count($v[mcid]);
+	  $volcnt = count($v['mcid']);
 		echo "<tr><td>$k</td><td align=\"center\">$volcnt</td><td align=\"center\">$v[count]</td><td align=\"center\">$v[hours]</td></tr>";
 		}
 	echo '</table></ul>';
@@ -174,8 +174,8 @@ if ($rowcnt > 0) {
   $str = '';
   if (count($counts) > 0) {
     foreach ($counts as $k => $v) {
-      $str1 .= "['$k'," . $v[count] . "],";
-      $str2 .= "['$k'," . $v[hours] . "],";
+      $str1 .= "['$k'," . $v['count'] . "],";
+      $str2 .= "['$k'," . $v['hours'] . "],";
       }
   $piechartdata1 = rtrim($str1, ','); 
   $piechartdata2 = rtrim($str2, ','); 
@@ -276,11 +276,11 @@ function drawChart2() {
 		$vscsv[] = "MCID;Name;SvcCnt;CatCnt;TotHrs;TotMiles\n";
 		ksort($ind);
 		foreach ($ind as $k => $v) {
-			$t = $v[Hours]; $m = $v[Mileage]; $cc = count($v[Cats]); $c = $v[Count];
+			$t = $v['Hours']; $m = $v['Mileage']; $cc = count($v['Cats']); $c = $v['Count'];
 			list($fn,$ln) = explode(';',$names[$k]);
 			echo "<tr><td>$k</td><td>$fn&nbsp;$ln</td><td align=right>$c</td><td align=right>$cc</td><td align=right>$t</td><td align=right>$m</td></tr>";
 			$vscsv[] = "$k;\"$fn $ln\";$c;$cc;$t;$m\n";
-//			echo "Key: $k, cats count: " . count($v[Cats]); 
+//			echo "Key: $k, cats count: " . count($v['Cats']); 
 //			echo "<pre> v "; print_r($v); echo '</pre>';
 			}
 		echo '</table>';
@@ -297,11 +297,11 @@ function drawChart2() {
 		echo '<table border=0 class="table-condensed">
 		<tr><th title="Volunteer service category">Category</th><th title="Volunteer MCID">MCID</th><th title="Volunteer name">Name</th><th title="Total hours served">TotalHrs</th><th title="Total miles driven">TotMiles</th></tr>';
 		$cscsv[] = "Category;MCID;Name;TotalHrs;TotMiles\n";
-// $k = cat, $kk = mcid, $vv[VolTime] = total hrs, $vv[VolMileage] = total miles
+// $k = cat, $kk = mcid, $vv['VolTime'] = total hrs, $vv['VolMileage'] = total miles
 		foreach ($categories as $k => $v) { 
-			//echo "<tr><td>$k</td><td>$v[Name]</td>";
+			//echo "<tr><td>$k</td><td>$v['Name']</td>";
 			foreach ($v as $kk => $vv) {
-				$t = $vv[VolTime]; $m = $vv[VolMileage]; list($fn,$ln) = explode(';',$names[$kk]);
+				$t = $vv['VolTime']; $m = $vv['VolMileage']; list($fn,$ln) = explode(';',$names[$kk]);
 				echo "<tr><td>$k</td><td>$kk</td><td>$fn&nbsp;$ln</td><td>$t</td><td>$m</td></tr>";
 				$cscsv[] = "$k;$kk;\"$fn $ln\";$t;$m\n"; 
 				}

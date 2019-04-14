@@ -34,9 +34,9 @@ if ($res->num_rows == 0) {
 // now create the string for the javascript arrays to download
 $vols = '[';		// create string for form typeahead
 while ($r = $res->fetch_assoc()) {
-	$mcid = preg_replace("/[\(\)\.\-\ \/\&]/i", "", $r[MCID]);
-	$lname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r[LName]);
-	$fname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r[FName]);
+	$mcid = preg_replace("/[\(\)\.\-\ \/\&]/i", "", $r['MCID']);
+	$lname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r['LName']);
+	$fname = preg_replace("/[\(\)\.\-\ \/\'\&]/i", "", $r['FName']);
 	$vols .= "'$mcid,$lname,$fname',";
 	}
 $vols = rtrim($vols,',') . ']';
@@ -63,12 +63,12 @@ if ($action == 'upd') {
 			continue;
 			}
 		$flds = array();
-		$flds[MCID] = $mcid;
-		$flds[VolDate] = $date[$i];
-		$flds[VolTime] = $hrs[$i];
-		$flds[VolMileage] = $mileage[$i];
-		$flds[VolCategory] = $cat[$i];
-		$flds[VolNotes] = $note[$i];
+		$flds['MCID'] = $mcid;
+		$flds['VolDate'] = $date[$i];
+		$flds['VolTime'] = $hrs[$i];
+		$flds['VolMileage'] = $mileage[$i];
+		$flds['VolCategory'] = $cat[$i];
+		$flds['VolNotes'] = $note[$i];
 		//echo "<pre>updcount $i: "; print_r($flds); echo '</pre>';
 		$rows = sqlinsert('voltime',$flds);			// returns the number of rows inserted
 		$rowcnt += 1;

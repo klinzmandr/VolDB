@@ -45,32 +45,37 @@ if ($action == 'list') {
 echo "Start Date: $sd, End Date: $ed&nbsp;&nbsp;<button class=\"hidden-print\" id=\"btnHS\">Hide/Show Details</button><br>";
 $sql = "SELECT `voltime`.*, `members`.`FName`, `members`.`LName` from `voltime`, `members` 
 WHERE `voltime`.`MCID` = `members`.`MCID`
-  AND `voltime`.`VolCategory` = 'Education' 
+  AND `voltime`.`VolCategory` = 'VolEduc' 
 	AND `voltime`.`VolDate` BETWEEN '$sd' AND '$ed' 
 ORDER BY `voltime`.`VTID` ASC";
+// echo "sql: $sql<br>";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;
+$edarray = array(); $mcidarray = array();
 if ($rowcnt > 0) {
 // table volcourses: 
-	$edarray = array(); $mcidarray = array();
 	while ($r = $res->fetch_assoc()) {
-//		echo '<pre>'; print_r($r); echo '</pre>';
-		list($courseid,$notes) = explode('/',$r[VolNotes]);
+//  	echo '<pre>'; print_r($r); echo '</pre>';
+		list($courseid,$notes) = explode('/',$r['VolNotes']);
 		list($agency, $cid) = explode(':', $courseid);
-		$mcid = $r[MCID];
-		$totchours += $r[VolTime];
-		$edarray[$agency][$cid][$r[VolDate]][count] += 1;
-		$edarray[$agency][$cid][$r[VolDate]][hours] += $r[VolTime];
-		$mcidarray[$mcid][$cid][count] += 1;
-		$mcidarray[$mcid][$cid][hours] += $r[VolTime];
-		$mcidtot[$mcid][count] += 1;
-		$mcidtot[$mcid][tothrs] += $r[VolTime];
-		$mcidnames[$mcid][name] = $r[FName] . ' ' . $r[LName];
+		$mcid = $r['MCID'];
+		$totchours += $r['VolTime'];
+		$edarray[$agency][$cid][$r['VolDate']]['count'] += 1;
+		$edarray[$agency][$cid][$r['VolDate']]['hours'] += $r['VolTime'];
+		$mcidarray[$mcid][$cid]['count'] += 1;
+		$mcidarray[$mcid][$cid]['hours'] += $r['VolTime'];
+		$mcidtot[$mcid]['count'] += 1;
+		$mcidtot[$mcid]['tothrs'] += $r['VolTime'];
+		$mcidnames[$mcid]['name'] = $r['FName'] . ' ' . $r['LName'];
 		}
 	//echo '<pre> mcidarray '; print_r($mcidarray); echo '</pre>';
   }
-ksort($mcidarray);
 $vcnt = count($mcidarray); 
+if ($vcnt <= 0) {
+  echo "<h3>No education courses in date range.</h3>";
+  exit;
+  }
+ksort($mcidarray);
 print <<<formPart
 <h4>Total volunteers: $vcnt, Total education hours: $totchours</h4>
 <script>
@@ -86,10 +91,10 @@ formPart;
 echo '<table border="0" width="50%">';
 echo '<tr><th>MCID</th><th>Volunteer Name<span class="cr"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Course Name</span></th><th>Courses</th><th align="center">Hrs</th></tr>';
 foreach ($mcidarray as $k => $v) {
-  $vcnt = $mcidtot[$k][count]; $vhrs = $mcidtot[$k][tothrs]; $name= $mcidnames[$k][name];
+  $vcnt = $mcidtot[$k]['count']; $vhrs = $mcidtot[$k]['tothrs']; $name= $mcidnames[$k]['name'];
   echo "<tr><td width=\"10%\">$k</td><td width=\"60%\">$name</td><td width=\"10%\">$vcnt</td><td width=\"10%\">$vhrs</td></tr>";
   foreach ($v as $kk => $vv) {
-    $ccnt = $mcidarray[$k][$kk][count]; $chrs = $mcidarray[$k][$kk][hours]; 
+    $ccnt = $mcidarray[$k][$kk]['count']; $chrs = $mcidarray[$k][$kk]['hours']; 
     echo "<tr class=\"cr\"><td colspan=1></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$kk</td><td align=\"right\">$ccnt</td><td align=\"right\">$chrs</td></tr>";
     }
   }

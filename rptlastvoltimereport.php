@@ -68,12 +68,12 @@ echo '<table class="table table-condensed">
 $csv[] =  "MCID;LastVolDate;LastVolTime;LastVolCat;LastPayDate;LastPayType;LastPayAmt;MemType;Name;Address;City;St;Zip;Email;\n";
 while ($r = $res->fetch_assoc()) {
   //echo "<pre> Row $rc "; print_r($r); echo '</pre>';
-  $lastpaydate = $r[LastDuesDate];
-  $lastpayamt = $r[LastDuesAmount];
+  $lastpaydate = $r['LastDuesDate'];
+  $lastpayamt = $r['LastDuesAmount'];
   $lastpaytype = 'Dues';
-  if (strtotime($lastpaydate) <= strtotime($r[LastDonDate])) {
-    $lastpaydate = $r[LastDonDate];
-    $lastpayamt = $r[LastDonAmount];
+  if (strtotime($lastpaydate) <= strtotime($r['LastDonDate'])) {
+    $lastpaydate = $r['LastDonDate'];
+    $lastpayamt = $r['LastDonAmount'];
     $lastpaytype = 'Donation';
     }
   echo "<tr><td>$r[MCID]</td><td>$r[LastVolDate]</td><td>$r[VolTime]</td><td>$r[VolCategory]</td><td>$lastpaydate</td><td>$lastpaytype</td><td>$lastpayamt</td><td>$r[MCtype]</td><td>$r[NameLabel1stline]</td><td>$r[AddressLine]</td><td>$r[City]</td><td>$r[State]</td><td>$r[ZipCode]</td><td>$r[EmailAddress]</td></tr>";

@@ -10,6 +10,8 @@ session_start();
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <?php
 // include 'Incls/vardump.inc.php';
@@ -61,7 +63,7 @@ if ($action == 'display') {
 	$emarray = array();
 	while($r = $res->fetch_assoc()) {
 //		echo '<pre>List members '; print_r($r); echo '</pre>';
-		$emarray[] = $r[EmailAddress];
+		$emarray[] = $r['EmailAddress'];
 		echo "<tr><td><a href=\"volinfotabbed.php?filter=$r[MCID]\">$r[MCID]</a></td>
 		<td>$r[LName]</td><td>$r[FName]</td><td>$r[City]</td><td>$r[EmailAddress]</td><td>$r[PrimaryPhone]</td><td>$r[Notes]</td></tr>";	
 		}
@@ -76,7 +78,5 @@ echo '</div>';
 
 ?>
 
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

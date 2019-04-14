@@ -11,6 +11,9 @@ session_start();
 <link href="css/datepicker3.css" rel="stylesheet">
 </head>
 <body>
+<script src="jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datepicker.js"></script>
 
 <?php
 //include 'Incls/vardump.inc.php';
@@ -29,7 +32,7 @@ if (isset($_REQUEST['AddRow'])) {
 	$uri = $_SERVER['QUERY_STRING'];
 	//echo "URI: $uri<br>";
 	parse_str($uri, $vararray);		// parse parameters from form into assoc array for db update
-	unset($vararray[AddRow]);			// delete action parameter from assoc array
+	unset($vararray['AddRow']);			// delete action parameter from assoc array
 	//echo '<pre> Var array'; print_r($vararray); echo '</pre>';
 	sqlinsert("voltime",$vararray);
 	}
@@ -77,7 +80,7 @@ if ($rowcnt == 0) {
 	echo '<a autofocus class="btn btn-large btn-warning" href="selfte.php">TRY AGAIN</a></div>';
 	exit;
 	}
-$mcidname = $r[FName] . "&nbsp;" . $r[LName];
+$mcidname = $r['FName'] . "&nbsp;" . $r['LName'];
 
 // present input form with mcid and name 
 print<<<pagePart2
@@ -159,9 +162,6 @@ print<<<pagePart3
 pagePart3;
 
 ?>
-<script src="jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
 </div>
 </body>
 </html>

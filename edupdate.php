@@ -38,8 +38,8 @@ if ($action == 'upd') {
 	//echo 'Update action requested.';
 	$uri = $_SERVER['QUERY_STRING'];
 	parse_str($uri, $coursearray);
-	unset($coursearray[action]);
-	unset($coursearray[submit]);
+	unset($coursearray['action']);
+	unset($coursearray['submit']);
 //	echo '<pre> note '; print_r($coursearray); echo '</pre>';
 	$where = "`CID`='" . $seqnbr . "'";
 //	echo '<pre> sql '; print_r($where); 
@@ -54,14 +54,14 @@ if ($action == 'addnew') {
 	$rc = $res->num_rows;
 	if (!$rc) {
 //		echo 'No NewRec - Adding new record<br>';
-		$newarray[CourseName] = '**NewRec**';
+		$newarray['CourseName'] = '**NewRec**';
 		sqlinsert('courses', $newarray);
 		echo "A new course record has been added<br>Please complete the details or delete it.<br>";
 		$sql = "SELECT * FROM `courses` WHERE `CourseName` = '**NewRec**';";
 		$res = doSQLsubmitted($sql);
 		}
 	$r = $res->fetch_assoc();
-	$seqnbr = $r[CID];
+	$seqnbr = $r['CID'];
 //	echo "seqnbr: $seqnbr<br>";
 	}
 
@@ -69,9 +69,9 @@ if ($action == 'addnew') {
 $sql = "SELECT * FROM `courses` WHERE `CID` = '$seqnbr';";
 $res = doSQLsubmitted($sql);
 $r = $res->fetch_assoc();
-$seqnbr = $r[CID];
+$seqnbr = $r['CID'];
 $userid = $_SESSION['VolSessionUser'];
-if ($r[CourseName] == '**NewRec**') $r[CourseName] = '';;
+if ($r['CourseName'] == '**NewRec**') $r['CourseName'] = '';;
 
 //echo '<pre> db '; print_r($r); echo '</pre>';
 print <<<pagePart1

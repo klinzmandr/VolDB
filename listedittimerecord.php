@@ -29,7 +29,7 @@ if ($_SESSION['VolSecLevel'] != 'voladmin') {
 		}
 
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-m-d', strtotime('-1 month'));
-$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime(now));
+$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
 $vcat = isset($_REQUEST['vcat']) ? $_REQUEST['vcat'] : '%';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 $recno = isset($_REQUEST['recno']) ? $_REQUEST['recno'] : 0;
@@ -52,10 +52,10 @@ if ($action == 'update') {
 	//echo '<pre> Update parameters '; print_r($vararray); echo '</pre>';
 	
 	// unset array val's that we are not updating
-	unset($vararray[VTID]);
-	unset($vararray[MCID]);
-	unset($vararray[action]);
-	unset($vararray[submit]);
+	unset($vararray['VTID']);
+	unset($vararray['MCID']);
+	unset($vararray['action']);
+	unset($vararray['submit']);
 	
 	sqlupdate('voltime',$vararray, $where);	  // now apply changes
 
@@ -99,7 +99,7 @@ pagePart1b;
 		//echo '<pre>'; print_r($r); echo '</pre>';
 		$rcdlink = "<a href=\"listedittimerecord.php?action=updform&recno=$r[VTID]\">$r[VTID]</a>";
 		echo "<tr><td>$rcdlink</td><td>$r[MCID]</td><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td>";
-		$tothrs += $r[VolTime];
+		$tothrs += $r['VolTime'];
 		}
 	echo "</table>Total Hours Recorded: $tothrs<br>";
 	echo '----- END OF REPORT -----

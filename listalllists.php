@@ -51,13 +51,13 @@ $syslistsarray = formatdbrec($systemlists);
 
 $mcidcount = array(); $listarray = array(); $listcounter = array(); 
 while ($r = $res->fetch_assoc()) {
-	$listarray = explode(",",$r[Lists]);	// array of member's lists
+	$listarray = explode(",",$r['Lists']);	// array of member's lists
 	$c = count($listarray);								// number of lists for MCID
 	$mcidcount[$c] += 1;
 //	echo '<pre> listarray '; print_r($listarray); echo '</pre>';
 	foreach ($listarray as $v) {
 			$listcounter[$v] += 1;
-//			if ($v == 'VolInactive') echo "mcid: $r[MCID]<br>";
+//			if ($v == 'VolInactive') echo "mcid: $r['MCID']<br>";
 		}
 	}
 

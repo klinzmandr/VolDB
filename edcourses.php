@@ -55,17 +55,17 @@ $sql = "SELECT * FROM `courses` WHERE '1' ORDER BY `Agency` ASC, `CourseId` ASC;
 $res = doSQLsubmitted($sql);
 
 echo '<table border=0 class="table-condensed">';
-if (($_SESSION['VolSessionUser'] == $r[UserID]) || ($_SESSION['VolSecLevel'] == 'voladmin'))
+if (($_SESSION['VolSessionUser'] == $r['UserID']) || ($_SESSION['VolSecLevel'] == 'voladmin'))
 	echo '<tr><th>Edit</th><th>Delete</th><th>Print</th><th>Agency</th><th>CourseId</th><th>Course Full Name</th></tr>';
 else	echo '<tr><th>Print</th><th>Agency</th><th>CourseId</th></tr>'; 		
 while ($r = $res->fetch_assoc()) {
 //	echo '<pre> bboard '; print_r($r); echo '</pre>';
-	if ($r[CourseName] == '**NewRec**') $r[CourseName] = '';
+	if ($r['CourseName'] == '**NewRec**') $r[CourseName] = '';
 //	$cid = $r[Agency] . ':' . $r[CourseId];
 	echo '<tr>';
-	if (($_SESSION['VolSessionUser'] == $r[UserID]) || ($_SESSION['VolSecLevel'] == 'voladmin'))
+	if (($_SESSION['VolSessionUser'] == $r['UserID']) || ($_SESSION['VolSecLevel'] == 'voladmin'))
 		echo "<td><a href=\"edupdate.php?CID=$r[CID]&action=update\"<span title=\"Edit Course\" class=\"glyphicon glyphicon-pencil\" style=\"color: blue; font-size: 20px\"></span></a>&nbsp;&nbsp;&nbsp;</td>";
-	if (($_SESSION['VolSessionUser'] == $r[UserID]) || ($_SESSION['VolSecLevel'] == 'voladmin'))
+	if (($_SESSION['VolSessionUser'] == $r['UserID']) || ($_SESSION['VolSecLevel'] == 'voladmin'))
 		echo "<td><a onclick=\"return confirmContinue()\" href=\"edcourses.php?CID=$r[CID]&action=delete\"<span title=\"Delete Course\" class=\"glyphicon glyphicon-trash\" style=\"color: blue; font-size: 20px\"></span></a>&nbsp;&nbsp;&nbsp;</td>";	
 	echo "<td><a href=\"edprint.php?CID=$r[CID]&action=print\"<span title=\"Print Course\" class=\"glyphicon glyphicon-print\" style=\"color: blue; font-size: 20px\"></span></a></td>";
 	echo "<td>$r[Agency]</td><td>$r[CourseId]</td><td>$r[CourseName]";

@@ -26,7 +26,7 @@ $from = $_SESSION['VolSessionUser'];
 $sql = "SELECT `MCID` FROM `adminusers` WHERE `UserID` = '$from'";
 $res = doSQLsubmitted($sql);
 $r = $res -> fetch_assoc();
-$fromMCID = $r[MCID];
+$fromMCID = $r['MCID'];
 if (strlen($fromMCID) == 0) {
   //echo "VolSessionUser: $from, fromMCID: $r[MCID] length: " . strlen($fromMCID) . "<br>";
   echo '<h3 style="color: red; ">ERROR: Your user registration MUST have an MCID.</h3>

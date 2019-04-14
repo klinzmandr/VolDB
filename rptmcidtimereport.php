@@ -18,7 +18,7 @@ include 'Incls/datautils.inc.php';
 
 $mcid = isset($_SESSION['VolActiveMCID']) ? $_SESSION['VolActiveMCID'] : '';
 $sd = isset($_REQUEST['sd']) ? $_REQUEST['sd'] : date('Y-01-01', strtotime("previous month"));
-$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime(now));
+$ed = isset($_REQUEST['ed']) ? $_REQUEST['ed'] : date('Y-m-d', strtotime('now'));
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 echo '<div class="container"><h3>Volunteer Time Report for '.$mcid.'&nbsp;&nbsp;<a class="btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
@@ -66,10 +66,10 @@ echo "<b>Period Entry Count:</b> $rowcnt<br />";
 while ($r = $res->fetch_assoc()) {
 $trows[] = "<tr><td>$r[VolDate]</td><td>$r[VolTime]</td><td>$r[VolMileage]</td><td>$r[VolCategory]</td><td>$r[VolNotes]</td></tr>";
 $vc = 'Uncategorized';
-if (strlen($r[VolCategory]) > 0) $vc = $r[VolCategory];
-$totalvolhrs += $r[VolTime];
-$tothrs[$vc] += $r[VolTime];
-$totmiles += $r[VolMileage];
+if (strlen($r['VolCategory']) > 0) $vc = $r['VolCategory'];
+$totalvolhrs += $r['VolTime'];
+$tothrs[$vc] += $r['VolTime'];
+$totmiles += $r['VolMileage'];
 	}
 echo "<b>Total Miles Driven:</b> $totmiles,&nbsp;";
 echo "<b>Total Volunteer Hours:</b> $totalvolhrs<br />";

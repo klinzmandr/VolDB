@@ -32,9 +32,9 @@ $action = $_REQUEST['action'];
 if ($action == "add") {
 	$table = $_REQUEST['tablename'];
 	$mcid = $_REQUEST['mcid'];
-	$fields[MCID] = $_REQUEST['mcid'];
-	$fields[MemDate] = date('Y-m-d');
-	$fields[MemStatus] = 2;
+	$fields['MCID'] = $_REQUEST['mcid'];
+	$fields['MemDate'] = date('Y-m-d');
+	$fields['MemStatus'] = 2;
 	$lead3 = substr($mcid,0,3);
 	$target = substr($mcid,0,3) . '%';
 	//echo "search string: $lead3<br />";
@@ -74,7 +74,7 @@ if ($action == "add") {
 		if ($res !== FALSE) {
 			//$_SESSION['VolActiveMCID'] = $fields[MCID];
 			echo "<h2>Add of MCID $mcid has been completed.</h2>";
-			echo "<a href=\"volinfotabbed.php?addflg=newrec&filter=".$fields[MCID]."\"><h3>Click to Complete MCID Info Entry</h3></a>";
+			echo "<a href=\"volinfotabbed.php?addflg=newrec&filter=".$fields['MCID']."\"><h3>Click to Complete MCID Info Entry</h3></a>";
 			exit;
 			}
 		echo "<h2>Add unsuccessful!  Try another MCID.</h2>";

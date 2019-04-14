@@ -34,10 +34,10 @@ $inactivetrue = 0; $inactivefalse = 0; $inactivemissing = 0; $inactive_expired =
 $neither = 0; $state = 0; $noaddr = 0; $nocity = 0; $nostate = 0; $nozip = 0; $missingall = 0;
 $nullemail = 0;
 while ($r = $res->fetch_assoc()) {
-	$memstatus=$r[MemStatus];
+	$memstatus=$r['MemStatus'];
 	$memstatuscount[$memstatus] += 1;
-	if ($r[MemStatus]==1) $memactive += 1;
-	$memdate=$r[MemDate];
+	if ($r['MemStatus']==1) $memactive += 1;
+	$memdate=$r['MemDate'];
 	if ($memdate == "") $memdatemissing += 1;
 	else {
 		$memdateyr=substr($memdate,0,4); $memdateyrcount[$memdateyr]+=1;
@@ -45,33 +45,33 @@ while ($r = $res->fetch_assoc()) {
 		$memdateyrmo=substr($memdate,0,7); $memdateyrmocount[$memdateyrmo]+=1;
 		}
 	//echo "year: $thisyear, record date: $memdateyr<br>";
-	if (($r[MemStatus] == 1) AND ($memdateyr == $thisyear)) $memdateYTD += 1;
+	if (($r['MemStatus'] == 1) AND ($memdateyr == $thisyear)) $memdateYTD += 1;
 	//echo "memdatemo: $memdateyrmo, this month: $thisyrmo<br>";
-	if (($r[MemStatus] == 1) AND ($memdateyrmo == $thisyrmo)) $memdateMo += 1;
+	if (($r['MemStatus'] == 1) AND ($memdateyrmo == $thisyrmo)) $memdateMo += 1;
 	
 	// testing address fields
-	if ($r[AddressLine] == '') $noaddr += 1;
-	if ($r[City] == '') $nocity += 1;
-	if ($r[State] == '') $nostate += 1;
-	if ($r[ZipCode] == '') $nozip += 1;
-	if (($r[AddressLine] == '') && ($r[City] == '') && ($r[State] == '') && ($r[ZipCode] == '')) $missingall++;
+	if ($r['AddressLine'] == '') $noaddr += 1;
+	if ($r['City'] == '') $nocity += 1;
+	if ($r['State'] == '') $nostate += 1;
+	if ($r['ZipCode'] == '') $nozip += 1;
+	if (($r['AddressLine'] == '') && ($r['City'] == '') && ($r['State'] == '') && ($r['ZipCode'] == '')) $missingall++;
 	
 	// testing inactive fields	
-	$inactive = $r[Inactive];
+	$inactive = $r['Inactive'];
 	if ($inactive == 'TRUE') $inactivetrue+=1;
 	if ($inactive == 'FALSE') $inactivefalse+=1;
-	if (($inactive == 'TRUE') AND ($r[Inactivedate] == '')) $inactivemissing +=1;
-	if (($inactive == 'TRUE') AND ($r[Inactivedate] != '')) {
-		$expired = strtotime("-90 days"); $inactive = strtotime($r[Inactivedate]);
+	if (($inactive == 'TRUE') AND ($r['Inactivedate'] == '')) $inactivemissing +=1;
+	if (($inactive == 'TRUE') AND ($r['Inactivedate'] != '')) {
+		$expired = strtotime("-90 days"); $inactive = strtotime($r['Inactivedate']);
 		if ($inactive <= $expired) $inactive_expired++;
 		}
 	
-	if ($r[EmailAddress] != "") { $email += 1; }
-	if ($r[PrimaryPhone] != "") { $phone += 1; }
-	if (($r[PrimaryPhone] == "") AND ($r[EmailAddress] == "")) { $neither += 1; }
-	if ($r[E_Mail] == 'TRUE') { $okemail += 1; }
-	if ($r[E_Mail] == 'FALSE') { $noemail += 1; }
-	if ($r[E_Mail] == '') { $nullemail += 1; }
+	if ($r['EmailAddress'] != "") { $email += 1; }
+	if ($r['PrimaryPhone'] != "") { $phone += 1; }
+	if (($r['PrimaryPhone'] == "") AND ($r['EmailAddress'] == "")) { $neither += 1; }
+	if ($r['E_Mail'] == 'TRUE') { $okemail += 1; }
+	if ($r['E_Mail'] == 'FALSE') { $noemail += 1; }
+	if ($r['E_Mail'] == '') { $nullemail += 1; }
 	}
 print <<<formatMembers1
 

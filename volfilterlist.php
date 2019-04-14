@@ -64,7 +64,7 @@ echo '<table class="table table-condensed">
 
 while ($row = $results->fetch_assoc()) {
 	$mcid=$row['MCID'];  $fname=$row['FName']; $lname=$row['LName'];
-	$addr1=$row['Organization']; $addr2=$row[AddressLine2]; $lab1line=$row['NameLabel1stline']; 
+	$addr1=$row['Organization']; $addr2=$row['AddressLine2']; $lab1line=$row['NameLabel1stline']; 
 	$eaddr1=$row['EmailAddress1']; $eadddr2=$row['EmailAddress2']; 
 print <<<bulletForm
 <tr><td><a href="volinfotabbed.php?filter=$mcid">$mcid</a></td><td>$lname</td><td>$fname</td><td>$lab1line</td><td>$eaddr1</td><td>$eaddr2</td></tr>
