@@ -194,7 +194,7 @@ function stopRKey(evt) {
 <!-- document.onkeypress = stopRKey; -->
 
 $(document).ready(function() {
-  $("#mbrsel").val("<?=$mctype?>");                     // init drop down
+  $("#mbrsel").val("<?=$mctype?>");   // init drop down
   $('.rbs:input:radio[value="<?=$memstatus?>"]').prop("checked", true);
 	$('.EMR:input:radio[value="<?=$e_mail?>"]').prop("checked", true);
 	$('.MAIL:input[value="<?=$mail?>"]').prop("checked", true);
@@ -286,7 +286,7 @@ return true;
 }
 </script>
 
-<form name="mcform" id="mcform" class="form-horizontal" role="form" onsubmit="return validateForm(this)">
+<form method="post"  name="mcform" id="mcform" class="form-horizontal" role="form" onsubmit="return validateForm(this)">
 <div style="text-align: center"><button type="submit" form='mcform' class="updb btn btn-primary">Apply Update(s)</button></div>
 
 <!-- Tab definition header  -->
@@ -319,7 +319,7 @@ return true;
 </div>
 <div class="row">
 <div class="col-sm-4">City: <input id="CI" placeholder="City" name="inpCity" value="<?=$city?>" autocomplete="off" onblur="loadcity()"></div>
-<input type=hidden name=inf[City] id=city value=''>
+<input type=hidden name=inf[City] id=city value="<?=$city?>">
 <div class="col-sm-2">State: <input id="ST" placeholder="State	" type="text" name="inf[State]" value="<?=$state?>" style="width: 50px; " /></div>
 <div class="col-sm-3">Zip: <input id="ZI" type="text" name="inf[ZipCode]" value="<?=$zip?>" size="5" maxlength="5" style="width: 100px;"  placeholder="Zip" /></div>
 </div>
