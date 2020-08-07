@@ -17,6 +17,7 @@ function prepaccum($yrkey) {
 				$a[$yrkey][$k][$mo]['hours'] = 0;
 				$a[$yrkey][$k][$mo]['avg'] = 0;
 				$a[$yrkey][$k][$mo]['mcids'] = 0;
+				$a[$yrkey][$k][$mo]['mileage'] = 0;
 			}
 		}
 //	}
@@ -28,7 +29,7 @@ function prepaccum($yrkey) {
 include 'Incls/datautils.inc.php';
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-$type = isset($_REQUEST['action2']) ? $_REQUEST['action2'] : '0';
+$type = isset($_REQUEST['action2']) ? $_REQUEST['action2'] : '';
 $volyr = isset($_REQUEST['volyr']) ? $_REQUEST['volyr'] : '2019';
 ?>
 
@@ -48,13 +49,11 @@ $volyr = isset($_REQUEST['volyr']) ? $_REQUEST['volyr'] : '2019';
 <h3>Volunteer Service Summary&nbsp;&nbsp;<a class="hidden-print btn btn-primary btn-xs" href="javascript:self.close();">CLOSE</a></h3>
 <script>
 $(function() {
+  // set up select list drop downs to last selected
   $("#volyr").val('<?=$volyr?>');
   $("#selid").val('<?=$type?>');
-
-  $("#selid").change(function() {
-    $("form").submit();
-  });
-  $("#volyr").change(function() {
+  // set submit on either select list changing
+  $("#selid, #volyr").change(function() {
     $("form").submit();
   });
 });
@@ -70,19 +69,25 @@ Year: <select id=volyr name=volyr>
 <option value=2020>2020</option>
 <option value=2021>2021</option>
 </select>&nbsp;&nbsp;
-<select name="action2" id="selid" onchange="this.form.submit()">
-<option value=""></option>
-<option value="0">Total volunteer hours in month</option>
-<option value="1">Service record count in month</option>
-<option value="2">Vol&apos;s served in month</option>
-<option value="3">Average Time Served</option>
-<option value=""></option>
+<select name="action2" id="selid">
+<option value="" selected>Information Tables Available</option>
+<option value="0">Total volunteer hours per month</option>
+<option value="1">Service record count per month</option>
+<option value="2">Vol&apos;s served per month</option>
+<option value="3">Monthly Average Time Served per Vol</option>
+<option value="4">Monthly Mileage per month</option>
 </select>
-<input type="hidden" name="action" value="chart6a">
+<input type="hidden" name="action" value="xx">
 <!-- <input type="submit" name="submit" value="submit"> -->
 </form>
 
 <?php
+
+if ($action == '') {
+  echo '<h4>Select a year and choose the table to view</h4>';
+  exit;
+}
+
 $volsd = $volyr . '-01-01'; $voled = $volyr . '-12-31';
 $sql = "SELECT * FROM `voltime` 
 WHERE `VolDate` BETWEEN '$volsd' AND '$voled' 
@@ -104,6 +109,7 @@ $accum = prepaccum($volyr);
 // echo '<pre>accum '; print_r($accum); echo '</pre>';
 
 $mcidcatcher = array(); $motot = array(); $yrcat = array();
+$grandtotmiles = 0;
 foreach ($resarray as $r) {
 //	echo '<pre> data '; print_r($r); echo '</pre>';
 	if ($r['VolDate'] == '0000-00-00') continue;
@@ -114,6 +120,8 @@ foreach ($resarray as $r) {
 	$vt = $r['VolTime'];
 	$cat = $r['VolCategory'];
 	$mcid = $r['MCID'];
+	$miles = $r['VolMileage'];
+	$grandtotmiles += $r['VolMileage'];
 	if ($cat == '') continue;
 //	echo "year: $yr, cateory: $cat, month: $mo, voltime: $vt<br>";
 //	$accum[$yr][$mo][$cat][count] += 1;
@@ -123,8 +131,10 @@ foreach ($resarray as $r) {
 	$accum[$yr][$cat][$mo]['hours'] += $vt;
 	$avg = $accum[$yr][$cat][$mo]['hours'] / $accum[$yr][$cat][$mo]['count'];
 	$accum[$yr][$cat][$mo]['avg'] = number_format($avg, 2);
+	$accum[$yr][$cat][$mo]['miles'] += $miles;
 	$motot[$yr][$mo]['count'] += 1;
 	$motot[$yr][$mo]['tothrs'] += $vt;
+	$motot[$yr][$mo]['totmiles'] += $miles;
 	$motot[$yr][$mo]['totavg'] = number_format($motot[$yr][$mo]['tothrs'] / $motot[$yr][$mo]['count'],2);
 	
 	$mcidkey = $yr . $cat . $mo . $mcid; 
@@ -136,6 +146,10 @@ foreach ($resarray as $r) {
 		$mcidcount[$mcid] += 1; 
 	}
 }
+$grandtotmiles = number_format($grandtotmiles);
+
+// echo '<pre>accum '; print_r($accum); echo '</pre>';
+
 if (count($motot) <= 0) {
   echo "<h3>No time entries for year selected.</h3>";
   exit;
@@ -149,6 +163,8 @@ elseif ($type == 2) {
 	echo '<h4>Different Volunteer&apos;s That Have Served: '. count($mcidcount) .'</h4>'; }
 elseif ($type == 3) {
 	echo '<h4>Average Time Served</h4>'; }
+elseif ($type == 4) {
+  echo "<h3>Total Miles Driven: $grandtotmiles</h3>"; }
 	
 ksort($mcidcatcher);
 // echo '<pre> mcidcatcher '; print_r($mcidcatcher); echo '</pre>';
@@ -168,6 +184,7 @@ foreach ($accum as $yr => $val) {
 			elseif ($type == 1) $fvv = number_format($vv['count']);
 			elseif ($type == 2) $fvv = number_format($vv['mcids']);
 			elseif ($type == 3) $fvv = number_format($vv['avg'],2);
+			elseif ($type == 4) $fvv = number_format($vv['miles']);
 			echo "<td align=\"right\">$fvv</td>";
 		}
 	}
@@ -179,6 +196,7 @@ foreach ($accum as $yr => $val) {
 		elseif ($type == 1) $fv = number_format($v['count']);
 		elseif ($type == 2)	$fv = number_format($v['mcidcount']);
 		elseif ($type == 3) $fv = number_format($v['totavg'],2);
+		elseif ($type == 4) $fv = number_format($v['totmiles']);
 		echo "<td align=\"right\">$fv</td>";
 	}
 echo '</tr></table><br>';

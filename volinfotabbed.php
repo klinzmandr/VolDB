@@ -494,7 +494,7 @@ else {
 <?php
 $sql = "SELECT * FROM `voltime` 
 WHERE `MCID` = '$mcid' 
-	AND `VolCategory` = 'Education' 
+	AND `VolCategory` = 'VolEduc' 
 ORDER BY `VolDate` DESC";
 $res = doSQLsubmitted($sql);
 $rowcnt = $res->num_rows;

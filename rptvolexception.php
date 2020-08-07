@@ -46,7 +46,8 @@ $expfdate = date('F d, Y', strtotime("today - $expperiod days"));
 
 echo '<div class="container">
 <h3>Volunteer Exception Report&nbsp;&nbsp;
-<a class="hidden-print btn btn-default" href="javascript:self.close();">CLOSE</a></h3>';
+<span id="helpbtn" title="Help" class="glyphicon glyphicon-question-sign" style="color: blue; font-size: 20px">
+<a class="hidden-print btn btn-primary" href="javascript:self.close();">CLOSE</a></h3>';
 //echo '<pre>'; print_r($_REQUEST); echo '</pre>';
 $sql = 'CALL rptvolexceptionsp()';
 //echo "SQL: $sql<br>";
@@ -66,13 +67,12 @@ if ($rescount == 0) {
 	}
 ?>
 
-<button id="helpbtn" class="hidden-print btn btn-regular btn-xs">About this report</button><br>
 <b>Active period:</b> <?=$expperiod?> days<br>
 <b>Active Date:</b> <?=$expfdate?><br>
 <b>Total volunteer records:</b> <?=$rescount?><br>
 <div id="help">
 <h4>Report Description</h4>
-<p><b>Active Date:</b> - The date 90 days prior to the current date relative to when the report is run.  Volunteers are considered to be &quot;Active&quot; if they have volunteer time recorded within the last 90 days.  Any volunteer reporting time reported BEFORE this date results in the volunteer being considered as &quot;Inactive&quot;.</p>
+<p><b>Active Date:</b> - The date 90 days prior to the current date relative to when the report is run.  Volunteers are considered to be &quot;Active&quot; if they have volunteer time recorded within the last 90 days.  Any volunteer reporting time AFTER the &apos;Active Date&apos; results in the volunteer being considered as &quot;Active&quot; and is not listed in this report.</p>
 <p>This report has the following sections which will only appear in the report if there are any MCIDs that qualify.
 <ol>
 <li><b>MCIDs that do not have an email address recorded on their supporter record.</b><br>
@@ -111,7 +111,7 @@ while ($r = $res->fetch_assoc()) {
     $nolistarray[$r['MCID']] = $r;
     }
   // vol has been marked as inactive
-  if (preg_match("/inactive/i", $r['Lists'])) {
+  if (preg_match("/inactive/i", $r['Lists']) AND ($r['MemStatus'] == 2)) {
     $volinactarray[$r['MCID']] = $r;
     continue;
     }
@@ -163,7 +163,7 @@ if ($rc > 0) {
 $rc = count($results);
 // echo "vols with no time: res - $rc<br>";
 if ($rc > 0) {
-	echo "<h4>There are $rc volunteer MCIDs with NO reported volunteer time in the active period.</h4>
+	echo "<h4>There are $rc volunteer MCIDs with NO reported volunteer time since the &apos;Active Date&apos;.</h4>
 <ul><button class=hidden-print id=resbtn>Show Details</button></ul>
 <div id=res>
 <table class=\"table-condensed\">
@@ -191,6 +191,7 @@ if ($rc > 0) {
 	<div class="page-break"></div>';
 }
 
+if (1<>1) {
 // vols marked inactive
 $rc = count($volinactarray);
 // echo "Inactive vols: inact, $rc<br>";
@@ -198,6 +199,7 @@ if ($rc > 0) {
 	echo "<h4>There are $rc volunteer MCIDs that are marked as &apos;Inactive&apos;.</h4>
 <ul><button class=hidden-print id=inactbtn>Show Details</button></ul>
 <div id=inact>
+<p>NOTE: an &apos;Inactive&apos; volunteer is defined as a trained volunteer who is no longer willing/able to provide volunteer time but is willing to act as a back up.</p>
 <table class=\"table-condensed\">
 <tr><th>MCID</th><th>FName</th><th>Lname</th><th>MemStatus</th><th>Lists</th></tr>";
 	foreach ($volinactarray as $k => $r) {
@@ -206,7 +208,7 @@ if ($rc > 0) {
 	echo '</table>----- END OF LIST -----<br /></div>
 		<div class="page-break"></div>';
 	}
-
+}
 
 ?>
 </body>

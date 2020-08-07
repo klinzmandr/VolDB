@@ -57,7 +57,7 @@ if ($mysqli->errno != 0) {
   exit;
 	}
 
-echo '<h3>Last Time Reported by a Volunteer&nbsp;&nbsp;&nbsp;<a href="javascript:self.close();" class="btn btn-primary"><strong>(CLOSE)</strong></a>&nbsp;&nbsp;&nbsp;
+echo '<h3>Last Time Reported by a Volunteer&nbsp;&nbsp;&nbsp;<a href="javascript:self.close();" class="btn btn-primary"><strong>CLOSE</strong></a>&nbsp;&nbsp;&nbsp;
 <a class="btn btn-primary" href="rptlastvoltimereport.php">ReDo</a></h3>
 Date entered: '.$sd.', Volunteer count: '.$nbr_rows.'<br />
 <a href="downloads/lastvoltimereport.csv" download="lastvoltimereport.csv">DOWNLOAD CSV FILE</a>
@@ -88,9 +88,9 @@ file_put_contents('downloads/lastvoltimereport.csv',$csv);
 if ($action == '') {
 print <<<pagePart1
 <div class="container">
-<h3>Last Volunteer Time Report&nbsp;&nbsp;<a href="javascript:self.close();" class="btn btn-primary"><strong>(CLOSE)</strong></a></h3>
-<p>This report details the last time a volunteer reported time, type and service provided by any active volunteer.</p>
-<p>The date entered is the LAST date of these service records.  Any volunteer reporting service AFTER the date entered is ignored and ALL service records from that volunteer dropped from this report.</p>
+<h3>Last Volunteer Time Report&nbsp;&nbsp;<a href="javascript:self.close();" class="btn btn-primary"><strong>CLOSE</strong></a></h3>
+<p>This report details the last date a volunteer reported volunteer time.</p>
+<p>The date entered is the LAST date of these service records.  Any volunteer reporting volunteeer service time AFTER the date entered is considerered as &apos;ACTIVE&apos; and will not be listed in this report.</p>
 
 <form action="rptlastvoltimereport.php">
 <input type="hidden" name="action" value="rpt">

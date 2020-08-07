@@ -92,7 +92,7 @@ body { padding-top: 50px; }      <!-- add padding to top of each page for fixed 
 	<li><a onclick="return chkchg()" href="listcreatenew.php">Create/Update Mail Lists</a></li>
 	<li><a onclick="return chkchg()" href="listvolcategories.php">Create/Update Vol Time Categories</a></li>
 	<li><a onclick="return chkchg()" href="voladdition.php">Add New Volunteer</a></li>
-	<li><a onclick="return chkchg()" href="voladdnewuser.php">Add New User</a></li>
+	<li><a onclick="return chkchg()" href="voladminaddnewuser.php">Add/Update User</a></li>
 </ul>
 </li>  <!-- class="dropdown" -->
 

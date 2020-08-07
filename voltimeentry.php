@@ -4,11 +4,41 @@ session_start();
 include 'Incls/datautils.inc.php';
 include 'Incls/seccheck.inc.php';
 
+// add rec's if this is an update
+$mciderr = array(); $rowcnt = 0;
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+if ($action == 'upd') {
+	// capture input arrays and apply the values to the db
+	$date = $_REQUEST['date'];
+	$id = $_REQUEST['id'];
+	$hrs = $_REQUEST['hrs'];
+	$mileage = $_REQUEST['mileage'];
+	$cat = $_REQUEST['category'];
+	$note = $_REQUEST['note'];
+	$rows = 0;
+	for ($i = 0; $i < 10; $i++) {
+		if ($date[$i] == '') break;											// first blank date is end of input rows
+		list($mcid,$lname,$fname) = explode(",",$id[$i]);
+		//echo "<pre>mcid after expode: "; print_r($mcid); echo '</pre>';		
+		$flds = array();
+		$flds['MCID'] = $mcid;
+		$flds['VolDate'] = $date[$i];
+		$flds['VolTime'] = $hrs[$i];
+		$flds['VolMileage'] = $mileage[$i];
+		$flds['VolCategory'] = $cat[$i];
+		$flds['VolNotes'] = $note[$i];
+		//echo "<pre>updcount $i: "; print_r($flds); echo '</pre>';
+		$rows = sqlinsert('voltime',$flds);			// returns the number of rows inserted
+		$rowcnt += 1;
+		}
+		//echo 'vol string:' . $vols .'<br />';
+	}
+
 // time entry is an admin function
 if ($_SESSION['VolSecLevel'] != 'voladmin') {
 		echo '<div class="container"><h2>Invalid Security Level</h2>
 		<h4>You do not have the correct authorization to perform volunteer time data entry.</h4>
-		<p>Your user id is registered with the security level of &apos;voluser&apos;.  It must be upgraded to &apos;voladmin&apos; in order to perform this function.</p><br />
+		<p>Your user id is registered with the security level of &apos;'.$_SESSION["VolSecLevel"].'&apos;.  It must be upgraded to &apos;voladmin&apos; in order to perform this function.</p><br />
 		<a class="btn btn-primary" href="admin.php">RETURN</a></div>
 		</body></html>';
 		exit;
@@ -31,7 +61,7 @@ if ($res->num_rows == 0) {
 	echo '<a class="btn btn-primary" href="admin.php">RETURN</a></body></html>';
 	exit;
 	}
-// now create the string for the javascript arrays to download
+// create the string for the javascript arrays to download
 $vols = '[';		// create string for form typeahead
 while ($r = $res->fetch_assoc()) {
 	$mcid = preg_replace("/[\(\)\.\-\ \/\&]/i", "", $r['MCID']);
@@ -40,49 +70,6 @@ while ($r = $res->fetch_assoc()) {
 	$vols .= "'$mcid,$lname,$fname',";
 	}
 $vols = rtrim($vols,',') . ']';
-
-$mciderr = array(); $rowcnt = 0;
-// check if this is an update, string to validate mcid's is in vols string
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-if ($action == 'upd') {
-	// capture input arrays and apply the values to the db
-	$date = $_REQUEST['date'];
-	$id = $_REQUEST['id'];
-	$hrs = $_REQUEST['hrs'];
-	$mileage = $_REQUEST['mileage'];
-	$cat = $_REQUEST['category'];
-	$note = $_REQUEST['note'];
-	$rows = 0;
-	for ($i = 0; $i < 10; $i++) {
-		if ($date[$i] == '') break;											// first blank date is end of input rows
-		list($mcid,$lname,$fname) = explode(",",$id[$i]);
-		//echo "<pre>mcid after expode: "; print_r($mcid); echo '</pre>';		
-		if (stripos($vols,$mcid) === FALSE) {						// test to see if input mcid is in vols string
-			$mciderr[$mcid] += 1;
-			echo "error mcid: $mcid";
-			continue;
-			}
-		$flds = array();
-		$flds['MCID'] = $mcid;
-		$flds['VolDate'] = $date[$i];
-		$flds['VolTime'] = $hrs[$i];
-		$flds['VolMileage'] = $mileage[$i];
-		$flds['VolCategory'] = $cat[$i];
-		$flds['VolNotes'] = $note[$i];
-		//echo "<pre>updcount $i: "; print_r($flds); echo '</pre>';
-		$rows = sqlinsert('voltime',$flds);			// returns the number of rows inserted
-		$rowcnt += 1;
-		}
-		//echo 'vol string:' . $vols .'<br />';
-		//echo '<pre>mciderr ->'; print_r($mciderr); echo '</pre>';
-
-		if (count($mciderr) > 0) {
-			echo 'MCID(s) entry(s) in error: ';
-			foreach ($mciderr as $k => $v) {
-				echo "$k($v), ";
-			}
-		}
-	}
 
 $showvolcats = loaddbselect('VolCategorys', 'show');
 
@@ -106,7 +93,7 @@ $(document).ready(function() {
 </script>
 <?php
 if ($action == 'upd') 
-echo '<h3 style="color: red; " id="X">Rows added: <?=$rowcnt?></h3>';
+  echo "<h3 style='color: red; ' id=X>Rows added: $rowcnt</h3>";
 ?>
 
 <div class="well">
